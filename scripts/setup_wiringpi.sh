@@ -14,4 +14,4 @@ git pull origin
 
 cd wiringPi
 
-./build
+#./build
