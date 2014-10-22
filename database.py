@@ -2,6 +2,11 @@
 #Author : Kevin Murphy
 #Date   : 21 - Oct - 14
 
+##TODO===========================================
+##Fix Dates
+
+
+
 import peewee
 from peewee import *
 import random
@@ -21,7 +26,7 @@ class Current_Day_Sensor_Output(peewee.Model):
         database = db
 
     #Define DB fields
-    date_and_time       = peewee.DateField(DATE_FORMAT)
+    date_and_time       = peewee.DateField(default=datetime.datetime.now)
     mq7_carbon_monoxide = peewee.IntegerField()
     temperature         = peewee.IntegerField()
     flammable_gas       = peewee.IntegerField()
@@ -32,7 +37,7 @@ class Sensor_Output_Averages(peewee.Model):
         database = db
 
     #Define DB fields
-    date_and_time       = peewee.DateField(DATE_FORMAT)
+    date_and_time       = peewee.DateField(default=datetime.datetime.now)
     mq7_carbon_monoxide = peewee.IntegerField()
     temperature         = peewee.IntegerField()
     flammable_gas       = peewee.IntegerField()
@@ -55,13 +60,13 @@ class System_Admin_Details(peewee.Model):
     last_name     = peewee.CharField()
     first_name    = peewee.CharField()
     device_id     = peewee.CharField()
-    date_and_time = peewee.DateField(DATE_FORMAT)
+    date_and_time = peewee.DateField(default=datetime.datetime.now)
 
 #Creates the Tables
 def create_tables():
     try: 
-        Sensor_Output_Averages.createTable()
-    except peewee.OperationError:
+        Sensor_Output_Averages.create_table()
+    except peewee.OperationalError:
         print "Sensor output Averages Table Already Exists"
 
     try:
@@ -79,16 +84,62 @@ def create_tables():
     except peewee.OperationalError:
         print "System_Admin_Details Table Already Exists"
 
-#Test Functions
-def insert_test_data():
-    sensor_output = Sensor_Output(mq7_carbon_monoxide=random.randint(100, 10000), 
-                                temperature=random.randint(0, 34),
-                                flammable_gas=random.randint(100, 10000),
-                                smoke=random.randint(100, 100000))
+#Insert functions
+def insert_sensor_output(mq7_output, temperature_output, flammable_gas_output, smoke_output):
+    sensor_output = Current_Day_Sensor_Output(mq7_carbon_monoxide = mq7_output,
+                                              temperature         = temperature_output, 
+                                              flammable_gas       = flammable_gas_output,
+                                              smoke               = smoke_output)
     sensor_output.save()
+    print "Sensor Data Inserted.."
 
-    print "Inserting Random Sensor Data..."
+#Test Functions
+def insert_test_data(simulated_output_level):
+    sensor_output = None
+    mq7_min       = None
+    mq7_max       = None
+    temp_min      = None
+    temp_max      = None
+    flammable_min = None
+    flammable_max = None
+    smoke_min     = None
+    smoke_max     = None
+    
+    if(simulated_output_level == "NORMAL"):
+        mq7_min       = 0 
+        mq7_max       = 10
+        temp_min      = 21 
+        temp_max      = 27 
+        flammable_min = 0
+        flammable_max = 0
+        smoke_min     = 0
+        smoke_max     = 0
+    elif(simulated_output_level == "EARLY_SIGNS"):
+        mq7_min       = 10   
+        mq7_max       = 150
+        temp_min      = 27  
+        temp_max      = 40  
+        flammable_min = 10
+        flammable_max = 150
+        smoke_min     = 10
+        smoke_max     = 150
+    elif(simulated_output_level == "RED_ALERT"):
+        mq7_min       = 150 
+        mq7_max       = 400
+        temp_min      = 40
+        temp_max      = 80
+        flammable_min = 150
+        flammable_max = 400
+        smoke_min     = 150
+        smoke_max     = 400
+        
+    insert_sensor_output(mq7_output           = random.randint(mq7_min, mq7_max),
+                         temperature_output   = random.randint(temp_min, temp_max),
+                         flammable_gas_output = random.randint(flammable_min,flammable_max),
+                         smoke_output         = random.randint(smoke_min, smoke_max))
 
 #Main Section
 create_tables()
-insert_test_data()
+insert_test_data("NORMAL")
+insert_test_data("EARLY_SIGNS")
+insert_test_data("RED_ALERT")
