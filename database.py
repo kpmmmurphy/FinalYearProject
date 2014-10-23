@@ -2,13 +2,9 @@
 #Author : Kevin Murphy
 #Date   : 21 - Oct - 14
 
-##TODO===========================================
-##Fix Dates
-
-
-
 import peewee
 from peewee import *
+import datetime
 import random
 
 #Database Credentials
@@ -25,8 +21,12 @@ class Current_Day_Sensor_Output(peewee.Model):
     class Meta:
         database = db
 
+    def save(self, *args, **kwargs):
+        self.date_and_time = datetime.datetime.now()
+        super(Current_Day_Sensor_Output, self).save(*args, **kwargs)
+
     #Define DB fields
-    date_and_time       = peewee.DateField(default=datetime.datetime.now)
+    date_and_time       = peewee.DateTimeField(formats=DATE_FORMAT)
     mq7_carbon_monoxide = peewee.IntegerField()
     temperature         = peewee.IntegerField()
     flammable_gas       = peewee.IntegerField()
@@ -36,8 +36,12 @@ class Sensor_Output_Averages(peewee.Model):
     class Meta: 
         database = db
 
+    def save(self, *args, **kwargs):
+        self.date_and_time = datetime.datetime.now()
+        super(myModel, self).save(*args, **kwargs)
+
     #Define DB fields
-    date_and_time       = peewee.DateField(default=datetime.datetime.now)
+    date_and_time       = peewee.DateTimeField(formats=DATE_FORMAT)
     mq7_carbon_monoxide = peewee.IntegerField()
     temperature         = peewee.IntegerField()
     flammable_gas       = peewee.IntegerField()
@@ -56,11 +60,15 @@ class System_Admin_Details(peewee.Model):
     class Meta:
         database = db
 
+    def save(self, *args, **kwargs):
+        self.date_and_time = datetime.datetime.now()
+        super(myModel, self).save(*args, **kwargs)
+
     #Define DB Fields
     last_name     = peewee.CharField()
     first_name    = peewee.CharField()
     device_id     = peewee.CharField()
-    date_and_time = peewee.DateField(default=datetime.datetime.now)
+    date_and_time = peewee.DateTimeField(formats=DATE_FORMAT)
 
 #Creates the Tables
 def create_tables():
