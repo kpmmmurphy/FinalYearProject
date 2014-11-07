@@ -31,7 +31,7 @@ const char path[] = "/sys/class/gpio/gpio";
 char pinpath[40];
 
 
-void gpio_init(int pin, char *direction) { // sets the direction of a pin. Allowed values are "in" and "out"
+void gpio_init(int pin, const char *direction) { // sets the direction of a pin. Allowed values are "in" and "out"
   FILE *f;
   sprintf(pinpath, "%s%d/direction", path,  pin);
   f = fopen(pinpath, "w");

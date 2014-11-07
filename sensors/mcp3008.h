@@ -66,7 +66,6 @@ int power_of_2(int exp) {
 }
 
 int mcp3008_value(int inputnum, int clock, int in, int out, int cs) {
-  printf("drgibnlik");
   int i; // "for-loop-integer"
   int inputarray[5]; // will contain the input number
   int output = 0; // this will be returned

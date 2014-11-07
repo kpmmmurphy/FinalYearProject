@@ -15,8 +15,8 @@
 //#define ADC_IN  3 //Pi Pin 15
 //#define ADC_OUT 2 //Pi Pin 13
 
-#define CLOCK   16
-#define SDA_CS  18
+#define CLOCK   11
+#define SDA_CS  12
 #define ADC_IN  15
 #define ADC_OUT 13
 
@@ -40,7 +40,7 @@ int Sensor::getADCResult(int adcChannelNo)
     {
 	cout << "Calling getADCResult on Channel:: " << adcChannelNo << "\n";
     }
-    return mcp3008_value(-1, CLOCK, ADC_IN, ADC_OUT, SDA_CS );
+    return mcp3008_value(adcChannelNo, CLOCK, ADC_IN, ADC_OUT, SDA_CS );
 }
 
 string Sensor::getName()
