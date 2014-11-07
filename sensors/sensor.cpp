@@ -15,8 +15,8 @@
 //#define ADC_IN  3 //Pi Pin 15
 //#define ADC_OUT 2 //Pi Pin 13
 
-#define CLOCK   5
-#define SDA_CS  3
+#define CLOCK   16
+#define SDA_CS  18
 #define ADC_IN  15
 #define ADC_OUT 13
 

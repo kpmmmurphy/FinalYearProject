@@ -68,6 +68,6 @@ int main(int argc, const char* argv[])
     Thermistor thermistor(NAME, ADC_CHANNEL_NO);
     //thermistor.initPins();
     thermistor.readValue();
-
+    cout << "Done";
     return 0;
 }
