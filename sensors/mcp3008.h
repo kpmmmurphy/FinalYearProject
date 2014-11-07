@@ -24,16 +24,19 @@
 
 #include "gpio.h"
 #include <stdio.h>
+
 void clocked_write(int clockpin, int out, int value) {
   gpio_write(out, value);
   gpio_write(clockpin, 1);
   gpio_write(clockpin, 0);
 }
+
 int clocked_read(int clockpin, int in){
   gpio_write(clockpin, 1);
   gpio_write(clockpin, 0);
   return gpio_read(in);
 }
+
 void mcp3008_select_chip(int bin[], int inputnum){
   bin[0] = 1; bin[1] = 1; //the first two bits have to be 1
   int i = 2;
@@ -52,6 +55,7 @@ void mcp3008_select_chip(int bin[], int inputnum){
     c++;
   }
 }
+
 int power_of_2(int exp) {
   int output = 1;
   int i;
@@ -62,6 +66,7 @@ int power_of_2(int exp) {
 }
 
 int mcp3008_value(int inputnum, int clock, int in, int out, int cs) {
+  printf("drgibnlik");
   int i; // "for-loop-integer"
   int inputarray[5]; // will contain the input number
   int output = 0; // this will be returned

@@ -19,14 +19,14 @@ class Sensor
         Sensor(string name, int adcChannelNo);
         ~Sensor();
 
-        virtual void  initPins()   = 0; //Pure Virtual
-        virtual float readValues() = 0; //Pure Virtual   
+        virtual void  initPins() = 0; //Pure Virtual
+        virtual int readValue()  = 0; //Pure Virtual   
         
-        int getADCResult();
+        int getADCResult(int adcChannelNo);
         string getName();
         void printName();
         int  getADCChannelNo();
 
-}
+};
 
 #endif
