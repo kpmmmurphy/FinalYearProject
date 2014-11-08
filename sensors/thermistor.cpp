@@ -7,7 +7,7 @@
 #include <wiringPi.h>
 #include <stdlib.h>
 #include <iostream>
-//#include <string>
+#include <cmath>
 #include "sensor.h"
 
 using namespace std;
@@ -26,14 +26,6 @@ class Thermistor : public Sensor
 
 	void initPins()
 	{
-	    if(wiringPiSetup() == -1)
-	    {
-	        printf("Setup WiringPi Failed!\n");
-		exit(1);
-	    }
-
-	    //Pin Modes here
-
 	    if(DEBUG)
    	    {
 	        cout << "Setup : " << Sensor::getName() << "\n";
@@ -47,11 +39,27 @@ class Thermistor : public Sensor
 	        cout << "Reading Value of : " << Sensor::getName() << "\n";
 	    }
 
-	    int result = Sensor::getADCResult(Sensor::getADCChannelNo()); 
-            printf("Result %d\n", result);
+	    int result = (int)thermistorTemp( Sensor::getADCResult( Sensor::getADCChannelNo() )); 
+            
+	    if(DEBUG)
+	    {
+		printf("Result %d\n", result);
+	    }
 
             return result;
 	}
+
+    private:
+	
+	double thermistorTemp(int RawADC) 
+        {
+  	    double Temp;
+            // We divide by our thermistor's resistance at 25C, in this case 10k
+  	    Temp = log((double)((10240000/RawADC) - 10000) / 10000);
+  	    Temp = 1 / (0.003354016 + (0.0002569850 * Temp) + (0.000002620131 * Temp * Temp)+ (0.00000006383091 * Temp * Temp * Temp));
+            Temp = Temp - 273.15; // Convert Kelvin to Celsius
+            return Temp;
+        }
 };
 
 //Extern for Ctypes in Python
@@ -66,8 +74,9 @@ extern "C"
 int main(int argc, const char* argv[])
 {
     Thermistor thermistor(NAME, ADC_CHANNEL_NO);
-    //thermistor.initPins();
-    thermistor.readValue();
-
+    thermistor.initPins();
+    while(1){
+        thermistor.readValue();
+    }
     return 0;
 }

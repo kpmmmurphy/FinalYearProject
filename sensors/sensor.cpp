@@ -4,21 +4,26 @@
 
 #include "sensor.h"
 #include <sys/time.h>
+#include <stdlib.h>
 #include <wiringPi.h>
 #include <iostream>
-#include "mcp3008.h"
+#include "mcp3004.h"
 #include <string>
 
 //Define the MCP3008 Pins -- WiringPi
-//#define CLOCK   9 //Pi Pin 5
-//#define SDA_CS  8 //Pi Pin 3
-//#define ADC_IN  3 //Pi Pin 15
-//#define ADC_OUT 2 //Pi Pin 13
+//#define CLOCK   11 //Pi Pin 5
+//#define SDA_CS  12 //Pi Pin 3
+//#define ADC_IN  15 //Pi Pin 15
+//#define ADC_OUT 13 //Pi Pin 13
 
-#define CLOCK   11
-#define SDA_CS  12
-#define ADC_IN  15
-#define ADC_OUT 13
+//BCM Mode
+//#define CLOCK   17
+//#define SDA_CS  18
+//#define ADC_IN  22
+//#define ADC_OUT 27
+
+//Define MCP3008 Fields-- WiringPi 
+#define SPI_CHAN 0
 
 //General Definitions
 #define DEBUG 1
@@ -29,6 +34,14 @@ Sensor::Sensor(string sensorName, int adcChannelNumber)
 {
     name         = sensorName;
     adcChannelNo = adcChannelNumber;
+
+    if(wiringPiSetup() < 0)
+    {
+        cout << "WiringPi Setup Failed...";
+        exit(EXIT_FAILURE);
+    }
+
+    mcp3004Setup(100, SPI_CHAN);
 };
 
 Sensor::~Sensor(){}
@@ -36,11 +49,20 @@ Sensor::~Sensor(){}
 //Code for reading values from MCP3008 ADC Chip
 int Sensor::getADCResult(int adcChannelNo)
 {
+    int BASE = 100; //MCP3008 channels are 100 - 107
     if(DEBUG)
     {
-	cout << "Calling getADCResult on Channel:: " << adcChannelNo << "\n";
+	cout << "Calling getADCResult on Channel :: " << adcChannelNo << "\n";
     }
-    return mcp3008_value(adcChannelNo, CLOCK, ADC_IN, ADC_OUT, SDA_CS );
+
+    int result = analogRead(BASE + adcChannelNo);
+
+    if(DEBUG)
+    {
+	cout << "Result :: " << result << "\n";
+    }
+
+    return result;
 }
 
 string Sensor::getName()
