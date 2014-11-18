@@ -9,6 +9,7 @@
 #include <iostream>
 #include "mcp3004.h"
 #include <string>
+#include <unistd.h>
 
 //Define the MCP3008 Pins -- WiringPi
 //#define CLOCK   11 //Pi Pin 5
@@ -40,8 +41,11 @@ Sensor::Sensor(string sensorName, int adcChannelNumber)
         cout << "WiringPi Setup Failed...";
         exit(EXIT_FAILURE);
     }
-
-    mcp3004Setup(100, SPI_CHAN);
+    
+    if(adcChannelNumber)
+    {
+        mcp3004Setup(100, SPI_CHAN);
+    }
 };
 
 Sensor::~Sensor(){}
@@ -50,16 +54,11 @@ Sensor::~Sensor(){}
 int Sensor::getADCResult(int adcChannelNo)
 {
     int BASE = 100; //MCP3008 channels are 100 - 107
-    if(DEBUG)
-    {
-	cout << "Calling getADCResult on Channel :: " << adcChannelNo << "\n";
-    }
-
     int result = analogRead(BASE + adcChannelNo);
 
     if(DEBUG)
     {
-	cout << "Result :: " << result << "\n";
+	cout << getName() << " -> Analog Result :: " << result << "\n";
     }
 
     return result;
