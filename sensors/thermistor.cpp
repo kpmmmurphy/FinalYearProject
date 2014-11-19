@@ -70,13 +70,15 @@ extern "C"
     int   Thermistor_readValue(Thermistor *sensor){return sensor->readValue();}
     int   test(){return 1;}
 }
-
+/*
 int main(int argc, const char* argv[])
 {
     Thermistor thermistor(NAME, ADC_CHANNEL_NO);
     thermistor.initPins();
     while(1){
         thermistor.readValue();
+	sleep(6);
     }
     return 0;
 }
+*/

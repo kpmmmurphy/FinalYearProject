@@ -12,8 +12,6 @@
 
 using namespace std;
 
-//Sensor Pin Definitions
-
 //General Definitions
 #define DEBUG 1
 #define NAME "MQ7 Carbon Monoxide"
@@ -47,7 +45,8 @@ class MQ7 : public Sensor
 	double carbonMonoxideLevel(int RawADC) 
         {
   	    double co_level;
-  	    co_level = log((double)((10240000/RawADC) - 10000) / 10000);
+	    int resistor = 0; //Usuall 10000 for 10k
+  	    co_level = log((double)((10240000/RawADC) - resistor) / 10000);
             return co_level;
         }
 };
@@ -60,7 +59,7 @@ extern "C"
     int   MQ7_readValue(MQ7 *sensor){return sensor->readValue();}
     int   MQ7_test(){return 1;}
 }
-
+/*
 int main(int argc, const char* argv[])
 {
     MQ7 mq7(NAME, ADC_CHANNEL_NO);
@@ -71,3 +70,4 @@ int main(int argc, const char* argv[])
     }
     return 0;
 }
+*/

@@ -42,13 +42,17 @@ Sensor::Sensor(string sensorName, int adcChannelNumber)
         exit(EXIT_FAILURE);
     }
     
-    if(adcChannelNumber)
+    //ADC channel number will be -1 for Digital Sensors 
+    if(adcChannelNumber >= 0)
     {
         mcp3004Setup(100, SPI_CHAN);
     }
 };
 
-Sensor::~Sensor(){}
+Sensor::~Sensor()
+{
+    cout << getName() <<" :: xxDestroyedxx";
+}
 
 //Code for reading values from MCP3008 ADC Chip
 int Sensor::getADCResult(int adcChannelNo)
