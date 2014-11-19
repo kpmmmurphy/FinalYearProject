@@ -32,16 +32,34 @@ class Sensor(object):
 class Thermistor(Sensor):
     _name = "Thermistor"
     _adcChannelNo = "0"
-    def getInstance():
-        if _instance is None:
-	    _instance = lib.Thermistor_new(_name, _adcChannelNo0)
+    _this = None
 
-            print('{a} {b}', getName(), "New Instance")
+    def __init__(self):
+        #if _instance is None:
+	#    _instance = lib.Thermistor_new(_name, _adcChannelNo)
+        #return _instance
+        self.obj = lib.Thermistor_new(_name, _adcChannel)
+        _this = self.obj
+        
+        #Setup arg types
+        lib.Thermistor_initPins.restype = None
+	lib.Thermistor_readValue.
 
-    def getName(self)
-        return lib.Thermistor_getName(self.obj);
+    def initPins(_this):
+        lib.Thermistor_initPiins(_this)
+
+    def readValue(_this):
+        lib.Thermistor_readValue(_this) 
+
+    def getName(_this)
+        return lib.Thermistor_getName(_this);
+
+    def test(_this):
+        print lib.Thermistor_test(_this)
+
+    
 
 def main():
-    SensorManager.
+    
 
 
