@@ -41,9 +41,10 @@ class Thermistor(Sensor):
         self.obj = lib.Thermistor_new(_name, _adcChannel)
         _this = self.obj
         
-        #Setup arg types
-        lib.Thermistor_initPins.restype = None
-	lib.Thermistor_readValue.
+        #Setup return types for ctypes
+        lib.Thermistor_initPins.restype  = None
+	lib.Thermistor_readValue.restype = ctypes.c_int
+	lib.Thermistor_test.restype      = ctypes.c_int 
 
     def initPins(_this):
         lib.Thermistor_initPiins(_this)
@@ -52,7 +53,7 @@ class Thermistor(Sensor):
         lib.Thermistor_readValue(_this) 
 
     def getName(_this)
-        return lib.Thermistor_getName(_this);
+        return _name
 
     def test(_this):
         print lib.Thermistor_test(_this)
@@ -60,6 +61,7 @@ class Thermistor(Sensor):
     
 
 def main():
-    
-
+    thermistor = Thermistor() 
+    print "Thermitor Test: \n"
+    print thermistor.test()
 
