@@ -15,14 +15,25 @@ using namespace std;
 //Sensor Pin Definitions
 
 //General Definitions
-#define DEBUG 1
+#define DEBUG 0
 #define NAME "Thermistor"
 #define ADC_CHANNEL_NO 0
+
+static Thermistor *instance;
 
 class Thermistor : public Sensor
 {
     public:
-        Thermistor(string name, int adcChannelNo) : Sensor(name, adcChannelNo){}
+        Thermistor(char *name, int adcChannelNo) : Sensor(name, adcChannelNo){}
+
+	Thermistor getInstance(char *name, int adcChannelNo)
+	{
+	    if(!instance)
+	    {
+		instance = new Thermistor(name, adcChannelNo);
+	    }
+	    return instance;
+	}
 
 	void initPins()
 	{
@@ -49,8 +60,7 @@ class Thermistor : public Sensor
             return result;
 	}
 
-    private:
-	
+    private:	
 	double thermistorTemp(int RawADC) 
         {
   	    double Temp;
@@ -65,10 +75,13 @@ class Thermistor : public Sensor
 //Extern for Ctypes in Python
 extern "C"
 {
-    Thermistor *Thermistor_new(char *name, int adcChannelNo){return new Thermistor(name, adcChannelNo);}
-    void  Thermistor_initPins(Thermistor *sensor){sensor->initPins();}
-    int   Thermistor_readValue(Thermistor *sensor){return sensor->readValue();}
-    int   test(){return 1;}
+    Thermistor *Thermistor_newInstance(char *name, int adcChannelNo)
+    {
+	return Thermistor.getInstance(name, adcChannelNo);
+    }
+    void Thermistor_initPins(Thermistor *sensor){sensor->initPins();}
+    int  Thermistor_readValue(Thermistor *sensor){return sensor->readValue();}
+    int  Thermistor_test(){return 1;}
 }
 /*
 int main(int argc, const char* argv[])

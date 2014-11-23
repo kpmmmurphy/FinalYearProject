@@ -1,67 +1,73 @@
-#!/usr/bin/env piython
+#!/usr/bin/env python
 
 #Manages Sensor Inputs
 #Author: Kevin Murphy
 #Date  : 18 - Oct - 14
 
-from ctypes import cdll
+import ctypes
 
 LIB_PATH = "./sensors/libs/lib_SensorManager.so"
 
-lib = cdll.LoadLibrary(LIB_PATH);
+lib = ctypes.cdll.LoadLibrary(LIB_PATH)
 
 class Sensor(object):
-    #Singleton Pattern
-    __metaclass__ = SensorMeta
-
-    _name = None
-    _instance = None
-
-    def getInstance(self):
-        raise NotImplementedError('Subclass must override Constructor');
-
-    def getName():
-        raise NotImplementedError('Subclass must override getName')
-
-    def readValue():
-        raise NotImplementedError('Subclass must override readValue')
-
-    def initPins():
-        raise NotImplementedError('Subclass must override initPins');
-            
-class Thermistor(Sensor):
-    _name = "Thermistor"
-    _adcChannelNo = "0"
-    _this = None
 
     def __init__(self):
-        #if _instance is None:
-	#    _instance = lib.Thermistor_new(_name, _adcChannelNo)
-        #return _instance
-        self.obj = lib.Thermistor_new(_name, _adcChannel)
-        _this = self.obj
-        
+        print "__Creating new Sensor__"
+
+    def getInstance(self):
+        raise NotImplementedError('Subclass must override Constructor')
+
+    def getName(self):
+        raise NotImplementedError('Subclass must override getName')
+
+    def readValue(self):
+        raise NotImplementedError('Subclass must override readValue')
+
+    def initPins(self):
+        raise NotImplementedError('Subclass must override initPins')
+            
+class Thermistor(Sensor):
+    __name         = "Thermistor"
+    __adcChannelNo = 0
+    __instance     = None
+
+    def __init__(self, *args, **kwargs):
+	#Setup arg ctypes------------
+	lib.Thermistor_new.argtypes = [ctypes.c_char_p, ctypes.c_int]
+	lib.Thermistor_new.restype  = Thermistor
+	if self.__instance is None:
+	   print "New Instance of Thermistor\n" 
+	   self.__instance = lib.Thermistor_new(self.__name, self.__adcChannelNo)
+
         #Setup return types for ctypes
-        lib.Thermistor_initPins.restype  = None
+	lib.Thermistor_initPins.restype  = None
 	lib.Thermistor_readValue.restype = ctypes.c_int
 	lib.Thermistor_test.restype      = ctypes.c_int 
 
-    def initPins(_this):
-        lib.Thermistor_initPiins(_this)
+    def getInstance(self):
+        try:
+            return self.__instance
+        except AttributeError:
+            #self._instance = self._decorated()
+            return self.__instance
 
-    def readValue(_this):
-        lib.Thermistor_readValue(_this) 
+    def initPins(self):
+        lib.Thermistor_initPins(_instance)
 
-    def getName(_this)
-        return _name
+    def readValue(self):
+        lib.Thermistor_readValue(_instance) 
 
-    def test(_this):
-        print lib.Thermistor_test(_this)
+    def getName(self):
+        return self.__name
+
+    def test(self):
+        print lib.Thermistor_test()
 
     
 
-def main():
-    thermistor = Thermistor() 
-    print "Thermitor Test: \n"
-    print thermistor.test()
+
+thermistor = Thermistor() 
+#thermistor.initPins()
+#print thermistor.readValue()
 

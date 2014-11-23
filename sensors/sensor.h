@@ -19,6 +19,8 @@ class Sensor
         Sensor(string name, int adcChannelNo);
         ~Sensor();
 
+	static Sensor* getInstance();
+
         virtual void  initPins() = 0; //Pure Virtual
         virtual int readValue()  = 0; //Pure Virtual   
         
@@ -26,6 +28,7 @@ class Sensor
         string getName();
         void printName();
         int  getADCChannelNo();
+	static int spiSetup;
 
 };
 
