@@ -23,7 +23,7 @@ using namespace std;
 class MotionDetector : public Sensor
 {
     public:
-        MotionDetector(string name, int adcChannelNo) : Sensor(name, adcChannelNo){}
+        MotionDetector(char *name, int adcChannelNo) : Sensor(name, adcChannelNo){}
 
 	void initPins()
 	{

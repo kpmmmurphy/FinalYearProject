@@ -19,14 +19,12 @@ using namespace std;
 #define NAME "Thermistor"
 #define ADC_CHANNEL_NO 0
 
-static Thermistor *instance;
-
 class Thermistor : public Sensor
 {
     public:
         Thermistor(char *name, int adcChannelNo) : Sensor(name, adcChannelNo){}
 
-	Thermistor getInstance(char *name, int adcChannelNo)
+	static Thermistor* getInstance(char *name, int adcChannelNo)
 	{
 	    if(!instance)
 	    {
@@ -60,7 +58,8 @@ class Thermistor : public Sensor
             return result;
 	}
 
-    private:	
+    private:
+	static Thermistor *instance;
 	double thermistorTemp(int RawADC) 
         {
   	    double Temp;
@@ -75,9 +74,9 @@ class Thermistor : public Sensor
 //Extern for Ctypes in Python
 extern "C"
 {
-    Thermistor *Thermistor_newInstance(char *name, int adcChannelNo)
+    Thermistor* Thermistor_newInstance(char *name, int adcChannelNo)
     {
-	return Thermistor.getInstance(name, adcChannelNo);
+	return new Thermistor(name, adcChannelNo);
     }
     void Thermistor_initPins(Thermistor *sensor){sensor->initPins();}
     int  Thermistor_readValue(Thermistor *sensor){return sensor->readValue();}

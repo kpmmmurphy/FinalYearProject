@@ -12,20 +12,18 @@ using namespace std;
 class Sensor
 {
     private:
-        string name;
+        char  *name;
         int    adcChannelNo;
 
     public:
-        Sensor(string name, int adcChannelNo);
+        Sensor(char *name, int adcChannelNo);
         ~Sensor();
-
-	static Sensor* getInstance();
 
         virtual void  initPins() = 0; //Pure Virtual
         virtual int readValue()  = 0; //Pure Virtual   
         
         int getADCResult(int adcChannelNo);
-        string getName();
+        char* getName();
         void printName();
         int  getADCChannelNo();
 	static int spiSetup;

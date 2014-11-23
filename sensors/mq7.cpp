@@ -20,7 +20,7 @@ using namespace std;
 class MQ7 : public Sensor
 {
     public:
-        MQ7(string name, int adcChannelNo) : Sensor(name, adcChannelNo){}
+        MQ7(char *name, int adcChannelNo) : Sensor(name, adcChannelNo){}
 
 	void initPins()
 	{

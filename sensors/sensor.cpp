@@ -33,7 +33,7 @@ using namespace std;
 
 int Sensor::spiSetup = 1;
 
-Sensor::Sensor(string sensorName, int adcChannelNumber)
+Sensor::Sensor(char* sensorName, int adcChannelNumber)
 {
     name         = sensorName;
     adcChannelNo = adcChannelNumber;
@@ -43,8 +43,6 @@ Sensor::Sensor(string sensorName, int adcChannelNumber)
         cout << "WiringPi Setup Failed...";
         exit(EXIT_FAILURE);
     }
-
-    cout << "SPI:: " << spiSetup;
     
     //ADC channel number will be -1 for Digital Sensors 
     if(spiSetup && adcChannelNumber >= 0)
@@ -83,7 +81,7 @@ int Sensor::getADCResult(int adcChannelNo)
     return result;
 }
 
-string Sensor::getName()
+char* Sensor::getName()
 {
     return name;
 }
