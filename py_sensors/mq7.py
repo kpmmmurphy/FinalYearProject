@@ -5,13 +5,14 @@
 #Date  : 24 - Nov - 14
 
 import ctypes
+from sensor import Sensor
           
-class MQ7(Sensor, lib):
+class MQ7(Sensor):
     __name         = "MQ7 Carbon Dioxide"
     __adcChannelNo = 1
     __lib = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, lib):
         self.__lib = lib
     	#Setup args for ctypes
     	self.__lib.MQ7_newInstance.argtypes = [ctypes.c_char_p, ctypes.c_int]
