@@ -1,4 +1,4 @@
-//Example Sensor Implementation
+//Thermistor Temperature Sensor Implementation
 //Author: Kevin Murphy
 //Date  : 15 - Oct - 14
 
@@ -12,8 +12,6 @@
 
 using namespace std;
 
-//Sensor Pin Definitions
-
 //General Definitions
 #define DEBUG 0
 #define NAME "Thermistor"
@@ -24,50 +22,40 @@ class Thermistor : public Sensor
     public:
         Thermistor(char *name, int adcChannelNo) : Sensor(name, adcChannelNo){}
 
-	static Thermistor* getInstance(char *name, int adcChannelNo)
-	{
-	    if(!instance)
-	    {
-		instance = new Thermistor(name, adcChannelNo);
-	    }
-	    return instance;
-	}
+		void initPins()
+		{
+		    if(DEBUG)
+	   	    {
+		        cout << "Setup : " << Sensor::getName() << "\n";
+		    }
+		}
 
-	void initPins()
-	{
-	    if(DEBUG)
-   	    {
-	        cout << "Setup : " << Sensor::getName() << "\n";
-	    }
-	}
+		int readValue()
+		{
+		    if(DEBUG)
+		    {
+		        cout << "Reading Value of : " << Sensor::getName() << "\n";
+		    }
 
-	int readValue()
-	{
-	    if(DEBUG)
-	    {
-	        cout << "Reading Value of : " << Sensor::getName() << "\n";
-	    }
+		    int result = (int)thermistorTemp( Sensor::getADCResult( Sensor::getADCChannelNo() )); 
+	            
+		    if(DEBUG)
+		    {
+			    printf("Result %d\n", result);
+		    }
 
-	    int result = (int)thermistorTemp( Sensor::getADCResult( Sensor::getADCChannelNo() )); 
-            
-	    if(DEBUG)
-	    {
-		printf("Result %d\n", result);
-	    }
-
-            return result;
-	}
+	        return result;
+		}
 
     private:
-	static Thermistor *instance;
-	double thermistorTemp(int RawADC) 
+		double thermistorTemp(int RawADC) 
         {
-  	    double Temp;
-            // We divide by our thermistor's resistance at 25C, in this case 10k
-  	    Temp = log((double)((10240000/RawADC) - 10000) / 10000);
-  	    Temp = 1 / (0.003354016 + (0.0002569850 * Temp) + (0.000002620131 * Temp * Temp)+ (0.00000006383091 * Temp * Temp * Temp));
-            Temp = Temp - 273.15; // Convert Kelvin to Celsius
-            return Temp;
+	  	    double Temp;
+	        // We divide by our thermistor's resistance at 25C, in this case 10k
+	  	    Temp = log((double)((10240000/RawADC) - 10000) / 10000);
+	  	    Temp = 1 / (0.003354016 + (0.0002569850 * Temp) + (0.000002620131 * Temp * Temp)+ (0.00000006383091 * Temp * Temp * Temp));
+	        Temp = Temp - 273.15; // Convert Kelvin to Celsius
+	        return Temp;
         }
 };
 

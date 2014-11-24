@@ -1,4 +1,4 @@
-//Example Sensor Implementation
+//MQ7 Carbon Dioxide Sensor Implementation
 //Author: Kevin Murphy
 //Date  : 15 - Oct - 14
 
@@ -37,28 +37,32 @@ class MQ7 : public Sensor
 	    {
 	        cout << Sensor::getName() << " -> Result :: "<< result << "\n";
 	    }
-            return result;
+        return result;
 	}
 
     private:
 	
 	double carbonMonoxideLevel(int RawADC) 
-        {
+    {
   	    double co_level;
 	    int resistor = 0; //Usuall 10000 for 10k
   	    co_level = log((double)((10240000/RawADC) - resistor) / 10000);
-            return co_level;
-        }
+        return co_level;
+    }
 };
 
 //Extern for Ctypes in Python
 extern "C"
 {
-    MQ7  *MQ7_new(char *name, int adcChannelNo){return new MQ7(name, adcChannelNo);}
+    MQ7* MQ7_newInstance(char *name, int adcChannelNo)
+    {
+        return new MQ7(name, adcChannelNo);
+    }
     void  MQ7_initPins(MQ7 *sensor){sensor->initPins();}
     int   MQ7_readValue(MQ7 *sensor){return sensor->readValue();}
     int   MQ7_test(){return 1;}
 }
+
 /*
 int main(int argc, const char* argv[])
 {

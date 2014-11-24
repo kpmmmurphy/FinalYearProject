@@ -25,31 +25,34 @@ class MotionDetector : public Sensor
     public:
         MotionDetector(char *name, int adcChannelNo) : Sensor(name, adcChannelNo){}
 
-	void initPins()
-	{
-	    if(DEBUG)
-   	    {
-	        cout << "Setup : " << Sensor::getName() << "\n";
-	    }
-	    
-	    pinMode(MOTION_D_INPUT_PIN,INPUT);
-	}
+		void initPins()
+		{
+		    if(DEBUG)
+	   	    {
+		        cout << "Setup : " << Sensor::getName() << "\n";
+		    }
+		    
+		    pinMode(MOTION_D_INPUT_PIN,INPUT);
+		}
 
-	int readValue()
-	{	
-	    int result = digitalRead(MOTION_D_INPUT_PIN); 
-	    if(DEBUG)
-	    {
-	        cout << Sensor::getName() << " -> Result :: "<< result << "\n";
-	    }
-            return result;
-	}
+		int readValue()
+		{	
+		    int result = digitalRead(MOTION_D_INPUT_PIN); 
+		    if(DEBUG)
+		    {
+		        cout << Sensor::getName() << " -> Result :: "<< result << "\n";
+		    }
+	        return result;
+		}
 };
 
 //Extern for Ctypes in Python
 extern "C"
 {
-    MotionDetector *MotionDetector_new(char *name, int adcChannelNo){return new MotionDetector(name, adcChannelNo);}
+    MotionDetector* MotionDetector_new(char *name, int adcChannelNo)
+    {
+    	return new MotionDetector(name, adcChannelNo);
+    }
     void  MotionDetector_initPins(MotionDetector *sensor){sensor->initPins();}
     int   MotionDetector_readValue(MotionDetector *sensor){return sensor->readValue();}
     int   MotionDetector_test(){return 1;}
