@@ -5,6 +5,8 @@
 #Date  : 18 - Oct - 14
 
 import ctypes
+import time
+import sched
 
 #Import Sensors
 from py_sensors.thermistor import Thermistor
@@ -20,6 +22,10 @@ thermistor      = None
 mq7             = None
 motion_detector = None
 
+#Timing Values
+PROBE_RATE_DEFAULT = 20
+SENSOR_PRIORITY_DEFAULT = 1
+
 #Creates sensor objects
 def setupSensors():
     #Using the Global keyword to allow initialization of global variables
@@ -31,13 +37,33 @@ def setupSensors():
     mq7             = MQ7(sensorLib)
     motion_detector = MotionDetector(sensorLib)
 
-def probeSensors():
-    print thermistor.readValue()
-    print mq7.readValue()
-    print motion_detector.readValue()
+def probeSensor(sched, sensor):
+    global PROBE_RATE_DEFAULT
+    global SENSOR_DEFAULT_PRIORITY
+
+    global thermistor
+    global mq7
+    global motion_detector
+    
+    if sensor is thermistor.getName():
+        print thermistor.readValue()
+        sched.enter(PROBE_RATE_DEFAULT, 1, probeSensor,(sched, sensor))
+    elif sensor is mq7.getName():
+        print mq7.readValue()
+        sched.enter(PROBE_RATE_DEFAULT, 1, probeSensor,(sched, sensor))
+    elif sensor is motion_detector.getName():
+        print motion_detector.readValue()
+        sched.enter(PROBE_RATE_DEFAULT, 1, probeSensor,(sched, sensor)) 
 
 def main():
+    global PROBE_RATE_DEFAULT
     setupSensors()
-    probeSensors()
+    
+    schedular = sched.scheduler(time.time, time.sleep)	
+    schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, thermistor.getName()))
+    schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, motion_detector.getName()))
+    schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, mq7.getName()))
+
+    schedular.run()
 
 main()
