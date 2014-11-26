@@ -23,7 +23,7 @@ mq7             = None
 motion_detector = None
 
 #Timing Values
-PROBE_RATE_DEFAULT = 20
+PROBE_RATE_DEFAULT = 10
 SENSOR_PRIORITY_DEFAULT = 1
 
 #Creates sensor objects
