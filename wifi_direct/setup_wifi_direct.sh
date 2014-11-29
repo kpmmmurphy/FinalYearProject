@@ -3,8 +3,16 @@
 #Author: Kevin Murphy
 #Date  : 27 - Oct - 14
 
-#Get the latest version of the wpa_supplicant
+#Get the latest version of the wpa_supplicant and hostapd
 #git clone git://w1.fi/srv/git/hostap.git
+
+#Install Hostapd
+sudo apt-get install hostapd
+
+#Copy custom .config into ./hostap/hostap
+##
+
+#Make hostap 
 
 #Install the dev version of OpenSSL
 #sudo apt-get install libssl-dev
@@ -18,7 +26,9 @@ sudo apt-get install libpcsclite-dev
 #Install DBUS for application communication
 sudo apt-get install libdbus-1-dev
 
-#Make and make install 
+#Copy custom wpa_supplicant .config file 
+
+#Make and make install wpa_supplicant
 sudo make && make install
 
 #Create p2p interface
