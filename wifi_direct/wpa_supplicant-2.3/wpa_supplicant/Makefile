@@ -58,7 +58,7 @@ mkconfig:
 $(DESTDIR)$(BINDIR)/%: %
 	install -D $(<) $(@)
 
-install: $(addprefix $(DESTDIR)$(BINDIR)/,$(BINALL))
+install: $(addprefix $(DESTDIR)$(BINDIR),$(BINALL))
 	$(MAKE) -C ../src install
 
 ifdef CONFIG_FIPS
