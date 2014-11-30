@@ -7,7 +7,7 @@
 import dbus
 import sys, os
 import time
-import gobject
+from gi.repository import GObject as gobject
 import threading
 import getopt
 from dbus.mainloop.glib import DBusGMainLoop

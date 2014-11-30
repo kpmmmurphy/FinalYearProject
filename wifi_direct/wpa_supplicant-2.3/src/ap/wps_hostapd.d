@@ -26,4 +26,5 @@
  /home/pi/FinalYearProject/wifi_direct/wpa_supplicant-2.3/src/drivers/driver.h \
  /home/pi/FinalYearProject/wifi_direct/wpa_supplicant-2.3/src/utils/list.h \
  ../src/ap/ap_drv_ops.h ../src/ap/beacon.h ../src/ap/sta_info.h \
- ../src/ap/wps_hostapd.h
+ ../src/ap/wps_hostapd.h \
+ /home/pi/FinalYearProject/wifi_direct/wpa_supplicant-2.3/src/wps/wps_upnp.h

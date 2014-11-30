@@ -1,0 +1,380 @@
+nl-pktloc-lookup.o: .././libnl-3.2.25/src/nl-pktloc-lookup.c \
+ .././libnl-3.2.25/include/netlink/cli/utils.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/arm-linux-gnueabihf/bits/predefs.h \
+ /usr/include/arm-linux-gnueabihf/sys/cdefs.h \
+ /usr/include/arm-linux-gnueabihf/bits/wordsize.h \
+ /usr/include/arm-linux-gnueabihf/gnu/stubs.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stddef.h \
+ /usr/include/arm-linux-gnueabihf/bits/types.h \
+ /usr/include/arm-linux-gnueabihf/bits/typesizes.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdarg.h \
+ /usr/include/arm-linux-gnueabihf/bits/stdio_lim.h \
+ /usr/include/arm-linux-gnueabihf/bits/sys_errlist.h \
+ /usr/include/arm-linux-gnueabihf/bits/stdio.h /usr/include/string.h \
+ /usr/include/xlocale.h /usr/include/arm-linux-gnueabihf/bits/string.h \
+ /usr/include/arm-linux-gnueabihf/bits/string2.h /usr/include/stdlib.h \
+ /usr/include/arm-linux-gnueabihf/bits/waitflags.h \
+ /usr/include/arm-linux-gnueabihf/bits/waitstatus.h /usr/include/endian.h \
+ /usr/include/arm-linux-gnueabihf/bits/endian.h \
+ /usr/include/arm-linux-gnueabihf/bits/byteswap.h \
+ /usr/include/arm-linux-gnueabihf/sys/types.h /usr/include/time.h \
+ /usr/include/arm-linux-gnueabihf/sys/select.h \
+ /usr/include/arm-linux-gnueabihf/bits/select.h \
+ /usr/include/arm-linux-gnueabihf/bits/sigset.h \
+ /usr/include/arm-linux-gnueabihf/bits/time.h \
+ /usr/include/arm-linux-gnueabihf/sys/sysmacros.h \
+ /usr/include/arm-linux-gnueabihf/bits/pthreadtypes.h \
+ /usr/include/alloca.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/limits.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/arm-linux-gnueabihf/bits/posix1_lim.h \
+ /usr/include/arm-linux-gnueabihf/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/arm-linux-gnueabihf/bits/posix2_lim.h \
+ /usr/include/arm-linux-gnueabihf/bits/xopen_lim.h \
+ /usr/include/inttypes.h \
+ /usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdint.h \
+ /usr/include/stdint.h /usr/include/arm-linux-gnueabihf/bits/wchar.h \
+ /usr/include/errno.h /usr/include/arm-linux-gnueabihf/bits/errno.h \
+ /usr/include/linux/errno.h /usr/include/arm-linux-gnueabihf/asm/errno.h \
+ /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
+ /usr/include/ctype.h /usr/include/getopt.h /usr/include/dlfcn.h \
+ /usr/include/arm-linux-gnueabihf/bits/dlfcn.h \
+ /usr/include/arm-linux-gnueabihf/sys/socket.h \
+ /usr/include/arm-linux-gnueabihf/sys/uio.h \
+ /usr/include/arm-linux-gnueabihf/bits/uio.h \
+ /usr/include/arm-linux-gnueabihf/bits/socket.h \
+ /usr/include/arm-linux-gnueabihf/bits/sockaddr.h \
+ /usr/include/arm-linux-gnueabihf/asm/socket.h \
+ /usr/include/arm-linux-gnueabihf/asm/sockios.h \
+ .././libnl-3.2.25/include/netlink/netlink.h \
+ /usr/include/arm-linux-gnueabihf/sys/poll.h \
+ /usr/include/arm-linux-gnueabihf/bits/poll.h \
+ /usr/include/arm-linux-gnueabihf/sys/time.h /usr/include/netdb.h \
+ /usr/include/netinet/in.h /usr/include/arm-linux-gnueabihf/bits/in.h \
+ /usr/include/rpc/netdb.h /usr/include/arm-linux-gnueabihf/bits/siginfo.h \
+ /usr/include/arm-linux-gnueabihf/bits/netdb.h \
+ .././libnl-3.2.25/include/netlink/netlink-compat.h \
+ .././libnl-3.2.25/include/linux/netlink.h /usr/include/linux/socket.h \
+ /usr/include/linux/types.h /usr/include/arm-linux-gnueabihf/asm/types.h \
+ /usr/include/asm-generic/int-ll64.h \
+ /usr/include/arm-linux-gnueabihf/asm/bitsperlong.h \
+ /usr/include/asm-generic/bitsperlong.h /usr/include/linux/posix_types.h \
+ /usr/include/linux/stddef.h \
+ /usr/include/arm-linux-gnueabihf/asm/posix_types.h \
+ .././libnl-3.2.25/include/linux/rtnetlink.h \
+ .././libnl-3.2.25/include/linux/if_link.h \
+ .././libnl-3.2.25/include/linux/if_addr.h \
+ .././libnl-3.2.25/include/linux/neighbour.h \
+ .././libnl-3.2.25/include/linux/genetlink.h \
+ .././libnl-3.2.25/include/linux/netfilter/nfnetlink.h \
+ .././libnl-3.2.25/include/linux/netfilter/nfnetlink_compat.h \
+ /usr/include/netinet/tcp.h .././libnl-3.2.25/include/netlink/version.h \
+ .././libnl-3.2.25/include/netlink/errno.h \
+ .././libnl-3.2.25/include/netlink/types.h \
+ .././libnl-3.2.25/include/netlink/handlers.h \
+ .././libnl-3.2.25/include/netlink/netlink-kernel.h \
+ .././libnl-3.2.25/include/netlink/socket.h \
+ .././libnl-3.2.25/include/netlink/object.h \
+ .././libnl-3.2.25/include/netlink/utils.h \
+ .././libnl-3.2.25/include/netlink/list.h \
+ .././libnl-3.2.25/include/netlink/addr.h \
+ .././libnl-3.2.25/include/netlink/route/rtnl.h \
+ .././libnl-3.2.25/include/netlink/route/link.h \
+ .././libnl-3.2.25/include/netlink/cache.h \
+ .././libnl-3.2.25/include/netlink/msg.h \
+ .././libnl-3.2.25/include/netlink/attr.h \
+ .././libnl-3.2.25/include/netlink/data.h \
+ .././libnl-3.2.25/include/linux/if.h \
+ .././libnl-3.2.25/include/netlink/route/addr.h \
+ .././libnl-3.2.25/include/netlink/route/neighbour.h \
+ .././libnl-3.2.25/include/netlink/route/neightbl.h \
+ .././libnl-3.2.25/include/netlink/route/route.h \
+ .././libnl-3.2.25/include/netlink/route/nexthop.h \
+ /usr/include/linux/in_route.h \
+ .././libnl-3.2.25/include/netlink/route/rule.h \
+ .././libnl-3.2.25/include/linux/fib_rules.h \
+ .././libnl-3.2.25/include/netlink/route/qdisc.h \
+ .././libnl-3.2.25/include/netlink/route/tc.h \
+ .././libnl-3.2.25/include/linux/pkt_sched.h \
+ .././libnl-3.2.25/include/linux/pkt_cls.h \
+ .././libnl-3.2.25/include/netlink/route/class.h \
+ .././libnl-3.2.25/include/netlink/route/classifier.h \
+ .././libnl-3.2.25/include/netlink/route/cls/ematch.h \
+ .././libnl-3.2.25/include/netlink/fib_lookup/lookup.h \
+ .././libnl-3.2.25/include/netlink/fib_lookup/request.h \
+ .././libnl-3.2.25/include/netlink/genl/genl.h \
+ .././libnl-3.2.25/include/netlink/genl/ctrl.h \
+ .././libnl-3.2.25/include/netlink/genl/mngt.h \
+ .././libnl-3.2.25/include/netlink/netfilter/ct.h \
+ .././libnl-3.2.25/include/netlink/route/pktloc.h \
+ /usr/include/linux/tc_ematch/tc_em_cmp.h
+
+.././libnl-3.2.25/include/netlink/cli/utils.h:
+
+/usr/include/stdio.h:
+
+/usr/include/features.h:
+
+/usr/include/arm-linux-gnueabihf/bits/predefs.h:
+
+/usr/include/arm-linux-gnueabihf/sys/cdefs.h:
+
+/usr/include/arm-linux-gnueabihf/bits/wordsize.h:
+
+/usr/include/arm-linux-gnueabihf/gnu/stubs.h:
+
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stddef.h:
+
+/usr/include/arm-linux-gnueabihf/bits/types.h:
+
+/usr/include/arm-linux-gnueabihf/bits/typesizes.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdarg.h:
+
+/usr/include/arm-linux-gnueabihf/bits/stdio_lim.h:
+
+/usr/include/arm-linux-gnueabihf/bits/sys_errlist.h:
+
+/usr/include/arm-linux-gnueabihf/bits/stdio.h:
+
+/usr/include/string.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/arm-linux-gnueabihf/bits/string.h:
+
+/usr/include/arm-linux-gnueabihf/bits/string2.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/arm-linux-gnueabihf/bits/waitflags.h:
+
+/usr/include/arm-linux-gnueabihf/bits/waitstatus.h:
+
+/usr/include/endian.h:
+
+/usr/include/arm-linux-gnueabihf/bits/endian.h:
+
+/usr/include/arm-linux-gnueabihf/bits/byteswap.h:
+
+/usr/include/arm-linux-gnueabihf/sys/types.h:
+
+/usr/include/time.h:
+
+/usr/include/arm-linux-gnueabihf/sys/select.h:
+
+/usr/include/arm-linux-gnueabihf/bits/select.h:
+
+/usr/include/arm-linux-gnueabihf/bits/sigset.h:
+
+/usr/include/arm-linux-gnueabihf/bits/time.h:
+
+/usr/include/arm-linux-gnueabihf/sys/sysmacros.h:
+
+/usr/include/arm-linux-gnueabihf/bits/pthreadtypes.h:
+
+/usr/include/alloca.h:
+
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/limits.h:
+
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include-fixed/syslimits.h:
+
+/usr/include/limits.h:
+
+/usr/include/arm-linux-gnueabihf/bits/posix1_lim.h:
+
+/usr/include/arm-linux-gnueabihf/bits/local_lim.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/arm-linux-gnueabihf/bits/posix2_lim.h:
+
+/usr/include/arm-linux-gnueabihf/bits/xopen_lim.h:
+
+/usr/include/inttypes.h:
+
+/usr/lib/gcc/arm-linux-gnueabihf/4.6/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/include/arm-linux-gnueabihf/bits/wchar.h:
+
+/usr/include/errno.h:
+
+/usr/include/arm-linux-gnueabihf/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/arm-linux-gnueabihf/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/ctype.h:
+
+/usr/include/getopt.h:
+
+/usr/include/dlfcn.h:
+
+/usr/include/arm-linux-gnueabihf/bits/dlfcn.h:
+
+/usr/include/arm-linux-gnueabihf/sys/socket.h:
+
+/usr/include/arm-linux-gnueabihf/sys/uio.h:
+
+/usr/include/arm-linux-gnueabihf/bits/uio.h:
+
+/usr/include/arm-linux-gnueabihf/bits/socket.h:
+
+/usr/include/arm-linux-gnueabihf/bits/sockaddr.h:
+
+/usr/include/arm-linux-gnueabihf/asm/socket.h:
+
+/usr/include/arm-linux-gnueabihf/asm/sockios.h:
+
+.././libnl-3.2.25/include/netlink/netlink.h:
+
+/usr/include/arm-linux-gnueabihf/sys/poll.h:
+
+/usr/include/arm-linux-gnueabihf/bits/poll.h:
+
+/usr/include/arm-linux-gnueabihf/sys/time.h:
+
+/usr/include/netdb.h:
+
+/usr/include/netinet/in.h:
+
+/usr/include/arm-linux-gnueabihf/bits/in.h:
+
+/usr/include/rpc/netdb.h:
+
+/usr/include/arm-linux-gnueabihf/bits/siginfo.h:
+
+/usr/include/arm-linux-gnueabihf/bits/netdb.h:
+
+.././libnl-3.2.25/include/netlink/netlink-compat.h:
+
+.././libnl-3.2.25/include/linux/netlink.h:
+
+/usr/include/linux/socket.h:
+
+/usr/include/linux/types.h:
+
+/usr/include/arm-linux-gnueabihf/asm/types.h:
+
+/usr/include/asm-generic/int-ll64.h:
+
+/usr/include/arm-linux-gnueabihf/asm/bitsperlong.h:
+
+/usr/include/asm-generic/bitsperlong.h:
+
+/usr/include/linux/posix_types.h:
+
+/usr/include/linux/stddef.h:
+
+/usr/include/arm-linux-gnueabihf/asm/posix_types.h:
+
+.././libnl-3.2.25/include/linux/rtnetlink.h:
+
+.././libnl-3.2.25/include/linux/if_link.h:
+
+.././libnl-3.2.25/include/linux/if_addr.h:
+
+.././libnl-3.2.25/include/linux/neighbour.h:
+
+.././libnl-3.2.25/include/linux/genetlink.h:
+
+.././libnl-3.2.25/include/linux/netfilter/nfnetlink.h:
+
+.././libnl-3.2.25/include/linux/netfilter/nfnetlink_compat.h:
+
+/usr/include/netinet/tcp.h:
+
+.././libnl-3.2.25/include/netlink/version.h:
+
+.././libnl-3.2.25/include/netlink/errno.h:
+
+.././libnl-3.2.25/include/netlink/types.h:
+
+.././libnl-3.2.25/include/netlink/handlers.h:
+
+.././libnl-3.2.25/include/netlink/netlink-kernel.h:
+
+.././libnl-3.2.25/include/netlink/socket.h:
+
+.././libnl-3.2.25/include/netlink/object.h:
+
+.././libnl-3.2.25/include/netlink/utils.h:
+
+.././libnl-3.2.25/include/netlink/list.h:
+
+.././libnl-3.2.25/include/netlink/addr.h:
+
+.././libnl-3.2.25/include/netlink/route/rtnl.h:
+
+.././libnl-3.2.25/include/netlink/route/link.h:
+
+.././libnl-3.2.25/include/netlink/cache.h:
+
+.././libnl-3.2.25/include/netlink/msg.h:
+
+.././libnl-3.2.25/include/netlink/attr.h:
+
+.././libnl-3.2.25/include/netlink/data.h:
+
+.././libnl-3.2.25/include/linux/if.h:
+
+.././libnl-3.2.25/include/netlink/route/addr.h:
+
+.././libnl-3.2.25/include/netlink/route/neighbour.h:
+
+.././libnl-3.2.25/include/netlink/route/neightbl.h:
+
+.././libnl-3.2.25/include/netlink/route/route.h:
+
+.././libnl-3.2.25/include/netlink/route/nexthop.h:
+
+/usr/include/linux/in_route.h:
+
+.././libnl-3.2.25/include/netlink/route/rule.h:
+
+.././libnl-3.2.25/include/linux/fib_rules.h:
+
+.././libnl-3.2.25/include/netlink/route/qdisc.h:
+
+.././libnl-3.2.25/include/netlink/route/tc.h:
+
+.././libnl-3.2.25/include/linux/pkt_sched.h:
+
+.././libnl-3.2.25/include/linux/pkt_cls.h:
+
+.././libnl-3.2.25/include/netlink/route/class.h:
+
+.././libnl-3.2.25/include/netlink/route/classifier.h:
+
+.././libnl-3.2.25/include/netlink/route/cls/ematch.h:
+
+.././libnl-3.2.25/include/netlink/fib_lookup/lookup.h:
+
+.././libnl-3.2.25/include/netlink/fib_lookup/request.h:
+
+.././libnl-3.2.25/include/netlink/genl/genl.h:
+
+.././libnl-3.2.25/include/netlink/genl/ctrl.h:
+
+.././libnl-3.2.25/include/netlink/genl/mngt.h:
+
+.././libnl-3.2.25/include/netlink/netfilter/ct.h:
+
+.././libnl-3.2.25/include/netlink/route/pktloc.h:
+
+/usr/include/linux/tc_ematch/tc_em_cmp.h:

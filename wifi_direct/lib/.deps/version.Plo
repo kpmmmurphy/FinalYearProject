@@ -1,0 +1,4 @@
+version.lo: .././libnl-3.2.25/lib/version.c \
+ .././libnl-3.2.25/include/netlink/version.h
+
+.././libnl-3.2.25/include/netlink/version.h:

@@ -1,0 +1,106 @@
+wpa_supplicant: /sbin/wpa_cli -B -P /var/run/wpa_action.wlan0.pid -i wlan0 -p1417356580.877412: wpa_supplicant v2.3
+1417356580.878054: random: Trying to read entropy from /dev/random
+1417356580.878157: Successfully initialized wpa_supplicant
+1417356580.878223: Initializing interface 'wlan0' conf '/etc/p2p.conf' driver 'nl80211' ctrl_interface 'N/A' bridge 'N/A'
+1417356580.878313: Configuration file '/etc/p2p.conf' -> '/etc/p2p.conf'
+1417356580.878411: Reading configuration file '/etc/p2p.conf'
+1417356580.878825: ctrl_interface='/var/run/wpa_supplicant'
+1417356580.878901: update_config=1
+1417356580.878932: device_name='Raspberry_Pi'
+1417356580.878996: ap_scan=1
+1417356580.879035: p2p_listen_reg_class=81
+1417356580.879058: p2p_listen_channel=1
+1417356580.879082: p2p_oper_reg_class=81
+1417356580.879109: p2p_oper_channel=1
+1417356580.879133: p2p_go_intent=15
+1417356580.879161: p2p_no_group_iface=1
+1417356580.879186: p2p_go_ht40=1
+1417356580.886240: nl80211: Could not add multicast membership for vendor events: -2 (No such file or directory)
+1417356580.886666: rfkill: initial event: idx=0 type=1 op=0 soft=0 hard=0
+1417356580.888107: nl80211: Supported cipher 00-0f-ac:1
+1417356580.888177: nl80211: Supported cipher 00-0f-ac:5
+1417356580.888194: nl80211: Supported cipher 00-0f-ac:2
+1417356580.888207: nl80211: Supported cipher 00-0f-ac:4
+1417356580.888224: nl80211: Supported cipher 00-0f-ac:6
+1417356580.888590: nl80211: Using driver-based off-channel TX
+1417356580.888749: nl80211: Use separate P2P group interface (driver advertised support)
+1417356580.888795: nl80211: Enable multi-channel concurrent (driver advertised support)
+1417356580.888816: nl80211: interface wlan0 in phy phy0
+1417356580.889067: nl80211: Set mode ifindex 3 iftype 2 (STATION)
+1417356580.889418: nl80211: Subscribe to mgmt frames with non-AP handle 0x330508
+1417356580.889647: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=040a
+1417356580.889913: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.889943: nl80211: Register frame match - hexdump(len=2): 04 0a
+1417356580.889995: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=040b
+1417356580.890150: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.890178: nl80211: Register frame match - hexdump(len=2): 04 0b
+1417356580.890226: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=040c
+1417356580.890420: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.890447: nl80211: Register frame match - hexdump(len=2): 04 0c
+1417356580.890538: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=040d
+1417356580.890701: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.890732: nl80211: Register frame match - hexdump(len=2): 04 0d
+1417356580.890780: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=090a
+1417356580.890932: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.890961: nl80211: Register frame match - hexdump(len=2): 09 0a
+1417356580.891012: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=090b
+1417356580.891160: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.891189: nl80211: Register frame match - hexdump(len=2): 09 0b
+1417356580.891238: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=090c
+1417356580.891426: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.891456: nl80211: Register frame match - hexdump(len=2): 09 0c
+1417356580.891598: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=090d
+1417356580.891773: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.891800: nl80211: Register frame match - hexdump(len=2): 09 0d
+1417356580.891858: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=0409506f9a09
+1417356580.892407: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.892438: nl80211: Register frame match - hexdump(len=6): 04 09 50 6f 9a 09
+1417356580.892549: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=7f506f9a09
+1417356580.892729: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.892758: nl80211: Register frame match - hexdump(len=5): 7f 50 6f 9a 09
+1417356580.892809: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=06
+1417356580.892958: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.892990: nl80211: Register frame match - hexdump(len=1): 06
+1417356580.893031: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=0a07
+1417356580.893177: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.893203: nl80211: Register frame match - hexdump(len=2): 0a 07
+1417356580.893251: nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x330508 match=0a11
+1417356580.893509: nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+1417356580.893538: nl80211: Register frame match - hexdump(len=2): 0a 11
+1417356580.893577: nl80211: Failed to register Action frame processing - ignore for now
+1417356580.893871: netlink: Operstate: ifindex=3 linkmode=1 (userspace-control), operstate=5 (IF_OPER_DORMANT)
+1417356580.894102: nl80211: driver param='(null)'
+1417356580.894133: Add interface wlan0 to a new radio phy0
+1417356580.895840: nl80211: Regulatory information - country=00
+1417356580.895890: nl80211: 2402-2472 @ 40 MHz 20 mBm
+1417356580.895916: nl80211: 2457-2482 @ 40 MHz 20 mBm (no IR)
+1417356580.895940: nl80211: 2474-2494 @ 20 MHz 20 mBm (no OFDM) (no IR)
+1417356580.895964: nl80211: 5170-5250 @ 160 MHz 20 mBm (no IR)
+1417356580.895986: nl80211: 5250-5330 @ 160 MHz 20 mBm (DFS) (no IR)
+1417356580.896008: nl80211: 5490-5730 @ 160 MHz 20 mBm (DFS) (no IR)
+1417356580.896030: nl80211: 5735-5835 @ 80 MHz 20 mBm (no IR)
+1417356580.896052: nl80211: 57240-63720 @ 2160 MHz 0 mBm
+1417356580.896215: nl80211: Added 802.11b mode based on 802.11g information
+1417356580.896238: nl80211: Do not indicate P2P_DEVICE support (p2p_device=1 driver param not specified)
+1417356580.924407: wlan0: Own MAC address: 00:90:4c:0e:81:23
+1417356580.924683: wpa_driver_nl80211_set_key: ifindex=3 (wlan0) alg=0 addr=(nil) key_idx=0 set_tx=0 seq_len=0 key_len=0
+1417356580.925004: wpa_driver_nl80211_set_key: ifindex=3 (wlan0) alg=0 addr=(nil) key_idx=1 set_tx=0 seq_len=0 key_len=0
+1417356580.925251: wpa_driver_nl80211_set_key: ifindex=3 (wlan0) alg=0 addr=(nil) key_idx=2 set_tx=0 seq_len=0 key_len=0
+1417356580.925617: wpa_driver_nl80211_set_key: ifindex=3 (wlan0) alg=0 addr=(nil) key_idx=3 set_tx=0 seq_len=0 key_len=0
+1417356580.925878: wlan0: RSN: flushing PMKID list in the driver
+1417356580.925902: nl80211: Flush PMKIDs
+1417356580.927141: wlan0: State: DISCONNECTED -> INACTIVE
+1417356580.927839: wlan0: WPS: UUID based on MAC address: d522428e-6adf-5049-8e46-d434904cd961
+1417356580.958731: EAPOL: SUPP_PAE entering state DISCONNECTED
+1417356580.958799: EAPOL: Supplicant port status: Unauthorized
+1417356580.958823: nl80211: Skip set_supp_port(unauthorized) while not associated
+1417356580.958834: EAPOL: KEY_RX entering state NO_KEY_RECEIVE
+1417356580.958846: EAPOL: SUPP_BE entering state INITIALIZE
+1417356580.958878: EAP: EAP entering state DISABLED
+1417356580.959091: Using existing control interface directory.
+1417356580.959510: P2P: Add operating class 81
+1417356580.959549: P2P: Channels - hexdump(len=11): 01 02 03 04 05 06 07 08 09 0a 0b
+1417356580.959603: P2P: Own listen channel: 81:1
+1417356580.959641: P2P: Configured operating channel: 81:1
+1417356580.963996: P2P: initialized
+1417356580.964144: P2P: channels:
