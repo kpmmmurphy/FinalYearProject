@@ -49,7 +49,7 @@ class MotionDetector : public Sensor
 //Extern for Ctypes in Python
 extern "C"
 {
-    MotionDetector* MotionDetector_new(char *name, int adcChannelNo)
+    MotionDetector* MotionDetector_newInstance(char *name, int adcChannelNo)
     {
     	return new MotionDetector(name, adcChannelNo);
     }

@@ -5,17 +5,14 @@
 #Date  : 24 - Nov - 14
 
 import ctypes
+from sensor import Sensor
 
-#LIB_PATH = "./sensors/libs/lib_SensorManager.so"
-
-#lib = ctypes.cdll.LoadLibrary(LIB_PATH)
-          
-class Thermistor(Sensor, lib):
+class Thermistor(Sensor):
     __name         = "Thermistor"
     __adcChannelNo = 0
     __lib = None
-
-    def __init__(self, *args, **kwargs):
+    
+    def __init__(self, lib):
     	self.__lib = lib
 
         #Setup arg for ctypes
@@ -24,9 +21,8 @@ class Thermistor(Sensor, lib):
         #Setup return types for ctypes
     	self.__lib.Thermistor_initPins.restype  = None
     	self.__lib.Thermistor_readValue.restype = ctypes.c_int
-    	self.__lib.Thermistor_test.restype      = ctypes.c_int 
+	self.__lib.Thermistor_test.restype      = ctypes.c_int 
     	
-
     	self.obj = self.__lib.Thermistor_newInstance(self.__name, self.__adcChannelNo)
     	self.initPins()
 
