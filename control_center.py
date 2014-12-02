@@ -7,6 +7,7 @@
 import ctypes
 import time
 import sched
+import RPi.GPIO as GPIO
 
 #Import Sensors
 from py_sensors.thermistor import Thermistor
@@ -65,5 +66,8 @@ def main():
     schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, mq7.getName()))
 
     schedular.run()
-
-main()
+try:
+    main()
+except KeyboardInterrupt:
+    print "Keyboard Interrupt.."
+    GPIO.cleanup()

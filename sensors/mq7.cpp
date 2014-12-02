@@ -13,7 +13,7 @@
 using namespace std;
 
 //General Definitions
-#define DEBUG 1
+#define DEBUG 0
 #define NAME "MQ7 Carbon Monoxide"
 #define ADC_CHANNEL_NO 1
 
@@ -37,7 +37,7 @@ class MQ7 : public Sensor
 	    {
 	        cout << Sensor::getName() << " -> Result :: "<< result << "\n";
 	    }
-        return result;
+            return result;
 	}
 
     private:

@@ -49,9 +49,13 @@ Sensor::Sensor(char* sensorName, int adcChannelNumber)
     {
     	if(DEBUG)
     	{
-    	    cout << "Setting up MCP3008\n..";
+    	    cout << "Attemping to Set up MCP3008..\n..";
     	}
         mcp3004Setup(100, SPI_CHAN);
+	if(DEBUG)
+	{
+	    cout << "Set up complete..";
+	}
     	spiSetup = 0;
     }
 };
