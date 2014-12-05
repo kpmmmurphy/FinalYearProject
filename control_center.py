@@ -4,6 +4,7 @@
 #Author: Kevin Murphy
 #Date  : 18 - Oct - 14
 
+import os
 import ctypes
 import time
 import sched
@@ -13,57 +14,99 @@ from py_sensors.thermistor import Thermistor
 from py_sensors.mq7 import MQ7
 from py_sensors.motion_detector import MotionDetector
 
-#Load .so c/c++ sensor library
-LIB_PATH = "./sensors/libs/lib_SensorManager.so"
-sensorLib = ctypes.cdll.LoadLibrary(LIB_PATH)
+#Constants
+DEBUG = True
 
 #Global Sensors
 thermistor      = None
 mq7             = None
 motion_detector = None
 
-#Timing Values
-PROBE_RATE_DEFAULT = 10
-SENSOR_PRIORITY_DEFAULT = 1
+class SensorFactory(object):
+    #Constants
+    PC_OS     = "posix"
+    LIB_PATH  = "./sensors/libs/lib_SensorManager.so"
+    __sensorLib = None
 
-#Creates sensor objects
-def setupSensors():
-    #Using the Global keyword to allow initialization of global variables
-    global thermistor 
-    global mq7
-    global motion_detector
+    #Singletons
+    __mq7            = None
+    __thermistor     = None
+    __motionDetector = None
 
-    thermistor      = Thermistor(sensorLib)
-    mq7             = MQ7(sensorLib)
-    motion_detector = MotionDetector(sensorLib)
+    #Sensor Holder
+    __sensors = []
+
+    def __init__(self):
+        print "SensorFactory Created..."
+        
+        if os.name is not self.PC_OS:
+            self.__sensorLib = ctypes.cdll.LoadLibrary(self.LIB_PATH)
+
+        self.createAllSensors()
+
+    def createAllSensors(self):
+        self.newInstance_MQ7()
+        self.newInstance_Thermistor()
+        self.newInstance_MotionDetector()
+
+    def getSensors(self):
+        return self.__sensors
+
+    def newInstance_MQ7(self):
+        if self.__mq7 is None:
+            if self.__sensorLib is None:
+               self.__mq7 = MQ7(lib=None)
+            else:
+               self.__mq7 = MQ7(lib=self.__sensorLib)
+
+            self.__sensors.append(self.__mq7)
+
+        return self.__mq7
+
+    def newInstance_Thermistor(self):
+        if self.__thermistor is None:
+            if self.__sensorLib is None:
+               self.__thermistor = Thermistor(lib=None)
+            else:
+               self.__thermistor = Thermistor(lib=self.__sensorLib)
+
+            self.__sensors.append(self.__thermistor)
+
+        return self.__thermistor
+
+    def newInstance_MotionDetector(self):
+        if self.__motionDetector is None:
+            if self.__sensorLib is None:
+               self.__motionDetector = MotionDetector(lib=None)
+            else:
+               self.__motionDetector = MotionDetector(lib=self.__sensorLib)
+
+            self.__sensors.append(self.__motionDetector) 
+        return self.__motionDetector
+
+
 
 def probeSensor(sched, sensor):
-    global PROBE_RATE_DEFAULT
-    global SENSOR_DEFAULT_PRIORITY
+    if sensor.isActive():
+        sensorValue = sensor.readValue()
+        if DEBUG:
+            print sensor.getName() , " :: " , sensorValue
 
-    global thermistor
-    global mq7
-    global motion_detector
-    
-    if sensor is thermistor.getName():
-        print thermistor.readValue()
-        sched.enter(PROBE_RATE_DEFAULT, 1, probeSensor,(sched, sensor))
-    elif sensor is mq7.getName():
-        print mq7.readValue()
-        sched.enter(PROBE_RATE_DEFAULT, 1, probeSensor,(sched, sensor))
-    elif sensor is motion_detector.getName():
-        print motion_detector.readValue()
-        sched.enter(PROBE_RATE_DEFAULT, 1, probeSensor,(sched, sensor)) 
+        sched.enter(sensor.getProbeRate(), sensor.getPriority(), probeSensor,(sched, sensor))
+
+        return sensorValue
 
 def main():
-    global PROBE_RATE_DEFAULT
-    setupSensors()
+    sensorFactory = SensorFactory() 
     
     schedular = sched.scheduler(time.time, time.sleep)	
-    schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, thermistor.getName()))
-    schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, motion_detector.getName()))
-    schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, mq7.getName()))
-
+    for sensor in sensorFactory.getSensors():
+        schedular.enter(sensor.getProbeRate(), sensor.getPriority(), probeSensor, (schedular, sensor))
+   
     schedular.run()
 
-main()
+try:
+    main()
+except KeyboardInterrupt, SystemExit:
+    print "KeyboardInterrupted..."
+

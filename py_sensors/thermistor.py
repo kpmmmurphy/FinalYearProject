@@ -13,30 +13,37 @@ class Thermistor(Sensor):
     __lib = None
     
     def __init__(self, lib):
-    	self.__lib = lib
-
-        #Setup arg for ctypes
-    	self.__lib.Thermistor_newInstance.argtypes = [ctypes.c_char_p, ctypes.c_int]
-
-        #Setup return types for ctypes
-    	self.__lib.Thermistor_initPins.restype  = None
-    	self.__lib.Thermistor_readValue.restype = ctypes.c_int
-	self.__lib.Thermistor_test.restype      = ctypes.c_int 
-    	
-    	self.obj = self.__lib.Thermistor_newInstance(self.__name, self.__adcChannelNo)
-    	self.initPins()
+        if lib is None:
+            print "Constructing ::", self.getName() , " without shared lib... "
+        else:
+            self.__lib = lib
+            #Setup arg for ctypes
+            self.__lib.Thermistor_newInstance.argtypes = [ctypes.c_char_p, ctypes.c_int]
+            #Setup return types for ctypes
+            self.__lib.Thermistor_initPins.restype  = None
+            self.__lib.Thermistor_readValue.restype = ctypes.c_int
+            self.__lib.Thermistor_test.restype      = ctypes.c_int 
+            self.obj = self.__lib.Thermistor_newInstance(self.__name, self.__adcChannelNo)
+            self.initPins()
 
     def initPins(self):
-        self.__lib.Thermistor_initPins(self.obj)
+        if self.__lib is not None:
+            self.__lib.Thermistor_initPins(self.obj)
 
     def readValue(self):
-        return self.__lib.Thermistor_readValue(self.obj) 
+        if self.__lib is None:
+            return self.test()
+        else:    
+            return self.__lib.Thermistor_readValue(self.obj) 
 
     def getName(self):
         return self.__name
 
     def test(self):
-        print self.__lib.Thermistor_test()
+        if self.__lib is None:
+            return -1
+        else:    
+            return self.__lib.Thermistor_test()
 
     
 
