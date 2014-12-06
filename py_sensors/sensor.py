@@ -4,11 +4,19 @@
 #Author: Kevin Murphy
 #Date  : 24 - Nov - 14
 
+import json
+
 class Sensor(object):
 
     #Constants:
     DEFAULT_PROBE_RATE = 10
     DEFAULT_PRIORITY   = 1
+
+    #JSON Keys
+    NAME       = "name"
+    PRIORITY   = "priority"
+    PROBE_RATE = "probe_rate"
+    IS_ACTIVE  = "is_active"
 
     #Private: 
     __isActive = True
@@ -44,3 +52,16 @@ class Sensor(object):
 
     def getProbeRate(self):
     	return self.__probeRate
+
+    def configure(self):
+        data = '{"priority": 2, "is_active": true, "name": "MQ7 Carbon Dioxide", "probe_rate": 15}'
+        jsonConfig = json.loads(data)
+        print " .. " , jsonConfig[self.IS_ACTIVE]
+        #self.setActiveStatus(jsonConfig[self.IS_ACTIVE])
+        #self.setProbeRate(jsonConfig[self.PROBE_RATE])
+        #self.setPriority(jsonConfig[self.PRIORITY])
+
+    def toString(self):
+        data = [{ self.NAME : self.getName(), self.IS_ACTIVE : self.isActive(), self.PRIORITY : self.getPriority(), self.PROBE_RATE : self.getProbeRate()}]
+        data_string = json.dumps(data)
+        print "JSON: " , data_string
