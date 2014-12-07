@@ -9,6 +9,7 @@ import json
 class Sensor(object):
 
     #Constants:
+    DEBUG = True
     DEFAULT_PROBE_RATE = 10
     DEFAULT_PRIORITY   = 1
 
@@ -19,9 +20,10 @@ class Sensor(object):
     IS_ACTIVE  = "is_active"
 
     #Private: 
-    __isActive = True
+    __isActive  = True
     __probeRate = DEFAULT_PROBE_RATE
     __priority  = DEFAULT_PRIORITY
+    __currentValue = -1
 
     def __init__(self):
         raise NotImplementedError('Subclass must override Constructor')
@@ -31,6 +33,12 @@ class Sensor(object):
 
     def readValue(self):
         raise NotImplementedError('Subclass must override readValue')
+
+    def setCurrentValue(self, newValue):
+        self.__currentValue = newValue
+
+    def getCurrentValue(self):
+        return self.__currentValue
 
     def getName(self):
         raise NotImplementedError('Subclass must override getName')
@@ -53,15 +61,24 @@ class Sensor(object):
     def getProbeRate(self):
     	return self.__probeRate
 
-    def configure(self):
-        data = '{"priority": 2, "is_active": true, "name": "MQ7 Carbon Dioxide", "probe_rate": 15}'
-        jsonConfig = json.loads(data)
-        print " .. " , jsonConfig[self.IS_ACTIVE]
-        #self.setActiveStatus(jsonConfig[self.IS_ACTIVE])
-        #self.setProbeRate(jsonConfig[self.PROBE_RATE])
-        #self.setPriority(jsonConfig[self.PRIORITY])
+    def configure(self, config):
+        if config is None:
+            config = self.toString()
+
+        if self.DEBUG:
+            print "Current Config :: " , config
+
+        jsonConfig = json.loads(config)
+
+        self.setActiveStatus(jsonConfig[self.IS_ACTIVE])
+        self.setProbeRate(jsonConfig[self.PROBE_RATE])
+        self.setPriority(jsonConfig[self.PRIORITY])
 
     def toString(self):
-        data = [{ self.NAME : self.getName(), self.IS_ACTIVE : self.isActive(), self.PRIORITY : self.getPriority(), self.PROBE_RATE : self.getProbeRate()}]
+        data = { self.NAME : self.getName(), self.IS_ACTIVE : self.isActive(), self.PRIORITY : self.getPriority(), self.PROBE_RATE : self.getProbeRate()}
         data_string = json.dumps(data)
-        print "JSON: " , data_string
+        
+        if self.DEBUG:
+            print self.getName() , data_string
+
+        return data_string    

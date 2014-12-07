@@ -35,7 +35,7 @@ class Thermistor(Sensor):
             return self.test()
         else:    
             return self.__lib.Thermistor_readValue(self.obj) 
-
+            
     def getName(self):
         return self.__name
 

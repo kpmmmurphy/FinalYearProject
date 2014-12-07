@@ -6,25 +6,24 @@
 
 import os
 import ctypes
+#import requests
 
 #Import Sensors
 from py_sensors.thermistor import Thermistor
 from py_sensors.mq7 import MQ7
 from py_sensors.motion_detector import MotionDetector
 
-class SensorManager(object):
-    LOGTAG = "SensorManager"
-    __sensors = []
+'''
+class API(object):
+    DEBUG = True
+    LOGTAG = "API_Client"
 
-    def __init__(self):
-        print self.LOGTAG , "Created..."
-
-    def addSensors(sensors):
-        self.__sensors = sensors
-
+    def requestConfig():
+'''
 
 class SensorFactory(object):
     #Constants
+    DEBUG  = True
     LOGTAG = "SensorFactory"
     PC_OS     = "posix"
     LIB_PATH  = "./sensors/libs/lib_SensorManager.so"
@@ -39,7 +38,8 @@ class SensorFactory(object):
     __sensors = []
 
     def __init__(self):
-        print self.LOGTAG , "Created..."
+        if self.DEBUG:
+            print self.LOGTAG , "Created..."
 
         if os.name is not self.PC_OS:
             self.__sensorLib = ctypes.cdll.LoadLibrary(self.LIB_PATH)

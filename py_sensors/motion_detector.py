@@ -6,7 +6,6 @@
 
 import ctypes
 from sensor import Sensor
-
           
 class MotionDetector(Sensor):
     __name         = "MotionDetector"
