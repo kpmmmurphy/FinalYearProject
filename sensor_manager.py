@@ -22,8 +22,9 @@ class SensorManager(object):
         if sensors is not None:
             self.setSensors(sensors)
 
-        self.startProbing()
+        self.startProbing() 
 
+    #PROBING SENSORS------------------------------------------------------
     #Starts all sensors probing depending on current configuration
     def startProbing(self):
         for sensor in self.getSensors():
@@ -47,8 +48,9 @@ class SensorManager(object):
 
             self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor,(sensor,))
 
-    def startCollecting():
-        
+    #COLLECTING DATA-----------------------------------------------------
+    def startCollecting(self):
+        self.__schedular.enter(self., sensor.getPriority(), self.,(sensor,))
 
 
     def setSensors(self, sensors):
