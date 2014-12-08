@@ -6,6 +6,7 @@
 
 import sched
 import time
+import database 
 
 class SensorManager(object):
     DEBUG = True
@@ -22,8 +23,6 @@ class SensorManager(object):
             self.setSensors(sensors)
 
         self.startProbing()
-
-    #def updateConfigurations(self):
 
     #Starts all sensors probing depending on current configuration
     def startProbing(self):
@@ -46,7 +45,11 @@ class SensorManager(object):
             if self.DEBUG:
                 print sensor.getName() , " :: " , sensor.getCurrentValue()
 
-            self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor,(sensor))
+            self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor,(sensor,))
+
+    def startCollecting():
+        
+
 
     def setSensors(self, sensors):
         self.__sensors = sensors
