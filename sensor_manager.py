@@ -44,9 +44,9 @@ class SensorManager(object):
         if sensor.isActive():
             sensor.setCurrentValue(sensor.readValue())
             if self.DEBUG:
-                print sensor.getName() , " :: " , currentValue
+                print sensor.getName() , " :: " , sensor.getCurrentValue()
 
-            self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor,(sensor,))
+            self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor,(sensor))
 
     def setSensors(self, sensors):
         self.__sensors = sensors
