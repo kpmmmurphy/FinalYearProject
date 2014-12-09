@@ -6,9 +6,10 @@
 
 import ctypes
 from sensor import Sensor
+import constants as CONSTS
           
 class MQ7(Sensor):
-    __name         = "MQ7 Carbon Dioxide"
+    __name         = CONSTS.SENSOR_MQ7
     __adcChannelNo = 1
     __lib = None
 

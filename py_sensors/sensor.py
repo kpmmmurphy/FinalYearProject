@@ -25,6 +25,8 @@ class Sensor(object):
     __priority  = DEFAULT_PRIORITY
     __currentValue = -1
 
+    __sql_row_name = None
+
     def __init__(self):
         raise NotImplementedError('Subclass must override Constructor')
 

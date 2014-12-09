@@ -35,7 +35,8 @@ class DatabaseManager(object):
             self.__db = peewee.MySQLDatabase(self.TEST_DB_NAME, user=self.TEST_DB_USER, passwd=self.TEST_DB_PASSWD)            
         else:
             self.__db = peewee.MySQLDatabase(DB_NAME, host=self.DB_HOST, port=self.DB_PORT, user=self.DB_USER, passwd=self.DB_PASSWD)
-    
+   
+    @staticmethod
     def getInstance(self):
         if self.__instance is None:
             self.__instance = DatabaseManager()
@@ -52,10 +53,10 @@ class DatabaseManager(object):
 
         #Define DB fields
         date_and_time       = peewee.DateTimeField(formats=DATE_FORMAT)
-        mq7_carbon_monoxide = peewee.IntegerField()
+        carbon_monoxide     = peewee.IntegerField()
         temperature         = peewee.IntegerField()
         flammable_gas       = peewee.IntegerField()
-        smoke               = peewee.IntegerField()
+        motion              = peewee.IntegerField()
 
     class Sensor_Output_Averages(peewee.Model):
         class Meta: 
@@ -67,10 +68,10 @@ class DatabaseManager(object):
     
         #Define DB fields
         date_and_time       = peewee.DateTimeField(formats=DATE_FORMAT)
-        mq7_carbon_monoxide = peewee.IntegerField()
+        carbon_monoxide     = peewee.IntegerField()
         temperature         = peewee.IntegerField()
         flammable_gas       = peewee.IntegerField()
-        smoke               = peewee.IntegerField()
+        motion              = peewee.IntegerField()
     
     
     class System_Details(peewee.Model):
@@ -118,11 +119,11 @@ class DatabaseManager(object):
             print "System_Admin_Details Table Already Exists"
     
     #Insert functions
-    def insert_sensor_output(mq7_output, temperature_output, flammable_gas_output, smoke_output):
+    def insert_sensor_output(mq7_output, temperature_output, flammable_gas_output, motion_output):
         sensor_output = Current_Day_Sensor_Output(mq7_carbon_monoxide = mq7_output,
                                                   temperature         = temperature_output, 
                                                   flammable_gas       = flammable_gas_output,
-                                                  smoke               = smoke_output)
+                                                  motion              = motion_output)
         sensor_output.save()
         if DEBUG:
             print "Sensor Data Inserted.."
@@ -136,8 +137,8 @@ class DatabaseManager(object):
         temp_max      = None
         flammable_min = None
         flammable_max = None
-        smoke_min     = None
-        smoke_max     = None
+        motion_min     = None
+        motion_max     = None
         
         if(simulated_output_level == "NORMAL"):
             mq7_min       = 0 
@@ -146,8 +147,8 @@ class DatabaseManager(object):
             temp_max      = 27 
             flammable_min = 0
             flammable_max = 0
-            smoke_min     = 0
-            smoke_max     = 0
+            motion_min     = 0
+            motion_max     = 0
         elif(simulated_output_level == "EARLY_SIGNS"):
             mq7_min       = 10   
             mq7_max       = 150
@@ -155,8 +156,8 @@ class DatabaseManager(object):
             temp_max      = 40  
             flammable_min = 10
             flammable_max = 150
-            smoke_min     = 10
-            smoke_max     = 150
+            motion_min     = 10
+            motion_max     = 150
         elif(simulated_output_level == "RED_ALERT"):
             mq7_min       = 150 
             mq7_max       = 400
@@ -164,15 +165,15 @@ class DatabaseManager(object):
             temp_max      = 80
             flammable_min = 150
             flammable_max = 400
-            smoke_min     = 150
-            smoke_max     = 400
+            motion_min     = 150
+            motion_max     = 400
             
         insert_sensor_output(mq7_output           = random.randint(mq7_min, mq7_max),
                              temperature_output   = random.randint(temp_min, temp_max),
                              flammable_gas_output = random.randint(flammable_min,flammable_max),
-                             smoke_output         = random.randint(smoke_min, smoke_max))
+                             motion_output         = random.randint(motion_min, motion_max))
     
-    def test(self):
+    def createTables(self):
         #Main Section
         create_tables()
         insert_test_data("NORMAL")

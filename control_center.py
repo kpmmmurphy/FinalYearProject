@@ -5,13 +5,15 @@
 #Date  : 18 - Oct - 14
 
 #Import infrastructure modules
-from sensor_factory import SensorFactory
-from sensor_manager import SensorManager
+from sensor_factory   import SensorFactory
+from sensor_manager   import SensorManager
+from database_manager import DatabaseManager
 
 #Constants
 DEBUG = True
 
 def main():
+    DatabaseManager.getInstance().createTables()
     sensorFactory = SensorFactory()
     sensorManager = SensorManager(sensorFactory.getSensors())
 

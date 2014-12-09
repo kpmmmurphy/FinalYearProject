@@ -6,9 +6,10 @@
 
 import ctypes
 from sensor import Sensor
+import constants as CONSTS
 
 class Thermistor(Sensor):
-    __name         = "Thermistor"
+    __name         = CONSTS.SENSOR_THERMISTOR
     __adcChannelNo = 0
     __lib = None
     
