@@ -20,6 +20,8 @@ DB_PASSWD = 'shiegeib'
 DB_PORT   = 80
 SQL_DATE_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
 
+#SENSORS------------------------------------
+
 #SENSOR Names - Also used as SQL Table names
 SENSOR_THERMISTOR    = "thermistor"
 SENSOR_MQ7           = "carbon_monoxide"
