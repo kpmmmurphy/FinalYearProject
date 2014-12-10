@@ -6,65 +6,51 @@ import peewee
 from peewee import *
 import datetime
 import random
-
-from py_models.sql_tables import current_day_sensor_output as Current
+import constants as CONSTS
 
 class DatabaseManager(object):
-    DEBUG     =  True
-
-    #Test Database Credentials
-    TEST           =  True
-    TEST_DB_NAME   = 'TEST'
-    TEST_DB_USER   = 'root'
-    TEST_DB_PASSWD = 'kevinmurphy'
-
-    #Production Database Credentials
-    DB_HOST   = 'csgate.ucc.ie'
-    DB_NAME   = '2015_kpm2'
-    DB_USER   = 'kpm2'
-    DB_PASSWD = 'shiegeib'
-    DB_PORT   = 80
+    DEBUG = True
+    TEST  = True
 
     #Private:
-    __db       = None
+    __db = None
 
     def __init__(self):
-        if self.TEST:
-            self.__db = peewee.MySQLDatabase(self.TEST_DB_NAME, user=self.TEST_DB_USER, passwd=self.TEST_DB_PASSWD)            
-        else:
-            self.__db = peewee.MySQLDatabase(self.DB_NAME, host=self.DB_HOST, port=self.DB_PORT, user=self.DB_USER, passwd=self.DB_PASSWD)
+         __db = self.loadDatabase()
 
     #Creates the Tables
-    def create_tables(self):
+    @staticmethod
+    def create_tables():
         try:
-            current_day_sensor_output.create_table()
+            Current_Day_Sensor_Output.create_table()
         except peewee.OperationalError:
             print "Current Day Sensor_Output Table Already Exists"
-        
+    
         '''
         try: 
             Sensor_Output_Averages.create_table()
         except peewee.OperationalError:
             print "Sensor output Averages Table Already Exists"
-    
+
         try:
             System_Details.create_table()
         except peewee.OperationalError:
             print "System_Details Table Already Exists"
-    
+
         try: 
             System_Admin_Details.create_table()
         except peewee.OperationalError:
             print "System_Admin_Details Table Already Exists"
-        '''
+    '''    
 
     #Insert functions
     def insert_sensor_output(self, mq7_output, temperature_output, flammable_gas_output, motion_output):
-        sensor_output = current_day_sensor_output(mq7_carbon_monoxide = mq7_output,
+        sensor_output = Current_Day_Sensor_Output(mq7_carbon_monoxide = mq7_output,
                                                   temperature         = temperature_output, 
                                                   flammable_gas       = flammable_gas_output,
                                                   motion              = motion_output)
         sensor_output.save()
+
         if self.DEBUG:
             print "Sensor Data Inserted.."
     
@@ -108,10 +94,10 @@ class DatabaseManager(object):
             motion_min     = 150
             motion_max     = 400
             
-        insert_sensor_output(mq7_output           = random.randint(mq7_min, mq7_max),
-                             temperature_output   = random.randint(temp_min, temp_max),
-                             flammable_gas_output = random.randint(flammable_min,flammable_max),
-                             motion_output         = random.randint(motion_min, motion_max))
+        self.insert_sensor_output(mq7_output           = random.randint(mq7_min, mq7_max),
+                                  temperature_output   = random.randint(temp_min, temp_max),
+                                  flammable_gas_output = random.randint(flammable_min,flammable_max),
+                                  motion_output        = random.randint(motion_min, motion_max))
     
     def createTables(self):
         #Main Section
@@ -122,8 +108,67 @@ class DatabaseManager(object):
             self.insert_test_data("RED_ALERT")    
 
     def getDatabase(self):
-        return self.__db        
+        return self.__db  
     
+    @staticmethod
+    def loadDatabase():
+        db = None
+        if CONSTS.TESTING_SQL:
+            #Local
+            db = peewee.MySQLDatabase(CONSTS.TEST_DB_NAME, user=CONSTS.TEST_DB_USER, passwd=CONSTS.TEST_DB_PASSWD)            
+        else:
+            #CS1
+            db = peewee.MySQLDatabase(CONSTS.DB_NAME, host=CONSTS.DB_HOST, port=CONSTS.DB_PORT, user=CONSTS.DB_USER, passwd=CONSTS.DB_PASSWD)
+
+        return db
+
+#MODELS------------------------------------------------------- 
+class BaseModel(peewee.Model):
+    class Meta:    
+        database = DatabaseManager.loadDatabase()
+
+class Current_Day_Sensor_Output(BaseModel):
     
-    
-    
+    def save(self, *args, **kwargs):
+        self.date_and_time = datetime.datetime.now()
+        super(Current_Day_Sensor_Output, self).save(*args, **kwargs)
+
+    #Define DB fields
+    date_and_time       = peewee.DateTimeField(formats=CONSTS.SQL_DATE_FORMAT)
+    carbon_monoxide     = peewee.IntegerField()
+    temperature         = peewee.IntegerField()
+    flammable_gas       = peewee.IntegerField()
+    motion              = peewee.IntegerField()
+
+class Sensor_Output_Averages(BaseModel):
+
+    def save(self, *args, **kwargs):
+        self.date_and_time = datetime.datetime.now()
+        super(myModel, self).save(*args, **kwargs)
+
+    #Define DB fields
+    date_and_time       = peewee.DateTimeField(formats=CONSTS.SQL_DATE_FORMAT)
+    carbon_monoxide     = peewee.IntegerField()
+    temperature         = peewee.IntegerField()
+    flammable_gas       = peewee.IntegerField()
+    motion              = peewee.IntegerField()
+
+class System_Admin_Details(BaseModel):
+
+    def save(self, *args, **kwargs):
+        self.date_and_time = datetime.datetime.now()
+        super(myModel, self).save(*args, **kwargs)
+
+    #Define DB Fields
+    last_name     = peewee.CharField()
+    first_name    = peewee.CharField()
+    device_id     = peewee.CharField()
+    date_and_time = peewee.DateTimeField(formats=CONSTS.SQL_DATE_FORMAT)
+
+class System_Details(BaseModel):
+
+    #Define DB Fields
+    name              = peewee.CharField()
+    location          = peewee.CharField()
+    ip_address        = peewee.CharField()
+    gps_coords_aprrox = peewee.CharField()   

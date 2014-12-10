@@ -13,7 +13,7 @@ from database_manager import DatabaseManager
 DEBUG = True
 
 def main():
-    #Organise table creation and models -> Create custom peewee model class with db
+    #Organise table creation and models -> Create custom peewee model class with dbzs
     databaseManager = DatabaseManager()
     databaseManager.createTables()
 
