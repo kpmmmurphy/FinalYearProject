@@ -60,11 +60,11 @@ class SensorManager(object):
         self.__schedular.enter(self.__collectionRate, sensor.__collectionPriority, self.collectData,())
 
     def collectData(self):
-        #Decouple sensor outputs somehow :s 
-        mq7_output = sensor[]
-        temperature_output
-        flammable_gas_output
-        smoke_output
+        mq7_output           = sensor[CONSTS.SENSOR_MQ7].getCurrentValue()
+        temperature_output   = sensor[CONSTS.SENSOR_THERMISTOR].getCurrentValue()
+        flammable_gas_output = sensor[CONSTS.SENSOR_FLAMMABLE_GAS].getCurrentValue()
+        motion_output        = sensor[CONSTS.MOTION].getCurrentValue()
+
         Database_Manager.getInstance().insert_sensor_output(mq7_output, temperature_output, flammable_gas_output, smoke_output)
         self.__schedular.enter(self.__collectionRate, sensor.__collectionPriority, self.collectData,())
 

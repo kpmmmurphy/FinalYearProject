@@ -13,9 +13,12 @@ from database_manager import DatabaseManager
 DEBUG = True
 
 def main():
-    DatabaseManager.getInstance().createTables()
-    sensorFactory = SensorFactory()
-    sensorManager = SensorManager(sensorFactory.getSensors())
+    #Organise table creation and models -> Create custom peewee model class with db
+    databaseManager = DatabaseManager()
+    databaseManager.createTables()
+
+    sensorFactory   = SensorFactory()
+    sensorManager   = SensorManager(sensorFactory.getSensors())
 
 try:
     main()

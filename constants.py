@@ -9,6 +9,7 @@ SQL_ROW_MQ7           = "mq7_carbon_monoxide"
 SQL_ROW_THERMISTOR    = "temperature"
 SQL_ROW_FLAMMABLE_GAS = "flammable_gas"
 SQL_ROW_MOTION        = "motion"
+SQL_DATE_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
 
 #SENSOR Names - Also used as SQL Table names
 SENSOR_THERMISTOR    = "thermistor"

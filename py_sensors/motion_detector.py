@@ -6,12 +6,12 @@
 
 import ctypes
 from sensor import Sensor
+import constants as CONSTS
           
 class MotionDetector(Sensor):
     __name         = CONSTS.SENSOR_MOTION
     __adcChannelNo = -1
     __lib = None
-    __sql_row_name = CONSTS.SQL_ROW_MOTION
 
     def __init__(self, lib):
         if lib is None:
