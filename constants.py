@@ -23,7 +23,12 @@ SQL_DATE_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
 #SENSORS------------------------------------
 
 #SENSOR Names - Also used as SQL Table names
-SENSOR_THERMISTOR    = "thermistor"
+SENSOR_THERMISTOR    = "temperature"
 SENSOR_MQ7           = "carbon_monoxide"
-SENSOR_FLAMMABLE_GAS = "flammable_gas"
+SENSOR_MQ2           = "flammable_gas"
 SENSOR_MOTION        = "motion"
+
+SENSOR_DEFAULT_VALUE = -1
+
+COLLECTION_RATE_DEFAULT     = 15
+COLLECTION_PRIORITY_DEFAULT = 1

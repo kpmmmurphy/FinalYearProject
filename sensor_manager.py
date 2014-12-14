@@ -6,35 +6,42 @@
 
 import sched
 import time
-import database_manager as Database_Manager
+from database_manager import DatabaseManager 
+import constants as CONSTS
 
 class SensorManager(object):
     DEBUG  = True
     LOGTAG = "SensorManager"
 
-    DEFAULT_COLLECTION_RATE     = 15
-    DEFAULT_COLLECTION_PRIORITY = 1
-
     __sensors   = {}
     __schedular = None
+    __databaseManager = None
 
-    __collectionRate     = DEFAULT_COLLECTION_RATE
-    __collectionPriority = DEFAULT_COLLECTION_PRIORITY
+    __collectionRate     = CONSTS.COLLECTION_RATE_DEFAULT
+    __collectionPriority = CONSTS.COLLECTION_PRIORITY_DEFAULT
 
-    def __init__(self, sensors):
+    def __init__(self, sensors, database_manager):
         if self.DEBUG:
             print self.LOGTAG , " Created..."
 
         self.__schedular = sched.scheduler(time.time, time.sleep)
+
         if sensors is not None:
             self.setSensors(sensors)
 
-        self.startProbing() 
+        if database_manager is not None:
+            self.setDatabaseManager(database_manager)
+
+        self.startCollecting()
+        self.startProbing()
 
     #PROBING SENSORS------------------------------------------------------
     #Starts all sensors probing depending on current configuration
     def startProbing(self):
-        for name, sensor in self.getSensors().iteritem():
+        if self.DEBUG:
+            print "Starting Sensor Probing.."
+
+        for name, sensor in self.getSensors().iteritems():
             if self.DEBUG:
                 sensor.toString()
 
@@ -57,21 +64,40 @@ class SensorManager(object):
 
     #COLLECTING DATA-----------------------------------------------------
     def startCollecting(self):
-        self.__schedular.enter(self.__collectionRate, sensor.__collectionPriority, self.collectData,())
+        if self.DEBUG:
+            print "Starting Data Collection..."
+        
+        self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
 
     def collectData(self):
-        mq7_output           = sensor[CONSTS.SENSOR_MQ7].getCurrentValue()
-        temperature_output   = sensor[CONSTS.SENSOR_THERMISTOR].getCurrentValue()
-        flammable_gas_output = sensor[CONSTS.SENSOR_FLAMMABLE_GAS].getCurrentValue()
-        motion_output        = sensor[CONSTS.MOTION].getCurrentValue()
+        #mq7_output           = sensor[CONSTS.SENSOR_MQ7].getCurrentValue()
+        #temperature_output   = sensor[CONSTS.SENSOR_THERMISTOR].getCurrentValue()
+        #flammable_gas_output = sensor[CONSTS.SENSOR_FLAMMABLE_GAS].getCurrentValue()
+        #motion_output        = sensor[CONSTS.MOTION].getCurrentValue()
 
-        Database_Manager.getInstance().insert_sensor_output(mq7_output, temperature_output, flammable_gas_output, smoke_output)
-        self.__schedular.enter(self.__collectionRate, sensor.__collectionPriority, self.collectData,())
+        #DatabaseManager.getInstance().insert_sensor_output(mq7_output, temperature_output, flammable_gas_output, smoke_output)
+        self.getDatabaseManager().insert_sensor_output(**self.getSensorValues())
 
+        if self.DEBUG:
+            print "/---Entering Data in DB---/"
 
+        self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
+    
     def setSensors(self, sensors):
         for sensor in sensors:
             self.__sensors[sensor.getName()] = sensor
 
     def getSensors(self):
         return self.__sensors
+
+    def getSensorValues(self):
+        sensorValues = {}
+        for name, sensor in self.getSensors().iteritems():
+            sensorValues[name] = sensor.getCurrentValue()
+        return sensorValues
+
+    def setDatabaseManager(self, database_manager):
+        self.__databaseManager = database_manager
+
+    def getDatabaseManager(self):
+        return self.__databaseManager

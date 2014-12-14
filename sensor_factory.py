@@ -11,6 +11,7 @@ import ctypes
 #Import Sensors
 from py_sensors.thermistor import Thermistor
 from py_sensors.mq7 import MQ7
+from py_sensors.mq2 import MQ2
 from py_sensors.motion_detector import MotionDetector
 
 '''
@@ -33,6 +34,7 @@ class SensorFactory(object):
     __mq7            = None
     __thermistor     = None
     __motionDetector = None
+    __mq2            = None
 
     #Sensor Holder
     __sensors = []
@@ -48,6 +50,7 @@ class SensorFactory(object):
 
     def createAllSensors(self):
         self.getInstance_MQ7()
+        self.getInstance_MQ2()
         self.getInstance_Thermistor()
         self.getInstance_MotionDetector()
 
@@ -64,6 +67,17 @@ class SensorFactory(object):
             self.__sensors.append(self.__mq7)
 
         return self.__mq7
+
+    def getInstance_MQ2(self):
+        if self.__mq2 is None:
+            if self.__sensorLib is None:
+               self.__mq2 = MQ2(lib=None)
+            else:
+               self.__mq2 = MQ2(lib=self.__sensorLib)
+
+            self.__sensors.append(self.__mq2)
+
+        return self.__mq2
 
     def getInstance_Thermistor(self):
         if self.__thermistor is None:

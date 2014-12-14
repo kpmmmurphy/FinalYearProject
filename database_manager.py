@@ -44,16 +44,17 @@ class DatabaseManager(object):
     '''    
 
     #Insert functions
-    def insert_sensor_output(self, mq7_output, temperature_output, flammable_gas_output, motion_output):
-        sensor_output = Current_Day_Sensor_Output(mq7_carbon_monoxide = mq7_output,
-                                                  temperature         = temperature_output, 
-                                                  flammable_gas       = flammable_gas_output,
-                                                  motion              = motion_output)
+    def insert_sensor_output(self, carbon_monoxide, temperature, flammable_gas, motion):
+
+        sensor_output = Current_Day_Sensor_Output(carbon_monoxide = carbon_monoxide,
+                                                  temperature     = temperature, 
+                                                  flammable_gas   = flammable_gas,
+                                                  motion          = motion)
         sensor_output.save()
 
         if self.DEBUG:
             print "Sensor Data Inserted.."
-    
+   
     #Test Functions
     def insert_test_data(self, simulated_output_level):
         sensor_output = None
@@ -94,10 +95,10 @@ class DatabaseManager(object):
             motion_min     = 150
             motion_max     = 400
             
-        self.insert_sensor_output(mq7_output           = random.randint(mq7_min, mq7_max),
-                                  temperature_output   = random.randint(temp_min, temp_max),
-                                  flammable_gas_output = random.randint(flammable_min,flammable_max),
-                                  motion_output        = random.randint(motion_min, motion_max))
+        self.insert_sensor_output(carbon_monoxide = random.randint(mq7_min, mq7_max),
+                                  temperature     = random.randint(temp_min, temp_max),
+                                  flammable_gas   = random.randint(flammable_min,flammable_max),
+                                  motion          = random.randint(motion_min, motion_max))
     
     def createTables(self):
         #Main Section

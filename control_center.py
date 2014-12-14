@@ -21,7 +21,8 @@ def main():
     databaseManager.createTables()
 
     sensorFactory   = SensorFactory()
-    sensorManager   = SensorManager(sensorFactory.getSensors())
+    sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager)
+
 
 try:
     main()
