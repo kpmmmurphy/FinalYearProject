@@ -44,8 +44,15 @@ JSON_KEY_SENSOR_NAME       = "name"
 JSON_KEY_SENSOR_PRIORITY   = "priority"
 JSON_KEY_SENSOR_PROBE_RATE = "probe_rate"
 JSON_KEY_SENSOR_IS_ACTIVE  = "is_active"
+JSON_KEY_SENSOR_ALERT_THRESHOLD  = "alert_threshold"
 
 #--Collection
 JSON_KEY_COLLECTION_OBJ      = "collection"
 JSON_KEY_COLLECTION_PRIORITY = "collection_priority"
 JSON_KEY_COLLECTION_RATE     = "collection_rate"
+
+#ALERTING-----------------------------------
+ALERT_THRESHOLD_DEFAULT_THERMISTOR = 50
+ALERT_THRESHOLD_DEFAULT_MQ7        = 50
+ALERT_THRESHOLD_DEFAULT_MOTION     = 1
+ALERT_THRESHOLD_DEFAULT_MQ2        = 50

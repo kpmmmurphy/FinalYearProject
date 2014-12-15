@@ -29,6 +29,8 @@ class MQ2(Sensor):
             self.obj = self.__lib.MQ2_newInstance(self.__name, self.__adcChannelNo)
     	    self.initPins()
 
+        self.__alertThreshold = CONSTS.ALERT_THRESHOLD_DEFAULT_MQ2
+
     def initPins(self):
         if self.__lib is not None:
             self.__lib.MQ2_initPins(self.obj)
@@ -38,8 +40,13 @@ class MQ2(Sensor):
             self.__currentValue = self.test()
         else:        
             self.__currentValue = self.__lib.MQ2_readValue(self.obj) 
-
+        
+        self.react(self.__currentValue)
         return self.__currentValue
+
+    def react(self, value):
+        if value >= self.__alertThreshold:
+            print self.__name, " :: ALERT"
 
     def getName(self):
         return self.__name

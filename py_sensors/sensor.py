@@ -18,6 +18,7 @@ class Sensor(Configurable):
     __probeRate = CONSTS.PROBE_RATE_DEFAULT
     __priority  = CONSTS.PRIORITY_DEFAULT
     __currentValue = -1
+    __alertThreshold = None
 
     def __init__(self):
         raise NotImplementedError('Subclass must override Constructor')
@@ -27,6 +28,9 @@ class Sensor(Configurable):
 
     def readValue(self):
         raise NotImplementedError('Subclass must override readValue')
+
+    def react(self, value):
+        raise NotImplementedError('Subclass must override react')
 
     def setCurrentValue(self, newValue):
         self.__currentValue = newValue
@@ -55,6 +59,12 @@ class Sensor(Configurable):
     def getProbeRate(self):
     	return self.__probeRate
 
+    def getAlertThreshold(self):
+        return self.__alertThreshold
+
+    def setAlertThreshold(self, newThreshold):
+        self.__alertThreshold = newThreshold
+
     def configure(self, config):
         if config is None:
             config = self.toString()
@@ -62,12 +72,18 @@ class Sensor(Configurable):
         self.setActiveStatus(config[CONSTS.JSON_KEY_SENSOR_IS_ACTIVE])
         self.setProbeRate(config[CONSTS.JSON_KEY_SENSOR_PROBE_RATE])
         self.setPriority(config[CONSTS.JSON_KEY_SENSOR_PRIORITY])
+        self.setAlertThreshold(config[CONSTS.JSON_KEY_SENSOR_ALERT_THRESHOLD])
 
         if self.DEBUG:
             print "New Config :: " , self.toString()
 
     def toString(self):
-        data = { CONSTS.JSON_KEY_SENSOR_NAME : self.getName(), CONSTS.JSON_KEY_SENSOR_IS_ACTIVE : self.isActive(), CONSTS.JSON_KEY_SENSOR_PRIORITY : self.getPriority(), CONSTS.JSON_KEY_SENSOR_PROBE_RATE : self.getProbeRate()}
+        data = { CONSTS.JSON_KEY_SENSOR_NAME : self.getName(), 
+                 CONSTS.JSON_KEY_SENSOR_IS_ACTIVE : self.isActive(), 
+                 CONSTS.JSON_KEY_SENSOR_PRIORITY : self.getPriority(), 
+                 CONSTS.JSON_KEY_SENSOR_PROBE_RATE : self.getProbeRate(),
+                 CONSTS.JSON_KEY_SENSOR_ALERT_THRESHOLD : self.getAlertThreshold()}
+        
         data_string = json.dumps(data)
         
         if self.DEBUG:

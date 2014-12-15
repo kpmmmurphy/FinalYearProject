@@ -27,6 +27,8 @@ class Thermistor(Sensor):
             self.obj = self.__lib.Thermistor_newInstance(self.__name, self.__adcChannelNo)
             self.initPins()
 
+        self.__alertThreshold = CONSTS.ALERT_THRESHOLD_DEFAULT_THERMISTOR
+
     def initPins(self):
         if self.__lib is not None:
             self.__lib.Thermistor_initPins(self.obj)
@@ -36,9 +38,14 @@ class Thermistor(Sensor):
             self.__currentValue = self.test()
         else:    
             self.__currentValue = self.__lib.Thermistor_readValue(self.obj) 
-
+        
+        self.react(self.__currentValue)
         return self.__currentValue
-            
+
+    def react(self, value):
+        if value >= self.__alertThreshold:
+            print self.__name, " :: ALERT"
+
     def getName(self):
         return self.__name
 

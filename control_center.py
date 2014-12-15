@@ -24,8 +24,6 @@ def main():
     # AlertManager - 1 
     # Configuration Manager/ Interface
     # User Pairing System
-    # Multithreading
-    # Change Schedular to threading.timer
     # Amazon Datastore
     # CS1 integration / Configurable DB??
     # System Status readings

@@ -25,9 +25,10 @@ class MQ7(Sensor):
             self.__lib.MQ7_initPins.restype  = None
             self.__lib.MQ7_readValue.restype = ctypes.c_int
             self.__lib.MQ7_test.restype      = ctypes.c_int 
-        	   
             self.obj = self.__lib.MQ7_newInstance(self.__name, self.__adcChannelNo)
     	    self.initPins()
+
+        self.__alertThreshold = CONSTS.ALERT_THRESHOLD_DEFAULT_MQ7
 
     def initPins(self):
         if self.__lib is not None:
@@ -38,8 +39,13 @@ class MQ7(Sensor):
             self.__currentValue = self.test()
         else:        
             self.__currentValue = self.__lib.MQ7_readValue(self.obj) 
-
+        
+        self.react(self.__currentValue)
         return self.__currentValue
+
+    def react(self, value):
+        if value >= self.__alertThreshold:
+            print self.__name, " :: ALERT"
 
     def getName(self):
         return self.__name
