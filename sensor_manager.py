@@ -5,6 +5,8 @@
 #Date  : 7 - Dec - 14
 
 import sched
+import thread
+from threading import Timer
 import time
 import json
 from database_manager import DatabaseManager 
@@ -13,6 +15,7 @@ from configurable import Configurable
 
 class SensorManager(Configurable):
     DEBUG  = True
+    USING_TIMER  = False 
     LOGTAG = "SensorManager"
 
     __sensors   = {}
@@ -37,6 +40,7 @@ class SensorManager(Configurable):
             self.configure(None)
             self.startProbing()
 
+        self.__schedular.run()
 
     #PROBING SENSORS------------------------------------------------------
     #Starts all sensors probing depending on current configuration
@@ -47,11 +51,13 @@ class SensorManager(Configurable):
         for name, sensor in self.getSensors().iteritems():
             if self.DEBUG:
                 sensor.toString()
-
-            self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor, (sensor,))
-   
-        self.__schedular.run()
-
+            
+            if self.USING_TIMER:
+                timer = Timer(sensor.getProbeRate(), self.probeSensor,(sensor,))
+                timer.start()
+            else:
+                self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor, (sensor,))
+                
     #Stops all sensors probing
     def stopProbing(self):
         for name, sensor in self.getSensors().iteritem():
@@ -63,22 +69,34 @@ class SensorManager(Configurable):
             if self.DEBUG:
                 print sensor.getName() , " :: " , sensor.getCurrentValue()
 
-            self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor,(sensor,))
+            if self.USING_TIMER:
+                timer = Timer(sensor.getProbeRate(), self.probeSensor, (sensor,))
+                timer.start()
+            else:    
+                self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor,(sensor,))
 
     #COLLECTING DATA-----------------------------------------------------
     def startCollecting(self):
         if self.DEBUG:
             print self.LOGTAG, " :: Starting Data Collection"
         
-        self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
+        if self.USING_TIMER:
+            timer = Timer(self.__collectionRate, self.collectData, ())
+            timer.start()
+        else:
+            self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
 
     def collectData(self):
         self.getDatabaseManager().insert_sensor_output(**self.getSensorValues())
 
         if self.DEBUG:
             print self.LOGTAG, " :: Entering Data in DB"
-
-        self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
+        
+        if self.USING_TIMER:
+            timer = Timer(self.__collectionRate, self.collectData, ())
+            timer.start()
+        else:
+            self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
     
     def setSensors(self, sensors):
         for sensor in sensors:
