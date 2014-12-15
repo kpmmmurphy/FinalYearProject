@@ -6,6 +6,7 @@
 
 import sched
 import time
+import json
 from database_manager import DatabaseManager 
 import constants as CONSTS
 from configurable import Configurable
@@ -23,23 +24,26 @@ class SensorManager(Configurable):
 
     def __init__(self, sensors, database_manager):
         if self.DEBUG:
-            print self.LOGTAG , " Created..."
+            print self.LOGTAG , " :: Created..."
 
         self.__schedular = sched.scheduler(time.time, time.sleep)
 
         if sensors is not None:
             self.setSensors(sensors)
+            self.configure(None)
             self.startProbing()
+
 
         if database_manager is not None:
             self.setDatabaseManager(database_manager)
             self.startCollecting()
 
+
     #PROBING SENSORS------------------------------------------------------
     #Starts all sensors probing depending on current configuration
     def startProbing(self):
         if self.DEBUG:
-            print "Starting Sensor Probing.."
+            print self.LOGTAG, " :: Starting Sensor Probing.."
 
         for name, sensor in self.getSensors().iteritems():
             if self.DEBUG:
@@ -65,7 +69,7 @@ class SensorManager(Configurable):
     #COLLECTING DATA-----------------------------------------------------
     def startCollecting(self):
         if self.DEBUG:
-            print "Starting Data Collection..."
+            print self.LOGTAG, " :: Starting Data Collection"
         
         self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
 
@@ -79,7 +83,7 @@ class SensorManager(Configurable):
         self.getDatabaseManager().insert_sensor_output(**self.getSensorValues())
 
         if self.DEBUG:
-            print "/---Entering Data in DB---/"
+            print self.LOGTAG, " :: Entering Data in DB"
 
         self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
     
@@ -118,11 +122,25 @@ class SensorManager(Configurable):
 
     def configure(self, config):
         if self.DEBUG:
-            print Self.LOGTAG, ":: Configuring..."
+            print self.LOGTAG, " :: Updating Configuration"
 
-        self.setCollectionRate(config[CONSTS.JSON_KEY_COLLECTION_RATE])
-        self.setCollectionPriority(config[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
+        if config is None:
+            config_data = open(CONSTS.CONFIGURATION_DEFAULT)
+            config      = json.load(config_data)
 
+        #Collection Config
+        collectionConfig  = config[CONSTS.JSON_KEY_COLLECTION_OBJ]
+        self.setCollectionRate(collectionConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
+        self.setCollectionPriority(collectionConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
+        
+        #Sensors Config
+        for sensorConfig in config[CONSTS.JSON_KEY_SENSORS_ARRAY]:
+            self.getSensors()[sensorConfig[CONSTS.JSON_KEY_SENSOR_NAME]].configure(sensorConfig)
+        
+        if config_data is not None:
+            config_data.close()
+
+        
 
 
 

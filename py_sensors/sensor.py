@@ -59,14 +59,12 @@ class Sensor(Configurable):
         if config is None:
             config = self.toString()
 
+        self.setActiveStatus(config[CONSTS.JSON_KEY_SENSOR_IS_ACTIVE])
+        self.setProbeRate(config[CONSTS.JSON_KEY_SENSOR_PROBE_RATE])
+        self.setPriority(config[CONSTS.JSON_KEY_SENSOR_PRIORITY])
+
         if self.DEBUG:
-            print "Current Config :: " , config
-
-        jsonConfig = json.loads(config)
-
-        self.setActiveStatus(jsonConfig[CONSTS.JSON_KEY_SENSOR_IS_ACTIVE])
-        self.setProbeRate(jsonConfig[CONSTS.JSON_KEY_SENSOR_PROBE_RATE])
-        self.setPriority(jsonConfig[CONSTS.JSON_KEY_SENSOR_PRIORITY])
+            print "New Config :: " , self.toString()
 
     def toString(self):
         data = { CONSTS.JSON_KEY_SENSOR_NAME : self.getName(), CONSTS.JSON_KEY_SENSOR_IS_ACTIVE : self.isActive(), CONSTS.JSON_KEY_SENSOR_PRIORITY : self.getPriority(), CONSTS.JSON_KEY_SENSOR_PROBE_RATE : self.getProbeRate()}

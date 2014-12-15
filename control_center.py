@@ -19,14 +19,14 @@ def main():
     # API Manager
     # AlertManager
     # Configuration Manager/ Interface
+    # Multithreading
+    # Change Schedular to threading.timer
 
     databaseManager = DatabaseManager()
     databaseManager.createTables()
 
     sensorFactory   = SensorFactory()
-    sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
-
-
+    sensorManager   = SensorManager(sensorFactory.getSensors(), None) 
 
 try:
     main()

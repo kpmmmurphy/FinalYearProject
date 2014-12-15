@@ -4,6 +4,9 @@
 #
 #Global Constants "Holder"
 
+#File Locations
+CONFIGURATION_DEFAULT = "./config/default_config.json"
+
 #SQL-----------------------------------------
 COLLECTION_RATE_DEFAULT     = 15
 COLLECTION_PRIORITY_DEFAULT = 1
@@ -36,10 +39,13 @@ SENSOR_MOTION        = "motion"
 
 #JSON Keys -----------------------------------
 #--Sensors
+JSON_KEY_SENSORS_ARRAY     = "sensors"
 JSON_KEY_SENSOR_NAME       = "name"
 JSON_KEY_SENSOR_PRIORITY   = "priority"
 JSON_KEY_SENSOR_PROBE_RATE = "probe_rate"
 JSON_KEY_SENSOR_IS_ACTIVE  = "is_active"
+
 #--Collection
+JSON_KEY_COLLECTION_OBJ      = "collection"
 JSON_KEY_COLLECTION_PRIORITY = "collection_priority"
 JSON_KEY_COLLECTION_RATE     = "collection_rate"

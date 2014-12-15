@@ -9,7 +9,7 @@ import random
 import constants as CONSTS
 from configurable import Configurable
 
-class DatabaseManager(Configurable):
+class DatabaseManager(object):
     DEBUG = True
     TEST  = True
 
