@@ -28,15 +28,14 @@ class SensorManager(Configurable):
 
         self.__schedular = sched.scheduler(time.time, time.sleep)
 
+        if database_manager is not None:
+            self.setDatabaseManager(database_manager)
+            self.startCollecting()
+
         if sensors is not None:
             self.setSensors(sensors)
             self.configure(None)
             self.startProbing()
-
-
-        if database_manager is not None:
-            self.setDatabaseManager(database_manager)
-            self.startCollecting()
 
 
     #PROBING SENSORS------------------------------------------------------
@@ -74,12 +73,6 @@ class SensorManager(Configurable):
         self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
 
     def collectData(self):
-        #mq7_output           = sensor[CONSTS.SENSOR_MQ7].getCurrentValue()
-        #temperature_output   = sensor[CONSTS.SENSOR_THERMISTOR].getCurrentValue()
-        #flammable_gas_output = sensor[CONSTS.SENSOR_FLAMMABLE_GAS].getCurrentValue()
-        #motion_output        = sensor[CONSTS.MOTION].getCurrentValue()
-
-        #DatabaseManager.getInstance().insert_sensor_output(mq7_output, temperature_output, flammable_gas_output, smoke_output)
         self.getDatabaseManager().insert_sensor_output(**self.getSensorValues())
 
         if self.DEBUG:

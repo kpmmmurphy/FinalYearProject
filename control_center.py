@@ -14,19 +14,24 @@ DEBUG = True
 
 def main():
     ##TODO
+    # Sensor Alerting and Info table - 1
+    # Automated Setup
     # Rasberry as AP
-    # API Class
-    # API Manager
-    # AlertManager
+    # API Class - 2
+    # API Manager - 2
+    # AlertManager - 1 
     # Configuration Manager/ Interface
+    # User Pairing System
     # Multithreading
     # Change Schedular to threading.timer
+    # Amazon Datastore
+    # CS1 integration
 
     databaseManager = DatabaseManager()
-    databaseManager.createTables()
+    #databaseManager.createTables()
 
     sensorFactory   = SensorFactory()
-    sensorManager   = SensorManager(sensorFactory.getSensors(), None) 
+    sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
 
 try:
     main()
