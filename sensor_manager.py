@@ -15,7 +15,7 @@ from configurable import Configurable
 
 class SensorManager(Configurable):
     DEBUG  = True
-    USING_TIMER  = False 
+    USING_TIMER  = True 
     LOGTAG = "SensorManager"
 
     __sensors   = {}
@@ -65,7 +65,7 @@ class SensorManager(Configurable):
 
     def probeSensor(self, sensor):
         if sensor.isActive():
-            sensor.setCurrentValue(sensor.readValue())
+            sensor.readValue()
             if self.DEBUG:
                 print sensor.getName() , " :: " , sensor.getCurrentValue()
 

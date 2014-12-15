@@ -34,9 +34,11 @@ class MotionDetector(Sensor):
 
     def readValue(self):
         if self.__lib is None:
-            return self.test()
+            self.__currentValue = self.test()
         else:    
-            return self.__lib.MotionDetector_readValue(self.obj) 
+            self.__currentValue = self.__lib.MotionDetector_readValue(self.obj) 
+
+        return self.__currentValue
 
     def getName(self):
         return self.__name
