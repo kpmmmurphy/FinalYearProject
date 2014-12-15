@@ -15,6 +15,8 @@ DEBUG = True
 def main():
     ##TODO
     # Sensor Alerting and Info table - 1
+    # Dropbox? / Google Drive? 
+    # Camera Stills, and Video?
     # Automated Setup
     # Rasberry as AP
     # API Class - 2
@@ -25,7 +27,8 @@ def main():
     # Multithreading
     # Change Schedular to threading.timer
     # Amazon Datastore
-    # CS1 integration
+    # CS1 integration / Configurable DB??
+    # System Status readings
 
     databaseManager = DatabaseManager()
     #databaseManager.createTables()
