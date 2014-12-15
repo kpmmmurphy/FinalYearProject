@@ -7,8 +7,9 @@ from peewee import *
 import datetime
 import random
 import constants as CONSTS
+from configurable import Configurable
 
-class DatabaseManager(object):
+class DatabaseManager(Configurable):
     DEBUG = True
     TEST  = True
 

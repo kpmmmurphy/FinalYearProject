@@ -5,27 +5,19 @@
 #Date  : 24 - Nov - 14
 
 import json
+import constants as CONSTS
+from configurable import Configurable
 
-class Sensor(object):
+class Sensor(Configurable):
 
     #Constants:
     DEBUG = True
-    DEFAULT_PROBE_RATE = 10
-    DEFAULT_PRIORITY   = 1
-
-    #JSON Keys
-    NAME       = "name"
-    PRIORITY   = "priority"
-    PROBE_RATE = "probe_rate"
-    IS_ACTIVE  = "is_active"
 
     #Private: 
     __isActive  = True
-    __probeRate = DEFAULT_PROBE_RATE
-    __priority  = DEFAULT_PRIORITY
+    __probeRate = CONSTS.PROBE_RATE_DEFAULT
+    __priority  = CONSTS.PRIORITY_DEFAULT
     __currentValue = -1
-
-    __sql_row_name = None
 
     def __init__(self):
         raise NotImplementedError('Subclass must override Constructor')
@@ -72,12 +64,12 @@ class Sensor(object):
 
         jsonConfig = json.loads(config)
 
-        self.setActiveStatus(jsonConfig[self.IS_ACTIVE])
-        self.setProbeRate(jsonConfig[self.PROBE_RATE])
-        self.setPriority(jsonConfig[self.PRIORITY])
+        self.setActiveStatus(jsonConfig[CONSTS.JSON_KEY_SENSOR_IS_ACTIVE])
+        self.setProbeRate(jsonConfig[CONSTS.JSON_KEY_SENSOR_PROBE_RATE])
+        self.setPriority(jsonConfig[CONSTS.JSON_KEY_SENSOR_PRIORITY])
 
     def toString(self):
-        data = { self.NAME : self.getName(), self.IS_ACTIVE : self.isActive(), self.PRIORITY : self.getPriority(), self.PROBE_RATE : self.getProbeRate()}
+        data = { CONSTS.JSON_KEY_SENSOR_NAME : self.getName(), CONSTS.JSON_KEY_SENSOR_IS_ACTIVE : self.isActive(), CONSTS.JSON_KEY_SENSOR_PRIORITY : self.getPriority(), CONSTS.JSON_KEY_SENSOR_PROBE_RATE : self.getProbeRate()}
         data_string = json.dumps(data)
         
         if self.DEBUG:

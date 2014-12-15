@@ -14,14 +14,18 @@ DEBUG = True
 
 def main():
     ##TODO
-    #
-    #
+    # Rasberry as AP
+    # API Class
+    # API Manager
+    # AlertManager
+    # Configuration Manager/ Interface
 
     databaseManager = DatabaseManager()
     databaseManager.createTables()
 
     sensorFactory   = SensorFactory()
-    sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager)
+    sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
+
 
 
 try:

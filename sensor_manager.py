@@ -8,8 +8,9 @@ import sched
 import time
 from database_manager import DatabaseManager 
 import constants as CONSTS
+from configurable import Configurable
 
-class SensorManager(object):
+class SensorManager(Configurable):
     DEBUG  = True
     LOGTAG = "SensorManager"
 
@@ -28,12 +29,11 @@ class SensorManager(object):
 
         if sensors is not None:
             self.setSensors(sensors)
+            self.startProbing()
 
         if database_manager is not None:
             self.setDatabaseManager(database_manager)
-
-        self.startCollecting()
-        self.startProbing()
+            self.startCollecting()
 
     #PROBING SENSORS------------------------------------------------------
     #Starts all sensors probing depending on current configuration
@@ -101,3 +101,28 @@ class SensorManager(object):
 
     def getDatabaseManager(self):
         return self.__databaseManager
+
+    def getCollectionRate(self):
+        return self.__collectionRate
+
+    def setCollectionRate(self, value):
+        if value is not None:
+            self.__collectionRate = value
+
+    def getCollectionPriority(self):
+        return self.__collectionPriority
+
+    def setCollectionPriority(self, value):
+        if value is not None:
+            self.__collectionPriority = value
+
+    def configure(self, config):
+        if self.DEBUG:
+            print Self.LOGTAG, ":: Configuring..."
+
+        self.setCollectionRate(config[CONSTS.JSON_KEY_COLLECTION_RATE])
+        self.setCollectionPriority(config[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
+
+
+
+
