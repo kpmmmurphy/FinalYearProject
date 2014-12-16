@@ -5,6 +5,7 @@
 #Date  : 24 - Nov - 14
 
 import ctypes
+import subprocess
 from sensor import Sensor
 import constants as CONSTS
           
@@ -46,6 +47,7 @@ class MotionDetector(Sensor):
     def react(self, value):
         if value >= self.__alertThreshold:
             print self.__name, " :: ALERT"
+            subprocess.call(CONSTS.SCRIPT_TAKE_CAMERA_STILL, shell=True)
 
     def getName(self):
         return self.__name

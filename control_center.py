@@ -14,19 +14,20 @@ DEBUG = True
 
 def main():
     ##TODO
+    # Configuration Manager/ Interface
     # Sensor Alerting and Info table - 1
-    # Dropbox? / Google Drive? 
-    # Camera Stills, and Video?
-    # Automated Setup
-    # Rasberry as AP
+    # AlertManager - 1 
     # API Class - 2
     # API Manager - 2
-    # AlertManager - 1 
-    # Configuration Manager/ Interface
-    # User Pairing System
-    # Amazon Datastore
     # CS1 integration / Configurable DB??
+    # Camera Stills, and Video?
+    # Dropbox? / Google Drive? 
+    # User Pairing System
+    # Automated Setup
     # System Status readings
+    # Rasberry as AP
+    # Amazon Datastore
+    # Push Notifications
 
     databaseManager = DatabaseManager()
     #databaseManager.createTables()
