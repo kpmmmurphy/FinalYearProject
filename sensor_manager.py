@@ -140,7 +140,7 @@ class SensorManager(Configurable):
             config      = json.load(config_data)
 
         #Collection Config
-        collectionConfig  = config[CONSTS.JSON_KEY_COLLECTION_OBJ]
+        collectionConfig  = config[CONSTS.JSON_KEY_COLLECTION_CONFIG_OBJ]
         self.setCollectionRate(collectionConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
         self.setCollectionPriority(collectionConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
         

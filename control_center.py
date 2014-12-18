@@ -17,8 +17,7 @@ def main():
     # Configuration Manager/ Interface - @
     # Sensor Alerting and Info table - 1
     # AlertManager - 1 
-    # API Class - 2
-    # API Manager - 2
+    # API Manager - 2 -> TEST
     # CS1 integration / Configurable DB??
     # Camera Stills, and Video?
     # Dropbox? / Google Drive? 
