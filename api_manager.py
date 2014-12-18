@@ -9,13 +9,21 @@ import requests
 from configurable import Configurable
 import constants as CONSTS
 
+from sensor_factory   import SensorFactory
+from sensor_manager   import SensorManager
+
 class APIManager(Configurable):
     DEBUG  = True
     LOGTAG = "APIManager"
 
-    def __init__(self):
-		if self.DEBUG:
-			print self.LOGTAG, " :: Created"
+    __sensorManager = None
+
+    def __init__(self, sensorManager):
+        if self.DEBUG:
+            print self.LOGTAG, " :: Created"
+
+        if sensorManager is not None:
+            self.__sensorManager = sensorManager
 
     def configure(self, value):
     	if self.DEBUG:
@@ -30,11 +38,23 @@ class APIManager(Configurable):
             print configResponse.url
             print configResponse.content
 
+    def sendSensorValues(self):
+        if self.DEBUG:
+            print self.LOGTAG, " :: Sending Sensor Values"
+        payload = CONSTS.REQUEST_PAYLOAD_UPLOAD_SENSOR_VALUES
+        payload[CONSTS.JSON_KEY_REQUEST_SENSOR_VALUES] = self.__sensorManager.getSensorValues()
+        print payload
+        #print CONSTS.REQUEST_PAYLOAD_UPLOAD_SENSOR_VALUES
+        #sendResponse = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, data)
+
     def test(self):
     	cs1_test = requests.get("http://cs1.ucc.ie/~kpm2/fyp/api/test.txt")	
     	print cs1_test.content
 
-apiManager = APIManager()
-apiManager.getSystemConfig()
+sensorFactory   = SensorFactory()
+sensorManager   = SensorManager(sensorFactory.getSensors(), None) 
+apiManager = APIManager(sensorManager=sensorManager)
+#apiManager.getSystemConfig()
+apiManager.sendSensorValues()
 
 

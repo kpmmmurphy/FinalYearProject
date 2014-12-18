@@ -10,7 +10,7 @@ import constants as CONSTS
 from configurable import Configurable
 
 class DatabaseManager(object):
-    DEBUG = True
+    DEBUG = False
     TEST  = True
 
     #Private:

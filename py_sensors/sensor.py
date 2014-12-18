@@ -11,7 +11,7 @@ from configurable import Configurable
 class Sensor(Configurable):
 
     #Constants:
-    DEBUG = True
+    DEBUG = False
 
     #Private: 
     __isActive  = True

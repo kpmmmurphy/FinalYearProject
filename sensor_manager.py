@@ -14,7 +14,7 @@ import constants as CONSTS
 from configurable import Configurable
 
 class SensorManager(Configurable):
-    DEBUG  = True
+    DEBUG  = False
     USING_TIMER  = True 
     LOGTAG = "SensorManager"
 

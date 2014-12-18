@@ -14,7 +14,7 @@ DEBUG = True
 
 def main():
     ##TODO
-    # Configuration Manager/ Interface
+    # Configuration Manager/ Interface - @
     # Sensor Alerting and Info table - 1
     # AlertManager - 1 
     # API Class - 2
