@@ -55,6 +55,8 @@ class APIManager(Configurable):
         return configResponse.content
 
     def uploadSensorValues(self):
+        self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES,self.__sensorManager.getSensorValues())
+        '''
         if self.DEBUG:
             print self.LOGTAG, " :: Sending Sensor Values"
         
@@ -65,7 +67,7 @@ class APIManager(Configurable):
             print self.LOGTAG, " :: Uploading -> " , payload
  
         data = json.dumps(payload)
-        sendResponse = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, data=CONSTS.REQUEST_PAYLOAD_UPLOAD_SENSOR_VALUES, json=data)
+        sendResponse = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, data=CONSTS.REQUEST_PAYLOAD_UPLOAD_SENSOR_VALUES)
 
         if self.DEBUG:
             print self.LOGTAG, " -> Response :: ", sendResponse.content
@@ -74,6 +76,28 @@ class APIManager(Configurable):
             print self.LOGTAG, " :: Uploading Sensor Values Completed Successfully"
         else:
             print self.LOGTAG, " :: ERROR:Uploading Sensor Values Failed -> status_code:", sendResponse.status_code
+        '''
+
+
+    def sendRequest(self, service, payload):
+        if self.DEBUG:
+            print self.LOGTAG, " :: ", service
+
+        headers = CONSTS.REQUEST_DEFAULT_HEADERS
+        headers[CONSTS.JSON_KEY_REQUEST_SERVICE] = service
+
+        if self.DEBUG: 
+            print self.LOGTAG, " :: Uploading -> " , payload
+
+        response = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, headers=headers, data=json.dumps(payload))
+
+        if self.DEBUG:
+            print self.LOGTAG, " -> Response Content :: ", response.content
+
+        if response.status_code == requests.codes.ok:
+            print self.LOGTAG, " :: ", service, " Completed Successfully"
+        else:
+            print self.LOGTAG, " :: ERROR: ",service, " -> status_code:", sendResponse.status_code
 
     def uploadImage(self):
         if self.DEBUG:

@@ -4,6 +4,7 @@
     //Date   :: 16 - Dec - 14
 
     //Costants
+    $debug = true;
     define('PARAM_SERVICE', 'service');
     define('PARAM_GET_CONFIG', 'get_config');
     define('PARAM_UPDATE_CONFIG', 'update_config');
@@ -15,13 +16,27 @@
     $password   = "shiegeib";
     $database   = "2015_kpm2";
 
-    $request = json_decode(file_get_contents('php://input'));
-    #$request = json_decode(stripslashes(file_get_contents('php://input')));
-    $request = json_encode($request, 2);
-    echo $request->sensor_values;
-    if(isset($_POST[constant('PARAM_SERVICE')])){
+    $request = file_get_contents('php://input', 0, null, null);
+    var_dump(json_decode($request));
+    #echo $request->service;
+    if($debug){
+        echo "\n";
+        foreach (getallheaders() as $name => $value) {
+            echo "$name: $value\n";
+        }
+    }
+    
+    #$jsonString = file_get_contents('php://input', 0, null, null);
+    #$request = json_decode($jsonString , true);
+    #echo "\n" . "Motion" . $request['motion'] . "\n";
+    #foreach ($request as $name => $value) {
+    #        echo "$name: $value\n";
+    #    }
+    $headers = getallheaders();
+    
+    if(isset($headers[constant('PARAM_SERVICE')])){
+        $requestedService = htmlspecialchars($headers[constant('PARAM_SERVICE')]);
 
-        $requestedService = htmlspecialchars($_POST[constant('PARAM_SERVICE')]);
         switch($requestedService){
 
             case constant('PARAM_GET_CONFIG'):
@@ -36,11 +51,8 @@
 
             case constant('PARAM_UPLOAD_SENSOR_VALUES'):
                 //Insert Sensor value 
-                echo "Inset Sensor Values into DB";
-                print_r($_POST);
-                print "JSON" . $json;
-                $sensorValues = htmlspecialchars($_POST[constant('PARAM_SENSOR_VALUES')]);
-                insertSensorValues($sensorValues);
+                echo "\nInsert Sensor Values into DB\n";
+                #insertSensorValues($sensorValues);
                 break;
 
         }
