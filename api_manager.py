@@ -6,6 +6,7 @@
 #API class handling all http requests
 
 import requests
+import json
 from threading import Timer
 from configurable import Configurable
 import constants as CONSTS
@@ -56,14 +57,18 @@ class APIManager(Configurable):
     def uploadSensorValues(self):
         if self.DEBUG:
             print self.LOGTAG, " :: Sending Sensor Values"
-
-        payload = CONSTS.REQUEST_PAYLOAD_UPLOAD_SENSOR_VALUES
+        
+        payload = {}
         payload[CONSTS.JSON_KEY_REQUEST_SENSOR_VALUES] = self.__sensorManager.getSensorValues()
         
         if self.DEBUG: 
             print self.LOGTAG, " :: Uploading -> " , payload
+ 
+        data = json.dumps(payload)
+        sendResponse = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, data=CONSTS.REQUEST_PAYLOAD_UPLOAD_SENSOR_VALUES, json=data)
 
-        sendResponse = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, data=payload)
+        if self.DEBUG:
+            print self.LOGTAG, " -> Response :: ", sendResponse.content
         
         if sendResponse.status_code == requests.codes.ok:
             print self.LOGTAG, " :: Uploading Sensor Values Completed Successfully"
@@ -107,19 +112,19 @@ class APIManager(Configurable):
         return self.__sensorValueUploadRate
 
     def setSensorValueUploadRate(self, newRate):
-        self.getSensorValueUploadRate() = newRate
+        self.__sensorValueUploadRate = newRate
 
     def getSystemConfigRequestRate(self):
         return self.__systemConfigRequestRate
 
     def setSystemConfigRequestRate(self, newRate):
-        self.getSystemConfigRequestRate() = newRate
+        self.__systemConfigRequestRate = newRate
 
     def getCameraImageUploadRate(self):
         return self.__cameraImageUploadRate
 
     def setCameraImageUploadRate(self, newRate):
-        self.getCameraImageUploadRate() = newRate
+        self.__cameraImageUploadRate = newRate
 
 sensorFactory   = SensorFactory()
 sensorManager   = SensorManager(sensorFactory.getSensors(), None) 
