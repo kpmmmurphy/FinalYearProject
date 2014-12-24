@@ -47,12 +47,12 @@ class DatabaseManager
     	{
             $sql = $this->conn->prepare("SELECT * FROM " . self::SQL_TABLE_CURRENT . " ORDER BY id DESC LIMIT 1");
             $sql->execute();
+            return $sql->fetchAll(PDO::FETCH_ASSOC); 
     	}
     	catch(PDOException $e)
         {
             echo "Error: " . $e->getMessage();
     	}
-        return $sql->fetchAll(PDO::FETCH_ASSOC);      
 	}
 
 	private function closeConn()
