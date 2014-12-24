@@ -14,15 +14,15 @@ class DatabaseManager
 
 	function __construct()
 	{
-        $this->$conn = new mysqli($serverName, $username, $password, $database);
+        $this->conn = new mysqli($this->serverName, $this->username, $this->password, $this->database);
         // Check connection
-	    if ($conn->connect_error) {
+	    if ($this->conn->connect_error) {
 	        die("Connection failed: " . $conn->connect_error);
-
+	    }
 	}
 
 	function __destruct() {
-        $this.closeConn();
+        self::closeConn();
     }
 
     public function insertSensorValues($values)
@@ -37,16 +37,16 @@ class DatabaseManager
 	           " (carbon_monoxide, temperature, flammable_gas, motion)
 	             VALUES ('$carbon_monoxide', '$temperature', '$flammable_gas', '$motion')";
 
-	    if ($conn->query($sql) === TRUE) {
+	    if ($this->conn->query($sql) === TRUE) {
 	        echo "New record created successfully";
 	    } else {
-	        echo "Error: " . $sql . "<br>" . $conn->error;
+	        echo "Error: " . $sql . "<br>" . $this->conn->error;
 	    }	    
 	}
 
-	private funcation closeConn()
+	private function closeConn()
 	{
-		$this->$conn->close();
+		$this->conn->close();
 	}
 
 }
