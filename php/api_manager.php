@@ -55,7 +55,7 @@
 
             case constant('PARAM_GET_SENSOR_VALUES'):
                 echo "Getting Sensor Values";
-                $database_manager->selectLatestSensorValues();
+                var_dump($database_manager->selectLatestSensorValues());
                 break;
 
             default:

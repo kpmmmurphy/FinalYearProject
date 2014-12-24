@@ -56,27 +56,9 @@ class APIManager(Configurable):
 
     def uploadSensorValues(self):
         self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES,self.__sensorManager.getSensorValues())
-        '''
-        if self.DEBUG:
-            print self.LOGTAG, " :: Sending Sensor Values"
-        
-        payload = {}
-        payload[CONSTS.JSON_KEY_REQUEST_SENSOR_VALUES] = self.__sensorManager.getSensorValues()
-        
-        if self.DEBUG: 
-            print self.LOGTAG, " :: Uploading -> " , payload
- 
-        data = json.dumps(payload)
-        sendResponse = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, data=CONSTS.REQUEST_PAYLOAD_UPLOAD_SENSOR_VALUES)
 
-        if self.DEBUG:
-            print self.LOGTAG, " -> Response :: ", sendResponse.content
-        
-        if sendResponse.status_code == requests.codes.ok:
-            print self.LOGTAG, " :: Uploading Sensor Values Completed Successfully"
-        else:
-            print self.LOGTAG, " :: ERROR:Uploading Sensor Values Failed -> status_code:", sendResponse.status_code
-        '''
+    def getLatestSensorValues(self):
+        self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, None)
 
 
     def sendRequest(self, service, payload):
@@ -84,12 +66,17 @@ class APIManager(Configurable):
             print self.LOGTAG, " :: ", service
 
         headers = CONSTS.REQUEST_DEFAULT_HEADERS
-        headers[CONSTS.JSON_KEY_REQUEST_SERVICE] = service
 
-        if self.DEBUG: 
+        if service is not None:
+            headers[CONSTS.JSON_KEY_REQUEST_SERVICE] = service
+
+        if self.DEBUG and payload is not None: 
             print self.LOGTAG, " :: Uploading -> " , payload
 
-        response = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, headers=headers, data=json.dumps(payload))
+        if payload is not None:
+            response = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, headers=headers, data=json.dumps(payload))
+        else:
+            response = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, headers=headers)
 
         if self.DEBUG:
             print self.LOGTAG, " -> Response Content :: ", response.content
@@ -154,6 +141,6 @@ sensorFactory   = SensorFactory()
 sensorManager   = SensorManager(sensorFactory.getSensors(), None) 
 apiManager = APIManager(sensorManager=sensorManager)
 #apiManager.getSystemConfig()
-apiManager.uploadSensorValues()
+apiManager.getLatestSensorValues()
 
 

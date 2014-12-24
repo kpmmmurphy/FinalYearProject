@@ -67,6 +67,7 @@ JSON_KEY_REQUEST_FILE          = "file"
 
 JSON_VALUE_REQUEST_SERVICE_GET_CONFIG           = "get_config"
 JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES = "upload_sensor_values"
+JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES = "get_sensor_values"
 JSON_VALUE_REQUEST_SERVICE_UPLOAD_CAMERA_IMAGE  = "upload_camera_image"
 
 #---ALERTING-----------------------------------

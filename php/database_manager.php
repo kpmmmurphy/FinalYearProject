@@ -14,14 +14,8 @@ class DatabaseManager
 
 	function __construct()
 	{
-        #$this->conn = new mysqli($this->serverName, $this->username, $this->password, $this->database);
         $this->conn = new PDO("mysql:host=$this->servername;dbname=$this->database", $this->username, $this->password);
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        // Check connection
-	    //if ($this->conn->connect_error) {
-	    //    die("Connection failed: " . $conn->connect_error);
-	    //}
-	}
+        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	}
 
 	function __destruct() {
         $this->closeConn();
@@ -49,26 +43,20 @@ class DatabaseManager
 
 	public function selectLatestSensorValues()
     {
-	    $date_and_time   = date("l jS \of F Y h:i:s A");
-	    $motion          = $values->motion;
-	    $temperature     = $values->temperature;
-	    $carbon_monoxide = $values->carbon_monoxide;
-	    $flammable_gas   = $values->flammable_gas;
-
-	    $sql = "SELECT * ". 
-	           "FROM " . self::SQL_TABLE_CURRENT . 
-	           "WHERE id = MAX(id)";
-
-	    if ($this->conn->query($sql) === TRUE) {
-	        echo "New record created successfully";
-	    } else {
-	        echo "Error: " . $sql . "<br>" . $this->conn->error;
-	    }	    
+	    try
+    	{
+            $sql = $this->conn->prepare("SELECT * FROM " . self::SQL_TABLE_CURRENT . " ORDER BY id DESC LIMIT 1");
+            $sql->execute();
+    	}
+    	catch(PDOException $e)
+        {
+            echo "Error: " . $e->getMessage();
+    	}
+        return $sql->fetchAll(PDO::FETCH_ASSOC);      
 	}
 
 	private function closeConn()
 	{
-		#$this->conn->close();
 		$this->conn = null;
 	}
 
