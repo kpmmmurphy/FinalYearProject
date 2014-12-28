@@ -14,7 +14,11 @@
     define('PARAM_UPLOAD_SENSOR_VALUES', 'upload_sensor_values');
     define('PARAM_GET_SENSOR_VALUES', 'get_sensor_values');
     define('PARAM_SENSOR_VALUES', 'sensor_values');
+    //Files
     define('DIR_CONFIG', './config/');
+    define('FILE_CONFIG_DEFAULT', 'default_config.json');
+    define('FILE_CONFIG', 'config.json');
+
     
     $headers    = getallheaders();
     $rawRequest = file_get_contents('php://input', 0, null, null);
@@ -46,16 +50,29 @@
                 if($debug){
                     echo "\nGet System Configuration\n";
                 }
-                $file = constant("DIR_CONFIG") . "default_config.json";
-                $config = fopen($file, "r") or die("Unable to open file!");
-                echo fread($config, filesize($file));
+                
+                $file = constant("DIR_CONFIG") . constant("FILE_CONFIG");
+                if(!file_exists($file)){
+                    $file = constant("DIR_CONFIG") . constant('FILE_CONFIG_DEFAULT');
+                }
+                $config_file = fopen($file, "r") or die("Unable to open file!");
+                echo fread($config_file, filesize($file));
+                fclose($config_file);
                 break;
 
             case constant('PARAM_UPDATE_CONFIG'):
                 //Update System config
                 if($debug){
-                    echo "\nUpdate system config\n";
+                    echo "\nUpdate System Config\n";
                 }
+                $file = constant("DIR_CONFIG") . constant("FILE_CONFIG");
+                if(!file_exists($file)){
+                    file_put_contents($file, '');
+                    echo "yeeees";
+                }
+                $config_file = fopen($file, "w") or die("Unable to open file!");
+                fwrite($config_file, $requestObj);
+                fclose($config_file);
                 break;
 
             case constant('PARAM_UPLOAD_SENSOR_VALUES'):

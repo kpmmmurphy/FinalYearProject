@@ -47,11 +47,17 @@ class APIManager(Configurable):
         configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_CONFIG,None)
         return configResponse.content
 
+    def updateSystemConfig(self):
+        file = open('config/test_config.json', 'r')
+        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG,file.read())
+        return configResponse.content
+
     def uploadSensorValues(self):
         self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES,self.__sensorManager.getSensorValues())
 
     def getLatestSensorValues(self):
-        self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, None)
+        valuesResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES,None)
+        return valuesResponse.content
 
 
     def sendRequest(self, service, payload):
@@ -78,6 +84,8 @@ class APIManager(Configurable):
             print self.LOGTAG, " :: ", service, " Completed Successfully"
         else:
             print self.LOGTAG, " :: ERROR: ",service, " -> status_code:", sendResponse.status_code
+
+        return response
 
     def uploadImage(self):
         if self.DEBUG:
@@ -133,7 +141,8 @@ class APIManager(Configurable):
 sensorFactory   = SensorFactory()
 sensorManager   = SensorManager(sensorFactory.getSensors(), None) 
 apiManager = APIManager(sensorManager=sensorManager)
-apiManager.getSystemConfig()
+#apiManager.getSystemConfig()
+apiManager.updateSystemConfig()
 #apiManager.getLatestSensorValues()
 
 
