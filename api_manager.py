@@ -44,14 +44,7 @@ class APIManager(Configurable):
 
     #---------API CALLS-----------------------------
     def getSystemConfig(self):
-    	if self.DEBUG:
-    		print self.LOGTAG, " :: Requesting System Configuration"
-
-        configResponse = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, data=CONSTS.REQUEST_PAYLOAD_CONFIG_GET)	
-        
-        if self.DEBUG:
-            print self.LOGTAG, " :: New Config -> ", configResponse.content
-
+        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_CONFIG,None)
         return configResponse.content
 
     def uploadSensorValues(self):
@@ -140,7 +133,7 @@ class APIManager(Configurable):
 sensorFactory   = SensorFactory()
 sensorManager   = SensorManager(sensorFactory.getSensors(), None) 
 apiManager = APIManager(sensorManager=sensorManager)
-#apiManager.getSystemConfig()
-apiManager.getLatestSensorValues()
+apiManager.getSystemConfig()
+#apiManager.getLatestSensorValues()
 
 

@@ -14,6 +14,7 @@
     define('PARAM_UPLOAD_SENSOR_VALUES', 'upload_sensor_values');
     define('PARAM_GET_SENSOR_VALUES', 'get_sensor_values');
     define('PARAM_SENSOR_VALUES', 'sensor_values');
+    define('DIR_CONFIG', './config/');
     
     $headers    = getallheaders();
     $rawRequest = file_get_contents('php://input', 0, null, null);
@@ -33,29 +34,44 @@
 
     
     if(isset($headers[constant('PARAM_SERVICE')])){
+
         $requestedService = htmlspecialchars($headers[constant('PARAM_SERVICE')]);
+
         $database_manager = new DatabaseManager();
+
         switch($requestedService){
 
             case constant('PARAM_GET_CONFIG'):
                 //Return System Configuration
-                echo "Get System Configuration";
+                if($debug){
+                    echo "\nGet System Configuration\n";
+                }
+                $file = constant("DIR_CONFIG") . "default_config.json";
+                $config = fopen($file, "r") or die("Unable to open file!");
+                echo fread($config, filesize($file));
                 break;
 
             case constant('PARAM_UPDATE_CONFIG'):
                 //Update System config
-                echo "Update system config";
+                if($debug){
+                    echo "\nUpdate system config\n";
+                }
                 break;
 
             case constant('PARAM_UPLOAD_SENSOR_VALUES'):
                 //Insert Sensor value 
-                echo "\nInsert Sensor Values into DB\n";
+                if($debug){
+                    echo "\nInsert Sensor Values into DB\n";
+                }
                 $database_manager->insertSensorValues($requestObj);
                 break;
 
             case constant('PARAM_GET_SENSOR_VALUES'):
-                echo "Getting Sensor Values";
-                var_dump($database_manager->selectLatestSensorValues());
+                //Get latest sensor values
+                if($debug){
+                    echo "\nGetting Sensor Values\n";
+                }
+                echo json_encode($database_manager->selectLatestSensorValues());
                 break;
 
             default:
