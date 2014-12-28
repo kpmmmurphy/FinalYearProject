@@ -44,26 +44,31 @@ class APIManager(Configurable):
 
     #---------API CALLS-----------------------------
     def getSystemConfig(self):
-        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_CONFIG,None)
+        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_CONFIG, payload=None, filez=None)
         return configResponse.content
 
     def updateSystemConfig(self):
         file = open('config/test_config.json', 'r')
-        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG,file.read())
+        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG, payload=file.read(), filez=None)
         return configResponse.content
 
     def uploadSensorValues(self):
-        self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES,self.__sensorManager.getSensorValues())
+        self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES, payload=self.__sensorManager.getSensorValues(), filez=None)
 
     def getLatestSensorValues(self):
-        valuesResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES,None)
+        valuesResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, payload=None, filez=None)
         return valuesResponse.content
 
+    def uploadImage(self):
+        #Should select latest image dynamically 
+        camera_image = {CONSTS.JSON_KEY_REQUEST_FILE : ('camera_still', open(CONSTS.DIR_CAMERA + "img.png", 'rb'))}
+        r = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_CAMERA_STILL, None, filez=camera_image)
 
-    def sendRequest(self, service, payload):
+    def sendRequest(self, service, payload, filez):
         if self.DEBUG:
             print self.LOGTAG, " :: ", service
 
+        url = CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER
         headers = CONSTS.REQUEST_DEFAULT_HEADERS
 
         if service is not None:
@@ -73,9 +78,11 @@ class APIManager(Configurable):
             print self.LOGTAG, " :: Uploading -> " , payload
 
         if payload is not None:
-            response = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, headers=headers, data=json.dumps(payload))
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+        elif filez is not None:
+            response = requests.post(url, headers=headers, files=filez)
         else:
-            response = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, headers=headers)
+            response = requests.post(url, headers=headers)
 
         if self.DEBUG:
             print self.LOGTAG, " -> Response Content :: ", response.content
@@ -86,25 +93,6 @@ class APIManager(Configurable):
             print self.LOGTAG, " :: ERROR: ",service, " -> status_code:", sendResponse.status_code
 
         return response
-
-    def uploadImage(self):
-        if self.DEBUG:
-            print self.LOGTAG, " :: Uploading Camera Image"
-
-        payload = CONSTS.REQUEST_PAYLOAD_UPLOAD_CAMERA_IMAGE
-        #Should select latest image dynamically 
-        camera_image   = {CONSTS.JSON_KEY_REQUEST_FILE : open(CONSTS.DIR_CAMERA + "img.png", 'rb')}
-        
-        imageUploadResponse = requests.post(CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER, data=payload, files=camera_image)
-        
-        if imageUploadResponse.status_code == requests.codes.ok:
-            print self.LOGTAG, " :: Uploading Image Completed Successfully"
-        else:
-            print self.LOGTAG, " :: ERROR:Uploading Image Failed -> status_code:", sendResponse.status_code
-
-    def test(self):
-    	cs1_test = requests.get("http://cs1.ucc.ie/~kpm2/fyp/api/test.txt")	
-    	print cs1_test.content
 
     #-------Polling Calls---------------------------
     def startPolling_SysConfig(self):
@@ -138,11 +126,11 @@ class APIManager(Configurable):
     def setCameraImageUploadRate(self, newRate):
         self.__cameraImageUploadRate = newRate
 
-sensorFactory   = SensorFactory()
-sensorManager   = SensorManager(sensorFactory.getSensors(), None) 
-apiManager = APIManager(sensorManager=sensorManager)
+sensorFactory = SensorFactory()
+sensorManager = SensorManager(sensorFactory.getSensors(), None) 
+apiManager    = APIManager(sensorManager=sensorManager)
 #apiManager.getSystemConfig()
-apiManager.updateSystemConfig()
+#apiManager.updateSystemConfig()
 #apiManager.getLatestSensorValues()
-
+apiManager.uploadImage()
 

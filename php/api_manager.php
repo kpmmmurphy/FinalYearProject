@@ -14,12 +14,12 @@
     define('PARAM_UPLOAD_SENSOR_VALUES', 'upload_sensor_values');
     define('PARAM_GET_SENSOR_VALUES', 'get_sensor_values');
     define('PARAM_SENSOR_VALUES', 'sensor_values');
+    define('PARAM_UPLOAD_CAMERA_STILL', 'upload_camera_still');
     //Files
     define('DIR_CONFIG', './config/');
     define('FILE_CONFIG_DEFAULT', 'default_config.json');
     define('FILE_CONFIG', 'config.json');
 
-    
     $headers    = getallheaders();
     $rawRequest = file_get_contents('php://input', 0, null, null);
     $requestObj = json_decode($rawRequest);
@@ -65,6 +65,7 @@
                 if($debug){
                     echo "\nUpdate System Config\n";
                 }
+
                 $file = constant("DIR_CONFIG") . constant("FILE_CONFIG");
                 if(!file_exists($file)){
                     file_put_contents($file, '');
@@ -89,6 +90,14 @@
                     echo "\nGetting Sensor Values\n";
                 }
                 echo json_encode($database_manager->selectLatestSensorValues());
+                break;
+
+            case constant('PARAM_UPLOAD_CAMERA_STILL'):
+                //Upload camera still
+                if($debug){
+                    echo "\Upload Camera Still\n";
+                }
+                print_r($_FILES);
                 break;
 
             default:
