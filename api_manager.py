@@ -20,6 +20,7 @@ class APIManager(Configurable):
     LOGTAG = "APIManager"
 
     __sensorManager = None
+    __configurationManager = None
     __polling = True
 
     #Configurables
@@ -27,9 +28,12 @@ class APIManager(Configurable):
     __sensorValueUploadRate   = CONSTS.REQUEST_RATE_UPLOAD_SENSOR_VALUES
     __cameraImageUploadRate   = CONSTS.REQUEST_RATE_UPLOAD_CAMERA_IMAGE
 
-    def __init__(self, sensorManager):
+    def __init__(self, sensorManager, configurationManager):
         if self.DEBUG:
             print self.LOGTAG, " :: Created"
+
+        if configurationManager is not None:
+            self.__configurationManager = configurationManager
 
         if sensorManager is not None:
             self.__sensorManager = sensorManager
@@ -52,6 +56,8 @@ class APIManager(Configurable):
         configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_CONFIG, payload=None, filez=None)   
         if self.__polling:
             self.schedule_SysConfigCheck()
+
+        configurationManager.reconfigure(json.loads(configResponse.content))
 
         return configResponse.content
 

@@ -137,7 +137,7 @@ class SensorManager(Configurable):
 
         if config is None:
             config_data = open(CONSTS.CONFIGURATION_DEFAULT)
-            config      = json.load(config_data)
+            config      = json.loads(config_data) #load or loads?
 
         #Collection Config
         collectionConfig  = config[CONSTS.JSON_KEY_COLLECTION_CONFIG_OBJ]
