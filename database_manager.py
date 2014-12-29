@@ -10,8 +10,9 @@ import constants as CONSTS
 from configurable import Configurable
 
 class DatabaseManager(object):
-    DEBUG = False
+    DEBUG = True
     TEST  = True
+    LOGTAG = "DatabaseManager"
 
     #Private:
     __db = None
@@ -54,7 +55,7 @@ class DatabaseManager(object):
         sensor_output.save()
 
         if self.DEBUG:
-            print "Sensor Data Inserted.."
+            print self.LOGTAG, " :: Sensor Data Inserted.."
    
     #Test Functions
     def insert_test_data(self, simulated_output_level):

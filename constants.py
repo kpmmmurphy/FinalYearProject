@@ -13,14 +13,14 @@ COLLECTION_RATE_DEFAULT     = 15
 COLLECTION_PRIORITY_DEFAULT = 1
 
 #Test - Local - Database Credentials
-TESTING_SQL    =  False
+TESTING_SQL    =  True
 TEST_DB_NAME   = 'TEST'
 TEST_DB_USER   = 'root'
 TEST_DB_PASSWD = 'kevinmurphy'
 
 #Production - CS1 - Database Credentials
 DB_HOST   = 'https://csgate.ucc.ie'
-#DB_HOST   = 'https://cs1.ucc.ie'
+DB_HOST   = 'https://cs1.ucc.ie'
 DB_NAME   = '2015_kpm2'
 DB_USER   = 'kpm2'
 DB_PASSWD = 'shiegeib'
@@ -102,5 +102,5 @@ REQUEST_PAYLOAD_UPLOAD_CAMERA_IMAGE  = {JSON_KEY_REQUEST_SERVICE : JSON_VALUE_RE
 
 #Request/Upload Rates
 REQUEST_RATE_SYSTEM_CONFIG        = 60
-REQUEST_RATE_UPLOAD_SENSOR_VALUES = 20
+REQUEST_RATE_UPLOAD_SENSOR_VALUES = 10
 REQUEST_RATE_UPLOAD_CAMERA_IMAGE  = 60

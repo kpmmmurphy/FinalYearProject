@@ -16,10 +16,11 @@ from sensor_factory   import SensorFactory
 from sensor_manager   import SensorManager
 
 class APIManager(Configurable):
-    DEBUG  = True
+    DEBUG  = False
     LOGTAG = "APIManager"
 
     __sensorManager = None
+    __polling = True
 
     #Configurables
     __systemConfigRequestRate = CONSTS.REQUEST_RATE_SYSTEM_CONFIG
@@ -32,6 +33,9 @@ class APIManager(Configurable):
 
         if sensorManager is not None:
             self.__sensorManager = sensorManager
+            self.schedule_UploadSensorValues()
+            self.schedule_UploadCameraStill()
+            self.schedule_SysConfigCheck()
 
     def configure(self, config):
     	if self.DEBUG:
@@ -45,25 +49,35 @@ class APIManager(Configurable):
 
     #---------API CALLS-----------------------------
     def getSystemConfig(self):
-        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_CONFIG, payload=None, filez=None)
-        return configResponse.content
+        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_CONFIG, payload=None, filez=None)   
+        if self.__polling:
+            self.schedule_SysConfigCheck()
 
-    def updateSystemConfig(self):
-        file = open('config/test_config.json', 'r')
-        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG, payload=file.read(), filez=None)
         return configResponse.content
 
     def uploadSensorValues(self):
         self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES, payload=self.__sensorManager.getSensorValues(), filez=None)
-
-    def getLatestSensorValues(self):
-        valuesResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, payload=None, filez=None)
-        return valuesResponse.content
+        if self.__polling:
+            self.schedule_UploadSensorValues()
 
     def uploadImage(self):
         #Should select latest image dynamically 
         camera_image = {CONSTS.JSON_KEY_CAMERA_STILL : (time.asctime(time.localtime(time.time())), open(CONSTS.DIR_CAMERA + "img.jpg", 'rb'), 'image/png')}
-        r = self.sendRequest(service=None, payload=None, filez=camera_image)
+        self.sendRequest(service=None, payload=None, filez=camera_image)
+        if self.__polling:
+            self.schedule_UploadCameraStill()
+
+    #Purely for testing server side api 
+    def getLatestSensorValues(self):
+        valuesResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, payload=None, filez=None)
+        return valuesResponse.content
+
+    #Purely for testing server side api 
+    def updateSystemConfig(self):
+        file = open('config/test_config.json', 'r')
+        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG, payload=file.read(), filez=None)
+
+        return configResponse.content
 
     def sendRequest(self, service, payload, filez):
         if self.DEBUG:
@@ -74,6 +88,8 @@ class APIManager(Configurable):
 
         if service is not None:
             headers[CONSTS.JSON_KEY_REQUEST_SERVICE] = service
+        else:
+            service = "File Uploading"
 
         if self.DEBUG and payload is not None: 
             print self.LOGTAG, " :: Uploading -> " , payload
@@ -96,15 +112,15 @@ class APIManager(Configurable):
         return response
 
     #-------Polling Calls---------------------------
-    def startPolling_SysConfig(self):
+    def schedule_SysConfigCheck(self):
         timer = Timer(self.getSystemConfigRequestRate(), self.getSystemConfig,())
         timer.start()
 
-    def startPolling_UploadSensorValues(self):
+    def schedule_UploadSensorValues(self):
         timer = Timer(self.getSensorValueUploadRate(), self.uploadSensorValues,())
         timer.start()
 
-    def startPolling_UploadCameraStill(self):
+    def schedule_UploadCameraStill(self):
         timer = Timer(self.getCameraImageUploadRate(), self.uploadImage,())
         timer.start()
 
@@ -127,11 +143,12 @@ class APIManager(Configurable):
     def setCameraImageUploadRate(self, newRate):
         self.__cameraImageUploadRate = newRate
 
+'''
 sensorFactory = SensorFactory()
 sensorManager = SensorManager(sensorFactory.getSensors(), None) 
 apiManager    = APIManager(sensorManager=sensorManager)
-#apiManager.getSystemConfig()
-#apiManager.updateSystemConfig()
-#apiManager.getLatestSensorValues()
+apiManager.getSystemConfig()
+apiManager.updateSystemConfig()
+apiManager.uploadSensorValues()
 apiManager.uploadImage()
-
+'''

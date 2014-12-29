@@ -8,6 +8,7 @@
 from sensor_factory   import SensorFactory
 from sensor_manager   import SensorManager
 from database_manager import DatabaseManager
+from api_manager      import APIManager
 
 #Constants
 DEBUG = True
@@ -17,9 +18,7 @@ def main():
     # Configuration Manager/ Interface - @
     # Sensor Alerting and Info table - 1
     # AlertManager - 1 
-    # API Manager - 2 -> TEST
-    # CS1 integration / Configurable DB??
-    # Camera Stills, and Video?
+    # Uploading Video?
     # Dropbox? / Google Drive? 
     # User Pairing System
     # Automated Setup
@@ -31,8 +30,9 @@ def main():
     databaseManager = DatabaseManager()
     #databaseManager.createTables()
 
-    sensorFactory   = SensorFactory()
-    sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
+    sensorFactory = SensorFactory()
+    sensorManager = SensorManager(sensorFactory.getSensors(), databaseManager) 
+    apiManager    = APIManager(sensorManager=sensorManager)
 
 try:
     main()
