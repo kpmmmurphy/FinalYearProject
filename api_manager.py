@@ -7,6 +7,7 @@
 
 import requests
 import json
+import time
 from threading import Timer
 from configurable import Configurable
 import constants as CONSTS
@@ -61,8 +62,8 @@ class APIManager(Configurable):
 
     def uploadImage(self):
         #Should select latest image dynamically 
-        camera_image = {CONSTS.JSON_KEY_REQUEST_FILE : ('camera_still', open(CONSTS.DIR_CAMERA + "img.png", 'rb'))}
-        r = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_CAMERA_STILL, None, filez=camera_image)
+        camera_image = {CONSTS.JSON_KEY_CAMERA_STILL : (time.asctime(time.localtime(time.time())), open(CONSTS.DIR_CAMERA + "img.jpg", 'rb'), 'image/png')}
+        r = self.sendRequest(service=None, payload=None, filez=camera_image)
 
     def sendRequest(self, service, payload, filez):
         if self.DEBUG:
@@ -80,12 +81,12 @@ class APIManager(Configurable):
         if payload is not None:
             response = requests.post(url, headers=headers, data=json.dumps(payload))
         elif filez is not None:
-            response = requests.post(url, headers=headers, files=filez)
+            response = requests.post(url, headers=None, files=filez)
         else:
             response = requests.post(url, headers=headers)
 
         if self.DEBUG:
-            print self.LOGTAG, " -> Response Content :: ", response.content
+            print self.LOGTAG, " -> Response Content :: ", response.text
 
         if response.status_code == requests.codes.ok:
             print self.LOGTAG, " :: ", service, " Completed Successfully"

@@ -14,9 +14,11 @@
     define('PARAM_UPLOAD_SENSOR_VALUES', 'upload_sensor_values');
     define('PARAM_GET_SENSOR_VALUES', 'get_sensor_values');
     define('PARAM_SENSOR_VALUES', 'sensor_values');
-    define('PARAM_UPLOAD_CAMERA_STILL', 'upload_camera_still');
+    define('PARAM_UPLOAD_CAMERA_STILL', 'camera_still');
+    define('PARAM_UPLOAD_CAMERA_VIDEO', 'camera_video');
     //Files
     define('DIR_CONFIG', './config/');
+    define('DIR_CAMERA', './camera/');
     define('FILE_CONFIG_DEFAULT', 'default_config.json');
     define('FILE_CONFIG', 'config.json');
 
@@ -36,7 +38,8 @@
         echo "\n";
     }
 
-    
+    var_dump($_FILES);
+
     if(isset($headers[constant('PARAM_SERVICE')])){
 
         $requestedService = htmlspecialchars($headers[constant('PARAM_SERVICE')]);
@@ -92,19 +95,70 @@
                 echo json_encode($database_manager->selectLatestSensorValues());
                 break;
 
-            case constant('PARAM_UPLOAD_CAMERA_STILL'):
-                //Upload camera still
-                if($debug){
-                    echo "\Upload Camera Still\n";
-                }
-                print_r($_FILES);
-                break;
-
             default:
                 echo "ERROR :: Requested service not present";
         }
 
     }else{
-        echo "Service Not Set";
+
+        if(isset($_FILES[constant('PARAM_UPLOAD_CAMERA_STILL')])){
+            if($debug){
+                echo "\Upload Camera Still\n";
+                var_dump($_FILES);
+            }
+            verifiy_and_upload_file(constant('PARAM_UPLOAD_CAMERA_STILL'));
+        }elseif(isset($_FILES[constant('PARAM_UPLOAD_CAMERA_VIDEO')])){
+            if($debug){
+                echo "\Upload Camera Video\n";
+                var_dump($_FILES);
+            }
+        }else{
+            echo "Service Not Set";
+        }
+
     }
+
+/*
+ * Code largely taken from ->
+ * http://www.w3schools.com/php/php_file_upload.asp
+ */
+
+function verifiy_and_upload_file($fileName)
+{
+    $target_file = constant("DIR_CAMERA") . basename($_FILES[$fileName]["name"]);
+    $check = getimagesize($_FILES[$fileName]["tmp_name"]);
+    $uploadOk = 1;
+    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+    if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+    } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+    }
+
+    // Check file size
+    if ($_FILES[$fileName]["size"] > 500000) {
+        echo "Sorry, your file is too large.";
+        $uploadOk = 0;
+    }
+
+    if($imageFileType === "image/jpg" or $imageFileType === "image/png" or $imageFileType === "image/jpeg"
+       or $imageFileType === "image/h264") {
+        echo "Sorry, only JPG, JPEG, PNG & h264 files are allowed.";
+        $uploadOk = 0;
+    }
+
+    if ($uploadOk == 0) {
+        echo "Sorry, your file was not uploaded.";
+    } else {
+        if (move_uploaded_file($_FILES[$fileName]["tmp_name"], $target_file)) {
+            echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
+    }
+}
+
 ?>

@@ -63,7 +63,8 @@ JSON_KEY_API_CAMERA_IMAGE_UPLOAD_RATE   = "camera_image_upload_rate"
 #Requests
 JSON_KEY_REQUEST_SERVICE       = "service"
 JSON_KEY_REQUEST_SENSOR_VALUES = "sensor_values"
-JSON_KEY_REQUEST_FILE          = "file"       
+JSON_KEY_REQUEST_FILE          = "file"     
+JSON_KEY_CAMERA_STILL          = "camera_still"  
 
 JSON_VALUE_REQUEST_SERVICE_GET_CONFIG           = "get_config"
 JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG        = "update_config"
