@@ -9,7 +9,7 @@ import random
 import constants as CONSTS
 from configurable import Configurable
 
-class DatabaseManager(object):
+class DatabaseManager(Configurable):
     DEBUG = True
     TEST  = True
     LOGTAG = "DatabaseManager"
@@ -18,7 +18,11 @@ class DatabaseManager(object):
     __db = None
 
     def __init__(self):
-         __db = self.loadDatabase()
+        super(DatabaseManager, self).__init__(CONSTS.JSON_KEY_DATABASE_MANAGER_CONFIG)
+        __db = self.loadDatabase()
+
+    def configure(self, config):
+        pass
 
     #Creates the Tables
     @staticmethod
@@ -124,6 +128,9 @@ class DatabaseManager(object):
             db = peewee.MySQLDatabase(CONSTS.DB_NAME, host=CONSTS.DB_HOST, port=CONSTS.DB_PORT, user=CONSTS.DB_USER, passwd=CONSTS.DB_PASSWD)
 
         return db
+
+    def toString(self):
+        pass
 
 #MODELS------------------------------------------------------- 
 class BaseModel(peewee.Model):

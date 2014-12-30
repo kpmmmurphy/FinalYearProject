@@ -40,6 +40,10 @@ SENSOR_MQ2           = "flammable_gas"
 SENSOR_MOTION        = "motion"
 
 #---JSON Keys -----------------------------------
+JSON_KEY_DEFAULT = "default"
+
+#Database
+JSON_KEY_DATABASE_MANAGER_CONFIG = "database_manager"
 
 #Sensors
 JSON_KEY_SENSORS_ARRAY     = "sensors"
@@ -49,16 +53,19 @@ JSON_KEY_SENSOR_PROBE_RATE = "probe_rate"
 JSON_KEY_SENSOR_IS_ACTIVE  = "is_active"
 JSON_KEY_SENSOR_ALERT_THRESHOLD  = "alert_threshold"
 
-#Collection
-JSON_KEY_COLLECTION_CONFIG_OBJ = "collection"
+#Sensor Manager
+JSON_KEY_SENSOR_MANAGER_CONFIG = "sensor_manager"
 JSON_KEY_COLLECTION_PRIORITY   = "collection_priority"
 JSON_KEY_COLLECTION_RATE       = "collection_rate"
 
 #API
-JSON_KEY_API_CONFIG_OBJ = "api"
+JSON_KEY_API_CONFIG = "api_manager"
 JSON_KEY_API_SYSTEM_CONFIG_REQUEST_RATE = "sys_config_request_rate"
 JSON_KEY_API_SENSOR_VALUE_UPLOAD_RATE   = "sensor_value_upload_rate"
 JSON_KEY_API_CAMERA_IMAGE_UPLOAD_RATE   = "camera_image_upload_rate"
+
+#Config Manager
+JSON_KEY_CONFIG_MANAGER_CONFIG = "config_manager"
 
 #Requests
 JSON_KEY_REQUEST_SERVICE       = "service"
@@ -87,6 +94,7 @@ SCRIPT_TAKE_CAMERA_STILL = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_still.sh
 
 #DIRs
 DIR_CAMERA = "./camera/"
+DIR_CONFIG = "./config/"
 
 #---API------------------------------------------
 API_URL_CS1     = "http://cs1.ucc.ie/~kpm2/fyp/api/"

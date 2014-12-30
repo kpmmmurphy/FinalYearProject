@@ -6,7 +6,7 @@
     require_once('database_manager.php');
 
     //---Constants
-    $debug = true;
+    $debug = false;
     //Request Params
     define('PARAM_SERVICE', 'service');
     define('PARAM_GET_CONFIG', 'get_config');
@@ -35,10 +35,11 @@
         echo "\n\nREQUEST::\n\n";
         var_dump($requestObj);
 
-        echo "\n";
+        echo "\nFiles::\n\n";
+        var_dump($_FILES);
     }
 
-    var_dump($_FILES);
+    
 
     if(isset($headers[constant('PARAM_SERVICE')])){
 
@@ -72,7 +73,6 @@
                 $file = constant("DIR_CONFIG") . constant("FILE_CONFIG");
                 if(!file_exists($file)){
                     file_put_contents($file, '');
-                    echo "yeeees";
                 }
                 $config_file = fopen($file, "w") or die("Unable to open file!");
                 fwrite($config_file, $requestObj);

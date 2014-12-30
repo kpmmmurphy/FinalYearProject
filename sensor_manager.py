@@ -26,6 +26,8 @@ class SensorManager(Configurable):
     __collectionPriority = CONSTS.COLLECTION_PRIORITY_DEFAULT
 
     def __init__(self, sensors, database_manager):
+        super(SensorManager, self).__init__(CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG)
+
         if self.DEBUG:
             print self.LOGTAG , " :: Created..."
 
@@ -37,10 +39,29 @@ class SensorManager(Configurable):
 
         if sensors is not None:
             self.setSensors(sensors)
-            self.configure(None)
             self.startProbing()
 
         self.__schedular.run()
+
+    def configure(self, config):
+        if self.DEBUG:
+            print self.LOGTAG, " :: Updating Configuration"
+
+        if config is None:
+            config_data = open(CONSTS.CONFIGURATION_DEFAULT)
+            config      = json.load(config_data) #load or loads?
+
+        sensorManagerConfig  = config[CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG]
+        self.setCollectionRate(collectionConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
+        self.setCollectionPriority(collectionConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
+        
+        #Sensors Config
+        for sensorConfig in config[CONSTS.JSON_KEY_SENSORS_ARRAY]:
+            self.getSensors()[sensorConfig[CONSTS.JSON_KEY_SENSOR_NAME]].configure(sensorConfig)
+        
+        if config_data is not None:
+            config_data.close()
+
 
     #PROBING SENSORS------------------------------------------------------
     #Starts all sensors probing depending on current configuration
@@ -60,7 +81,7 @@ class SensorManager(Configurable):
                 
     #Stops all sensors probing
     def stopProbing(self):
-        for name, sensor in self.getSensors().iteritem():
+        for name, sensor in self.getSensors().iteritems():
             sensor.setActiveStatus(False)
 
     def probeSensor(self, sensor):
@@ -131,26 +152,24 @@ class SensorManager(Configurable):
         if value is not None:
             self.__collectionPriority = value
 
-    def configure(self, config):
+    def toString(self):
+        data = { CONSTS.JSON_KEY_COLLECTION_RATE     : self.getCollectionRate(), 
+                 CONSTS.JSON_KEY_COLLECTION_PRIORITY : self.getCollectionPriority()}
+        
         if self.DEBUG:
-            print self.LOGTAG, " :: Updating Configuration"
+            print self.LOGTAG , json.dumps(data)
 
-        if config is None:
-            config_data = open(CONSTS.CONFIGURATION_DEFAULT)
-            config      = json.loads(config_data) #load or loads?
+        return data  
 
-        #Collection Config
-        collectionConfig  = config[CONSTS.JSON_KEY_COLLECTION_CONFIG_OBJ]
-        self.setCollectionRate(collectionConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
-        self.setCollectionPriority(collectionConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
-        
-        #Sensors Config
-        for sensorConfig in config[CONSTS.JSON_KEY_SENSORS_ARRAY]:
-            self.getSensors()[sensorConfig[CONSTS.JSON_KEY_SENSOR_NAME]].configure(sensorConfig)
-        
-        if config_data is not None:
-            config_data.close()
+    def sensorsToString(self):
+        sensor_array = []
+        for name, sensor in self.getSensors().iteritems():
+            sensor_array.append(sensor.toString())
 
+        return sensor_array
+
+
+    
         
 
 

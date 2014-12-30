@@ -14,17 +14,9 @@ from py_sensors.mq7 import MQ7
 from py_sensors.mq2 import MQ2
 from py_sensors.motion_detector import MotionDetector
 
-'''
-class API(object):
-    DEBUG = True
-    LOGTAG = "API_Client"
-
-    def requestConfig():
-'''
-
 class SensorFactory(object):
     #Constants
-    DEBUG  = True
+    DEBUG  = False
     LOGTAG = "SensorFactory"
     PC_OS     = "posix"
     LIB_PATH  = "./sensors/libs/lib_SensorManager.so"

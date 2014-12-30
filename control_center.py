@@ -32,8 +32,10 @@ def main():
     databaseManager = DatabaseManager()
     sensorFactory   = SensorFactory()
     sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
-    apiManager      = APIManager(sensorManager=sensorManager)
+    apiManager      = APIManager(sensorManager=sensorManager, configurationManager=None)
     configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager})
+    #Api needs this to update configuration
+    apiManager.setConfigManager(configurationManager)
 
 try:
     main()

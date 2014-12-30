@@ -29,6 +29,8 @@ class APIManager(Configurable):
     __cameraImageUploadRate   = CONSTS.REQUEST_RATE_UPLOAD_CAMERA_IMAGE
 
     def __init__(self, sensorManager, configurationManager):
+        super(APIManager, self).__init__(CONSTS.JSON_KEY_API_CONFIG)
+
         if self.DEBUG:
             print self.LOGTAG, " :: Created"
 
@@ -46,7 +48,7 @@ class APIManager(Configurable):
     	    print self.LOGTAG, ":: Configuring"
         
         if config is not None:
-            apiConfig = config[CONSTS.JSON_KEY_API_CONFIG_OBJ]
+            apiConfig = config[self.getJsonConfigKey()]
             self.setSensorValueUploadRate(apiConfig[CONSTS.JSON_KEY_API_SENSOR_VALUE_UPLOAD_RATE])
             self.setSystemConfigRequestRate(apiConfig[CONSTS.JSON_KEY_API_SYSTEM_CONFIG_REQUEST_RATE])
             self.setCameraImageUploadRate(apiConfig[CONSTS.JSON_KEY_API_CAMERA_IMAGE_UPLOAD_RATE])
@@ -57,7 +59,9 @@ class APIManager(Configurable):
         if self.__polling:
             self.schedule_SysConfigCheck()
 
-        configurationManager.reconfigure(json.loads(configResponse.content))
+        if self.getConfigManager() is not None:
+            print configResponse.content
+            self.getConfigManager().reconfigure(json.loads(configResponse.content))
 
         return configResponse.content
 
@@ -148,6 +152,22 @@ class APIManager(Configurable):
 
     def setCameraImageUploadRate(self, newRate):
         self.__cameraImageUploadRate = newRate
+
+    def getConfigManager(self):
+        return self.__configurationManager
+
+    def setConfigManager(self, configurationManager):
+        self.__configurationManager = configurationManager
+
+    def toString(self):
+        data = { CONSTS.JSON_KEY_API_SENSOR_VALUE_UPLOAD_RATE   : self.getSensorValueUploadRate(), 
+                 CONSTS.JSON_KEY_API_SYSTEM_CONFIG_REQUEST_RATE : self.getSystemConfigRequestRate(), 
+                 CONSTS.JSON_KEY_API_CAMERA_IMAGE_UPLOAD_RATE   : self.getCameraImageUploadRate()}
+        
+        if self.DEBUG:
+            print self.LOGTAG , json.dumps(data)
+
+        return data    
 
 '''
 sensorFactory = SensorFactory()

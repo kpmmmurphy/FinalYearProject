@@ -84,9 +84,7 @@ class Sensor(Configurable):
                  CONSTS.JSON_KEY_SENSOR_PROBE_RATE : self.getProbeRate(),
                  CONSTS.JSON_KEY_SENSOR_ALERT_THRESHOLD : self.getAlertThreshold()}
         
-        data_string = json.dumps(data)
-        
         if self.DEBUG:
-            print self.getName() , data_string
+            print self.getName() , json.dumps(data)
 
-        return data_string    
+        return data    
