@@ -28,6 +28,8 @@ def main():
     # Rasberry as AP
     # Amazon Datastore
     # Push Notifications
+    # Data Truncation
+    # Graphing on cs1
 
     databaseManager = DatabaseManager()
     sensorFactory   = SensorFactory()

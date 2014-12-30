@@ -39,8 +39,6 @@
         var_dump($_FILES);
     }
 
-    
-
     if(isset($headers[constant('PARAM_SERVICE')])){
 
         $requestedService = htmlspecialchars($headers[constant('PARAM_SERVICE')]);

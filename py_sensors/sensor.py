@@ -11,7 +11,8 @@ from configurable import Configurable
 class Sensor(Configurable):
 
     #Constants:
-    DEBUG = False
+    DEBUG = True
+    LOGTAG = "Sensor"
 
     #Private: 
     __isActive  = True
@@ -75,7 +76,7 @@ class Sensor(Configurable):
         self.setAlertThreshold(config[CONSTS.JSON_KEY_SENSOR_ALERT_THRESHOLD])
 
         if self.DEBUG:
-            print "New Config :: " , self.toString()
+            print self.LOGTAG, " : ", self.getName().upper(), " -> New Config :: " , self.toString()
 
     def toString(self):
         data = { CONSTS.JSON_KEY_SENSOR_NAME : self.getName(), 

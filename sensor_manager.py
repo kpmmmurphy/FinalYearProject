@@ -14,7 +14,7 @@ import constants as CONSTS
 from configurable import Configurable
 
 class SensorManager(Configurable):
-    DEBUG  = False
+    DEBUG  = True
     USING_TIMER  = True 
     LOGTAG = "SensorManager"
 
@@ -29,7 +29,7 @@ class SensorManager(Configurable):
         super(SensorManager, self).__init__(CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG)
 
         if self.DEBUG:
-            print self.LOGTAG , " :: Created..."
+            print self.LOGTAG, " :: Created..."
 
         self.__schedular = sched.scheduler(time.time, time.sleep)
 
@@ -47,11 +47,6 @@ class SensorManager(Configurable):
         if self.DEBUG:
             print self.LOGTAG, " :: Updating Configuration"
 
-        if config is None:
-            config_data = open(CONSTS.CONFIGURATION_DEFAULT, 'rb' )
-            config      = json.loads(config_data) #load or loads?
-            config_data.close()
-
         sensorManagerConfig  = config[CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG]
         self.setCollectionRate(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
         self.setCollectionPriority(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
@@ -67,9 +62,6 @@ class SensorManager(Configurable):
             print self.LOGTAG, " :: Starting Sensor Probing.."
 
         for name, sensor in self.getSensors().iteritems():
-            if self.DEBUG:
-                sensor.toString()
-            
             if self.USING_TIMER:
                 timer = Timer(sensor.getProbeRate(), self.probeSensor,(sensor,))
                 timer.start()
@@ -84,8 +76,6 @@ class SensorManager(Configurable):
     def probeSensor(self, sensor):
         if sensor.isActive():
             sensor.readValue()
-            if self.DEBUG:
-                print sensor.getName() , " :: " , sensor.getCurrentValue()
 
             if self.USING_TIMER:
                 timer = Timer(sensor.getProbeRate(), self.probeSensor, (sensor,))
@@ -105,11 +95,11 @@ class SensorManager(Configurable):
             self.__schedular.enter(self.__collectionRate, self.__collectionPriority, self.collectData,())
 
     def collectData(self):
+        if self.DEBUG:
+            print self.LOGTAG, " :: Inserting into DB -> ", self.getSensorValues()
+
         self.getDatabaseManager().insert_sensor_output(**self.getSensorValues())
 
-        if self.DEBUG:
-            print self.LOGTAG, " :: Entering Data in DB"
-        
         if self.USING_TIMER:
             timer = Timer(self.__collectionRate, self.collectData, ())
             timer.start()

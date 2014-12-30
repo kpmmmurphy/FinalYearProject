@@ -17,6 +17,7 @@ class ConfigurationManager(Configurable):
 
 	def __init__(self, configurables):
 		super(ConfigurationManager, self).__init__(CONSTS.JSON_KEY_CONFIG_MANAGER_CONFIG)
+		
 		if self.DEBUG:
 			print self.LOGTAG, " :: Created"
 
@@ -29,12 +30,10 @@ class ConfigurationManager(Configurable):
 
 	def reconfigure(self, config):
 		if self.DEBUG:
-			print self.LOGTAG, ":: Reconfiguring System"
-			print config
+			print self.LOGTAG, " :: Reconfiguring System"
 
-		jsonConfig = json.loads(config)
 		for item in self.getConfigurables():
-			item.configure(jsonConfig)
+			item.configure(json.loads(config))
 
 	def writeoutConfiguration(self):
 		config = {}

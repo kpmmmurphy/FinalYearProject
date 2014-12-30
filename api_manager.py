@@ -16,7 +16,7 @@ from sensor_factory   import SensorFactory
 from sensor_manager   import SensorManager
 
 class APIManager(Configurable):
-    DEBUG  = False
+    DEBUG  = True
     LOGTAG = "APIManager"
 
     __sensorManager = None
@@ -62,7 +62,6 @@ class APIManager(Configurable):
         if self.getConfigManager() is not None:
             self.getConfigManager().reconfigure(configResponse.content)
 
-        return configResponse.content
 
     def uploadSensorValues(self):
         self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES, payload=self.__sensorManager.getSensorValues(), filez=None)
@@ -89,16 +88,16 @@ class APIManager(Configurable):
         return configResponse.content
 
     def sendRequest(self, service, payload, filez):
-        if self.DEBUG:
-            print self.LOGTAG, " :: ", service
-
         url = CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER
         headers = CONSTS.REQUEST_DEFAULT_HEADERS
 
         if service is not None:
             headers[CONSTS.JSON_KEY_REQUEST_SERVICE] = service
         else:
-            service = "File Uploading"
+            service = "file_uploading"
+
+        if self.DEBUG:
+            print self.LOGTAG, " :: Service -> ", service
 
         if self.DEBUG and payload is not None: 
             print self.LOGTAG, " :: Uploading -> " , payload
@@ -110,11 +109,11 @@ class APIManager(Configurable):
         else:
             response = requests.post(url, headers=headers)
 
-        if self.DEBUG:
-            print self.LOGTAG, " -> Response Content :: ", response.text
+        if self.DEBUG and response.text != "" and response.text != None:
+            print self.LOGTAG, " :: Response Content -> ", response.text, "\n"
 
-        if response.status_code == requests.codes.ok:
-            print self.LOGTAG, " :: ", service, " Completed Successfully"
+        if self.DEBUG and response.status_code == requests.codes.ok:
+            print self.LOGTAG, " :: ", service, " -> Completed Successfully"
         else:
             print self.LOGTAG, " :: ERROR: ",service, " -> status_code:", sendResponse.status_code
 

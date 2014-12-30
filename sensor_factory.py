@@ -16,7 +16,7 @@ from py_sensors.motion_detector import MotionDetector
 
 class SensorFactory(object):
     #Constants
-    DEBUG  = False
+    DEBUG  = True
     LOGTAG = "SensorFactory"
     PC_OS     = "posix"
     LIB_PATH  = "./sensors/libs/lib_SensorManager.so"
@@ -33,7 +33,7 @@ class SensorFactory(object):
 
     def __init__(self):
         if self.DEBUG:
-            print self.LOGTAG , "Created..."
+            print self.LOGTAG , " :: Created..."
 
         if os.name is not self.PC_OS:
             self.__sensorLib = ctypes.cdll.LoadLibrary(self.LIB_PATH)
