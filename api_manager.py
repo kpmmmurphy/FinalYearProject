@@ -60,8 +60,7 @@ class APIManager(Configurable):
             self.schedule_SysConfigCheck()
 
         if self.getConfigManager() is not None:
-            print configResponse.content
-            self.getConfigManager().reconfigure(json.loads(configResponse.content))
+            self.getConfigManager().reconfigure(configResponse.content)
 
         return configResponse.content
 

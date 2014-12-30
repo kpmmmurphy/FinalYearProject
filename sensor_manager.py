@@ -48,21 +48,18 @@ class SensorManager(Configurable):
             print self.LOGTAG, " :: Updating Configuration"
 
         if config is None:
-            config_data = open(CONSTS.CONFIGURATION_DEFAULT)
-            config      = json.load(config_data) #load or loads?
+            config_data = open(CONSTS.CONFIGURATION_DEFAULT, 'rb' )
+            config      = json.loads(config_data) #load or loads?
+            config_data.close()
 
         sensorManagerConfig  = config[CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG]
-        self.setCollectionRate(collectionConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
-        self.setCollectionPriority(collectionConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
+        self.setCollectionRate(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
+        self.setCollectionPriority(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
         
         #Sensors Config
         for sensorConfig in config[CONSTS.JSON_KEY_SENSORS_ARRAY]:
             self.getSensors()[sensorConfig[CONSTS.JSON_KEY_SENSOR_NAME]].configure(sensorConfig)
         
-        if config_data is not None:
-            config_data.close()
-
-
     #PROBING SENSORS------------------------------------------------------
     #Starts all sensors probing depending on current configuration
     def startProbing(self):

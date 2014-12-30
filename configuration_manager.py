@@ -28,8 +28,13 @@ class ConfigurationManager(Configurable):
 			print self.LOGTAG, " :: Updating Configuration"
 
 	def reconfigure(self, config):
+		if self.DEBUG:
+			print self.LOGTAG, ":: Reconfiguring System"
+			print config
+
+		jsonConfig = json.loads(config)
 		for item in self.getConfigurables():
-			item.configure(config)
+			item.configure(jsonConfig)
 
 	def writeoutConfiguration(self):
 		config = {}
@@ -38,13 +43,14 @@ class ConfigurationManager(Configurable):
 			if item.getJsonConfigKey() == CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG:
 				config[CONSTS.JSON_KEY_SENSORS_ARRAY] = item.sensorsToString()
 
-		obj = open(CONSTS.DIR_CONFIG + "default_config.json", 'wb')
+		obj = open(CONSTS.DIR_CONFIG + "config.json", 'wb')
 		obj.write(json.dumps(config))
 		obj.close()
 
+		return config
+
 	def setConfigurables(self, configurables):
 		self.__configurables = configurables
-		self.writeoutConfiguration()
 
 	def getConfigurables(self):
 		return self.__configurables
