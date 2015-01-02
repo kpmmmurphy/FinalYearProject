@@ -10,14 +10,16 @@ except ImportError:
     pass
 
 from time import sleep
+import datetime
 
 class PiCamera(object):
-	DEBUG = True
-	LOGTAG = "PiCamera"
-	@staticmethod
-	def takeStill():
-		camera = picamera.PiCamera()
-		imageName = datetime.datetime.now().time(), ".png"
+    DEBUG = True
+    LOGTAG = "PiCamera"
+
+    @staticmethod
+    def takeStill():
+        camera = picamera.PiCamera()
+        imageName = str(datetime.datetime.now().time()) + ".png"
         camera.capture(imageName)
 
     @staticmethod
