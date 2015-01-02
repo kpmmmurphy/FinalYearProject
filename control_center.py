@@ -36,6 +36,8 @@ def main():
             #fix printing in c files
             #wire up buzzer and lights
             #write alert manager 
+            #Order sensors
+            #PAY RENT
 
     databaseManager = DatabaseManager()
     sensorFactory   = SensorFactory()
