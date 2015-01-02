@@ -111,11 +111,13 @@ class DatabaseManager(Configurable):
     def createTables(self):
         #Main Section
         self.create_tables()
+        '''
         if self.DEBUG:
             self.insert_test_data("NORMAL")
             self.insert_test_data("EARLY_SIGNS")
-            self.insert_test_data("RED_ALERT")    
-
+            self.insert_test_data("RED_ALERT")
+        '''
+    
     def getDatabase(self):
         return self.__db  
     

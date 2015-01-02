@@ -6,7 +6,9 @@
 
 import os
 import ctypes
-#import requests
+import socket
+import subprocess
+import constants as CONSTS
 
 #Import Sensors
 from py_sensors.thermistor import Thermistor
@@ -18,7 +20,7 @@ class SensorFactory(object):
     #Constants
     DEBUG  = True
     LOGTAG = "SensorFactory"
-    PC_OS     = "posix"
+
     LIB_PATH  = "./sensors/libs/lib_SensorManager.so"
     __sensorLib = None
 
@@ -35,7 +37,8 @@ class SensorFactory(object):
         if self.DEBUG:
             print self.LOGTAG , " :: Created..."
 
-        if os.name is not self.PC_OS:
+        if socket.gethostname() == CONSTS.RASP_PI:
+            subprocess.call("gpio load spi", shell=True)
             self.__sensorLib = ctypes.cdll.LoadLibrary(self.LIB_PATH)
 
         self.createAllSensors()
@@ -65,8 +68,8 @@ class SensorFactory(object):
             if self.__sensorLib is None:
                self.__mq2 = MQ2(lib=None)
             else:
-               self.__mq2 = MQ2(lib=self.__sensorLib)
-
+               #self.__mq2 = MQ2(lib=self.__sensorLib)
+               self.__mq2 = MQ2(lib=None)
             self.__sensors.append(self.__mq2)
 
         return self.__mq2

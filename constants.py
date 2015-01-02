@@ -5,6 +5,9 @@
 #
 #Global Constants "Holder"
 
+#OS
+RASP_PI = "raspberrypi"
+
 #File Locations
 CONFIGURATION_DEFAULT = "./config/default_config.json"
 
