@@ -99,8 +99,8 @@ SCRIPT_TAKE_CAMERA_VIDEO = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_video.sh
 
 #DIRs
 DIR_CAMERA = "./camera/"
-DIR_CAMERA_STILL = DIR_CAMERA + "still"
-DIR_CAMERA_VIDEO = DIR_CAMERA + "video"
+DIR_CAMERA_STILL = DIR_CAMERA + "still/"
+DIR_CAMERA_VIDEO = DIR_CAMERA + "video/"
 DIR_CONFIG = "./config/"
 
 #---API------------------------------------------
