@@ -95,6 +95,7 @@ SCRIPTS_DIR_IMG          = "image/"
 SCRIPTS_DIR_NETWORKING   = "networking/"
 SCRIPTS_DIR_SETUP        = "setup/"
 SCRIPT_TAKE_CAMERA_STILL = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_still.sh"
+SCRIPT_TAKE_CAMERA_VIDEO = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_video.sh"
 
 #DIRs
 DIR_CAMERA = "./camera/"

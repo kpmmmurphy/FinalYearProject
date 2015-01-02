@@ -3,10 +3,10 @@
 #This script when called will snap an still image and return its address
 
 #Check if the camera directory exists
-if [ ! -d "/home/pi/camera" ]; then
-  mkdir /home/pi/camera
+if [ ! -d "/home/pi/FinalYearProject/camera/still" ]; then
+  mkdir -p /home/pi/FinalYearProject/camera/still
 fi
 
 DATE=$(date +"%Y-%m-%d_%H%M")
 
-raspistill -vf -hf -o /home/pi/camera/$DATE.jpg
+raspistill -vf -hf -o /home/pi/FinalYearProject/camera/still/$DATE.jpg

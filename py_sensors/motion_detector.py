@@ -8,6 +8,7 @@ import ctypes
 import subprocess
 from sensor import Sensor
 import constants as CONSTS
+from pi_camera import PiCamera
           
 class MotionDetector(Sensor):
     DEBUG = True
@@ -51,8 +52,9 @@ class MotionDetector(Sensor):
 
     def react(self, value):
         if value >= self.getAlertThreshold():
-            print self.getName().upper(), " :: ALERT"
-            subprocess.call(CONSTS.SCRIPT_TAKE_CAMERA_STILL, shell=True)
+            if self.DEBUG:
+                print self.getName().upper(), " :: ALERT"
+            PiCamera.takeStill()
 
     def getName(self):
         return self.__name

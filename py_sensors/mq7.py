@@ -50,7 +50,8 @@ class MQ7(Sensor):
 
     def react(self, value):
         if value >= self.getAlertThreshold():
-            print self.getName().upper(), " :: ALERT"
+            if self.DEBUG:
+                print self.getName().upper(), " :: ALERT"
 
     def getName(self):
         return self.__name
