@@ -4,70 +4,42 @@
 #Author: Kevin Murphy
 #Date  : 18 - Oct - 14
 
-import ctypes
-import time
-import sched
-import RPi.GPIO as GPIO
+#Import infrastructure modules
+from sensor_factory   import SensorFactory
+from sensor_manager   import SensorManager
+from database_manager import DatabaseManager
+from api_manager      import APIManager
+from configuration_manager import ConfigurationManager
 
-#Import Sensors
-from py_sensors.thermistor import Thermistor
-from py_sensors.mq7 import MQ7
-from py_sensors.motion_detector import MotionDetector
-
-#Load .so c/c++ sensor library
-LIB_PATH = "./sensors/libs/lib_SensorManager.so"
-sensorLib = ctypes.cdll.LoadLibrary(LIB_PATH)
-
-#Global Sensors
-thermistor      = None
-mq7             = None
-motion_detector = None
-
-#Timing Values
-PROBE_RATE_DEFAULT = 10
-SENSOR_PRIORITY_DEFAULT = 1
-
-#Creates sensor objects
-def setupSensors():
-    #Using the Global keyword to allow initialization of global variables
-    global thermistor 
-    global mq7
-    global motion_detector
-
-    thermistor      = Thermistor(sensorLib)
-    mq7             = MQ7(sensorLib)
-    motion_detector = MotionDetector(sensorLib)
-
-def probeSensor(sched, sensor):
-    global PROBE_RATE_DEFAULT
-    global SENSOR_DEFAULT_PRIORITY
-
-    global thermistor
-    global mq7
-    global motion_detector
-    
-    if sensor is thermistor.getName():
-        print thermistor.readValue()
-        sched.enter(PROBE_RATE_DEFAULT, 1, probeSensor,(sched, sensor))
-    elif sensor is mq7.getName():
-        print mq7.readValue()
-        sched.enter(PROBE_RATE_DEFAULT, 1, probeSensor,(sched, sensor))
-    elif sensor is motion_detector.getName():
-        print motion_detector.readValue()
-        sched.enter(PROBE_RATE_DEFAULT, 1, probeSensor,(sched, sensor)) 
+#Constants
+DEBUG = True
 
 def main():
-    global PROBE_RATE_DEFAULT
-    setupSensors()
-    
-    schedular = sched.scheduler(time.time, time.sleep)	
-    schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, thermistor.getName()))
-    schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, motion_detector.getName()))
-    schedular.enter(PROBE_RATE_DEFAULT, 1, probeSensor, (schedular, mq7.getName()))
+    ##TODO
+    # Configuration Manager/ Interface - @
+    # System details configuration - naming etc 
+    # Sensor Alerting and Info table - 1
+    # AlertManager - 1 
+    # Uploading Video?
+    # Dropbox? / Google Drive? 
+    # User Pairing System
+    # Automated Setup
+    # System Status readings
+    # Rasberry as AP
+    # Amazon Datastore
+    # Push Notifications
+    # Data Truncation
+    # Graphing on cs1
 
-    schedular.run()
+    databaseManager = DatabaseManager()
+    sensorFactory   = SensorFactory()
+    sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
+    apiManager      = APIManager(sensorManager=sensorManager, configurationManager=None)
+    configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager})
+    #Api needs this to update configuration
+    apiManager.setConfigManager(configurationManager)
+
 try:
     main()
-except KeyboardInterrupt:
-    print "Keyboard Interrupt.."
-    GPIO.cleanup()
+except KeyboardInterrupt, SystemExit:
+    print "KeyboardInterrupted..."
