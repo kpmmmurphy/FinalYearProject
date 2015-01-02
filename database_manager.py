@@ -125,10 +125,6 @@ class DatabaseManager(Configurable):
     def loadDatabase():
         db = None
         if CONSTS.TESTING_SQL:
-<<<<<<< HEAD
-            #Local
-=======
->>>>>>> d45039e... Fixed the mess I made for myself after coding on the Pi for the first time in weeks
             db_passwd = CONSTS.DB_PASSWD_PI
             if socket.gethostname() != CONSTS.RASP_PI:
                 db_passwd = CONSTS.DB_PASSWD_UBUNTU
