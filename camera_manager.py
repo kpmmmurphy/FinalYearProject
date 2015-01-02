@@ -5,24 +5,21 @@
 #Date  : 18 - Oct - 14
 
 import subprocess
-from time import sleep
-import datetime
+import constants as CONSTS
 
-class PiCamera(object):
+class CameraManager(object):
     DEBUG = True
-    LOGTAG = "PiCamera"
+    LOGTAG = "CameraManager"
 
     @staticmethod
     def takeStill():
-    	if self.DEBUG:
-    		print self.LOGTAG, " :: Taking Still"
+    	print "CameraManager :: Taking Still"
         subprocess.call(CONSTS.SCRIPT_TAKE_CAMERA_STILL, shell=True)
 
     @staticmethod
     def recordVideo():
-    	if self.DEBUG:
-    		print self.LOGTAG, " :: Taking Video"
+    	print "CameraManager :: Taking Video"
     	subprocess.call(CONSTS.SCRIPT_TAKE_CAMERA_VIDEO, shell=True)
 
-PiCamera.takeStill()
-PiCamera.recordVideo()
+CameraManager.takeStill()
+CameraManager.recordVideo()

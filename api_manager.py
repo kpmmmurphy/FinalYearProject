@@ -8,6 +8,7 @@
 import requests
 import json
 import time
+import os
 from threading import Timer
 from configurable import Configurable
 import constants as CONSTS
@@ -67,7 +68,8 @@ class APIManager(Configurable):
 
     def uploadImage(self):
         #Should select latest image dynamically 
-        camera_image = {CONSTS.JSON_KEY_CAMERA_STILL : (time.asctime(time.localtime(time.time())), open(CONSTS.DIR_CAMERA + "img.jpg", 'rb'), 'image/png')}
+        images = os.listdir(CONSTS.DIR_CAMERA_STILL)
+        camera_image = {CONSTS.JSON_KEY_CAMERA_STILL : (time.asctime(time.localtime(time.time())), open(CONSTS.DIR_CAMERA + images[0], 'rb'), 'image/png')}
         self.sendRequest(service=None, payload=None, filez=camera_image)
         if self.__polling:
             self.schedule_UploadCameraStill()

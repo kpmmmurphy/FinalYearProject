@@ -8,7 +8,7 @@ import ctypes
 import subprocess
 from sensor import Sensor
 import constants as CONSTS
-from pi_camera import PiCamera
+from camera_manager import CameraManager
           
 class MotionDetector(Sensor):
     DEBUG = True
@@ -54,7 +54,7 @@ class MotionDetector(Sensor):
         if value >= self.getAlertThreshold():
             if self.DEBUG:
                 print self.getName().upper(), " :: ALERT"
-            PiCamera.takeStill()
+            CameraManager.takeStill()
 
     def getName(self):
         return self.__name
