@@ -1,1 +1,1 @@
-mysql --user=root --password=kevinmurphy TEST
+mysql --user=root --password=kevinmurphy fyp

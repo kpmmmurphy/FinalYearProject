@@ -126,7 +126,10 @@ class DatabaseManager(Configurable):
         db = None
         if CONSTS.TESTING_SQL:
             #Local
-            db = peewee.MySQLDatabase(CONSTS.DB_NAME, user=CONSTS.DB_USER, passwd=CONSTS.DB_PASSWD)            
+            db_passwd = CONSTS.DB_PASSWD_PI
+            if socket.gethostname() != CONSTS.RASP_PI:
+                db_passwd = CONSTS.DB_PASSWD_UBUNTU
+            db = peewee.MySQLDatabase(CONSTS.DB_NAME, user=CONSTS.DB_USER, passwd=db_passwd)            
         else:
             #CS1
             db = peewee.MySQLDatabase(CONSTS.DB_NAME, host=CONSTS.DB_HOST, port=CONSTS.DB_PORT, user=CONSTS.DB_USER, passwd=CONSTS.DB_PASSWD)

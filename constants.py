@@ -19,8 +19,8 @@ COLLECTION_PRIORITY_DEFAULT = 1
 TESTING_SQL = True
 DB_NAME   = 'fyp'
 DB_USER   = 'root'
-DB_PASSWD = '111314826'
-#DB_PASSWD = 'kevinmurphy'
+DB_PASSWD_PI = '111314826'
+DB_PASSWD_UBUNTU = 'kevinmurphy'
 
 #Production - CS1 - Database Credentials
 #DB_HOST   = 'https://csgate.ucc.ie'
