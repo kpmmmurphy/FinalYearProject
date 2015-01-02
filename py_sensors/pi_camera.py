@@ -14,7 +14,6 @@ from time import sleep
 class PiCamera(object):
 	DEBUG = True
 	LOGTAG = "PiCamera"
-
 	@staticmethod
 	def takeStill():
 		camera = picamera.PiCamera()
