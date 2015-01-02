@@ -68,8 +68,14 @@ class SensorFactory(object):
             if self.__sensorLib is None:
                self.__mq2 = MQ2(lib=None)
             else:
+<<<<<<< HEAD
                #self.__mq2 = MQ2(lib=self.__sensorLib)
                self.__mq2 = MQ2(lib=None)
+=======
+               self.__mq2 = MQ2(lib=self.__sensorLib)
+               self.__mq2 = MQ2(lib=None)
+
+>>>>>>> d45039e... Fixed the mess I made for myself after coding on the Pi for the first time in weeks
             self.__sensors.append(self.__mq2)
 
         return self.__mq2

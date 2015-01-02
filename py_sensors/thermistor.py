@@ -9,14 +9,19 @@ from sensor import Sensor
 import constants as CONSTS
 
 class Thermistor(Sensor):
+    DEBUG = True
+
     __name         = CONSTS.SENSOR_THERMISTOR
     __adcChannelNo = 0
     __lib = None
     
     def __init__(self, lib):
         if lib is None:
-            print "Constructing ::", self.getName() , " without shared lib... "
+            if self.DEBUG:
+                print self.getName().upper(), " :: Constructing -> without shared lib... "
         else:
+            if self.DEBUG:
+                print self.getName().upper(), " :: Constructing -> with shared lib... "
             self.__lib = lib
             #Setup arg for ctypes
             self.__lib.Thermistor_newInstance.argtypes = [ctypes.c_char_p, ctypes.c_int]
@@ -27,7 +32,7 @@ class Thermistor(Sensor):
             self.obj = self.__lib.Thermistor_newInstance(self.__name, self.__adcChannelNo)
             self.initPins()
 
-        self.__alertThreshold = CONSTS.ALERT_THRESHOLD_DEFAULT_THERMISTOR
+        self.setAlertThreshold(CONSTS.ALERT_THRESHOLD_DEFAULT_THERMISTOR)
 
     def initPins(self):
         if self.__lib is not None:
@@ -35,16 +40,16 @@ class Thermistor(Sensor):
 
     def readValue(self):
         if self.__lib is None:
-            self.__currentValue = self.test()
+            self.setCurrentValue(self.test())
         else:    
-            self.__currentValue = self.__lib.Thermistor_readValue(self.obj) 
+            self.setCurrentValue(self.__lib.Thermistor_readValue(self.obj)) 
         
-        self.react(self.__currentValue)
-        return self.__currentValue
+        self.react(self.getCurrentValue())
+        return self.getCurrentValue()
 
     def react(self, value):
-        if value >= self.__alertThreshold:
-            print self.__name, " :: ALERT"
+        if value >= self.getAlertThreshold():
+            print self.getName().upper(), " :: ALERT"
 
     def getName(self):
         return self.__name

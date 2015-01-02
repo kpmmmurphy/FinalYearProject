@@ -28,14 +28,11 @@ class APIManager(Configurable):
     __sensorValueUploadRate   = CONSTS.REQUEST_RATE_UPLOAD_SENSOR_VALUES
     __cameraImageUploadRate   = CONSTS.REQUEST_RATE_UPLOAD_CAMERA_IMAGE
 
-    def __init__(self, sensorManager, configurationManager):
+    def __init__(self, sensorManager):
         super(APIManager, self).__init__(CONSTS.JSON_KEY_API_CONFIG)
 
         if self.DEBUG:
             print self.LOGTAG, " :: Created"
-
-        if configurationManager is not None:
-            self.__configurationManager = configurationManager
 
         if sensorManager is not None:
             self.__sensorManager = sensorManager
@@ -44,8 +41,8 @@ class APIManager(Configurable):
             self.schedule_SysConfigCheck()
 
     def configure(self, config):
-    	if self.DEBUG:
-    	    print self.LOGTAG, ":: Configuring"
+        if self.DEBUG:
+            print self.LOGTAG, ":: Configuring"
         
         if config is not None:
             apiConfig = config[self.getJsonConfigKey()]

@@ -34,8 +34,9 @@ def main():
     databaseManager = DatabaseManager()
     sensorFactory   = SensorFactory()
     sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
-    apiManager      = APIManager(sensorManager=sensorManager, configurationManager=None)
+    apiManager      = APIManager(sensorManager=sensorManager)
     configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager})
+    configurationManager.writeoutConfiguration()
     #Api needs this to update configuration
     apiManager.setConfigManager(configurationManager)
 
