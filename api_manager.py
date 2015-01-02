@@ -70,7 +70,7 @@ class APIManager(Configurable):
         #Should select latest image dynamically 
         images = os.listdir(CONSTS.DIR_CAMERA_STILL)
         if len(images) > 0:
-            camera_image = {CONSTS.JSON_KEY_CAMERA_STILL : images[0], open(CONSTS.DIR_CAMERA_STILL + images[0], 'rb'), 'image/png')}
+            camera_image = {CONSTS.JSON_KEY_CAMERA_STILL : (images[0], open(CONSTS.DIR_CAMERA_STILL + images[0], 'rb'), 'image/png')}
             self.sendRequest(service=None, payload=None, filez=camera_image)
 
         if self.__polling:
