@@ -31,12 +31,17 @@ def main():
     # Data Truncation
     # Graphing on cs1
 
+    #Sat - Fix Mq7 sensor
+            #Implement mq2 in c
+            #fix printing in c files
+            #wire up buzzer and lights
+            #write alert manager 
+
     databaseManager = DatabaseManager()
     sensorFactory   = SensorFactory()
     sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
     apiManager      = APIManager(sensorManager=sensorManager)
     configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager})
-    configurationManager.writeoutConfiguration()
     #Api needs this to update configuration
     apiManager.setConfigManager(configurationManager)
 

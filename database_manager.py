@@ -32,7 +32,7 @@ class DatabaseManager(Configurable):
         try:
             Current_Day_Sensor_Output.create_table()
         except peewee.OperationalError:
-            print "Current Day Sensor_Output Table Already Exists"
+            print "DatabaseManager :: Exception -> Current Day Sensor_Output Table Already Exists"
     
         '''
         try: 

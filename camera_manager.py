@@ -21,5 +21,3 @@ class CameraManager(object):
     	print "CameraManager :: Taking Video"
     	subprocess.call(CONSTS.SCRIPT_TAKE_CAMERA_VIDEO, shell=True)
 
-CameraManager.takeStill()
-CameraManager.recordVideo()
