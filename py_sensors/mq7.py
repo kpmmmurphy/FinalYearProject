@@ -66,7 +66,7 @@ class MQ7(Sensor):
             self.__previousValue = latestValue
 
         calValue = max((self.getCurrentValue()) + (latestValue - self.__previousValue), 0)
-        self.__previousValue = calValue
+        self.__previousValue = latestValue
         return calValue
 
     def test(self):
