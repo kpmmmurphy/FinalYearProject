@@ -15,6 +15,8 @@ class MQ7(Sensor):
     __adcChannelNo = 1
     __lib = None
 
+    __previousValue = None
+
     def __init__(self, lib):
         if lib is None:
             if self.DEBUG:
@@ -41,11 +43,14 @@ class MQ7(Sensor):
 
     def readValue(self):
         if self.__lib is None:
-            self.setCurrentValue(self.test())
+            latestValue = self.setCurrentValue(self.test())
         else:        
-            self.setCurrentValue(self.__lib.MQ7_readValue(self.obj)) 
-        
+            #self.setCurrentValue(self.__lib.MQ7_readValue(self.obj)) 
+            latestValue = self.__lib.MQ7_readValue(self.obj) 
+
+        self.setCurrentValue(self.calculateCurrentValue(latestValue))
         self.react(self.getCurrentValue())
+
         return self.getCurrentValue()
 
     def react(self, value):
@@ -55,6 +60,12 @@ class MQ7(Sensor):
 
     def getName(self):
         return self.__name
+
+    def calculateCurrentValue(self, latestValue):
+        if self.__previousValue is None:
+            self.__previousValue = latestValue
+
+        return self.setCurrentValue(max(self.getCurrentValue() + (latestValue - self.__previousValue), 0))
 
     def test(self):
         #If __lib is set, then test the .so file, other wise produce a default test value -1

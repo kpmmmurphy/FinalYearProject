@@ -37,8 +37,6 @@ def main():
             #wire up buzzer and lights
             #write alert manager 
             #Order sensors
-            #PAY RENT
-            #FIX motion also
 
     databaseManager = DatabaseManager()
     sensorFactory   = SensorFactory()
