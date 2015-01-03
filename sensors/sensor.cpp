@@ -40,7 +40,10 @@ Sensor::Sensor(char* sensorName, int adcChannelNumber)
 
     if(wiringPiSetup() < 0)
     {
-        cout << "WiringPi Setup Failed...";
+        if(DEBUG)
+        {
+            cout << "WiringPi Setup Failed...";
+        }
         exit(EXIT_FAILURE);
     }
     
@@ -51,11 +54,14 @@ Sensor::Sensor(char* sensorName, int adcChannelNumber)
     	{
     	    cout << "Attemping to Set up MCP3008..\n..";
     	}
+
         mcp3004Setup(100, SPI_CHAN);
-	if(DEBUG)
-	{
-	    cout << "Set up complete..";
-	}
+
+    	if(DEBUG)
+    	{
+    	    cout << "Set up complete..";
+    	}
+
     	spiSetup = 0;
     }
 };
@@ -73,7 +79,7 @@ int Sensor::getADCResult(int adcChannelNo)
 
     if(DEBUG)
     {
-	cout << getName() << " -> Analog Result :: " << result << "\n";
+	   cout << getName() << ":: Analog Result -> " << result << "\n";
     }
 
     return result;

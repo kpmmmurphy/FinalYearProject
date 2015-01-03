@@ -39,7 +39,6 @@ def main():
             #Order sensors
             #PAY RENT
             #FIX motion also
-            #fix uploading
 
     databaseManager = DatabaseManager()
     sensorFactory   = SensorFactory()

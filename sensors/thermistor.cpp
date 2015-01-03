@@ -68,7 +68,7 @@ extern "C"
     }
     void Thermistor_initPins(Thermistor *sensor){sensor->initPins();}
     int  Thermistor_readValue(Thermistor *sensor){return sensor->readValue();}
-    int  Thermistor_test(){return 1;}
+    int  Thermistor_test(){return -1;}
 }
 /*
 int main(int argc, const char* argv[])

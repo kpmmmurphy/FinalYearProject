@@ -32,12 +32,13 @@ class MQ7 : public Sensor
 
 	int readValue()
 	{	
-	    int result = (int)carbonMonoxideLevel( Sensor::getADCResult( Sensor::getADCChannelNo() )); 
+        //int result = (int)carbonMonoxideLevel( Sensor::getADCResult( Sensor::getADCChannelNo() )); 
+	    int result = Sensor::getADCResult( Sensor::getADCChannelNo()); 
 	    if(DEBUG)
 	    {
 	        cout << Sensor::getName() << " -> Result :: "<< result << "\n";
 	    }
-            return result;
+        return result;
 	}
 
     private:
@@ -60,7 +61,7 @@ extern "C"
     }
     void  MQ7_initPins(MQ7 *sensor){sensor->initPins();}
     int   MQ7_readValue(MQ7 *sensor){return sensor->readValue();}
-    int   MQ7_test(){return 1;}
+    int   MQ7_test(){return -1;}
 }
 
 /*

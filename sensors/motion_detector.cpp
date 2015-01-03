@@ -13,7 +13,7 @@
 using namespace std;
 
 //General Definitions
-#define DEBUG 0
+#define DEBUG 1
 #define NAME "Motion Detector"
 #define ADC_CHANNEL_NO -1
 
@@ -33,6 +33,7 @@ class MotionDetector : public Sensor
 		    }
 		    
 		    pinMode(MOTION_D_INPUT_PIN,INPUT);
+		    pullUpDnControl(MOTION_D_INPUT_PIN, PUD_DOWN);
 		}
 
 		int readValue()
@@ -55,7 +56,7 @@ extern "C"
     }
     void  MotionDetector_initPins(MotionDetector *sensor){sensor->initPins();}
     int   MotionDetector_readValue(MotionDetector *sensor){return sensor->readValue();}
-    int   MotionDetector_test(){return 1;}
+    int   MotionDetector_test(){return -1;}
 }
 /*
 int main(int argc, const char* argv[])
