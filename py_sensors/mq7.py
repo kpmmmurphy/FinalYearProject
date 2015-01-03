@@ -7,6 +7,7 @@
 import ctypes
 from sensor import Sensor
 import constants as CONSTS
+from buzzer import Buzzer
           
 class MQ7(Sensor):
     DEBUG = True
@@ -57,6 +58,8 @@ class MQ7(Sensor):
         if value >= self.getAlertThreshold():
             if self.DEBUG:
                 print self.getName().upper(), " :: ALERT"
+        Buzzer.buzz()
+
 
     def getName(self):
         return self.__name

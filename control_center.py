@@ -20,6 +20,7 @@ def main():
     # System details configuration - naming etc 
     # Sensor Alerting and Info table - 1
     # AlertManager - 1 
+    # Implement MQ2 in c
     # Uploading Video?
     # Dropbox? / Google Drive? 
     # User Pairing System
@@ -31,9 +32,7 @@ def main():
     # Data Truncation
     # Graphing on cs1
 
-    #Sat - Fix Mq7 sensor
-            #Implement mq2 in c
-            #fix printing in c files
+    #Sat
             #wire up buzzer and lights
             #write alert manager 
             #Order sensors
