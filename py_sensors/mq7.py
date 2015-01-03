@@ -64,8 +64,10 @@ class MQ7(Sensor):
     def calculateCurrentValue(self, latestValue):
         if self.__previousValue is None:
             self.__previousValue = latestValue
-            
-        return max((self.getCurrentValue()) + (latestValue - self.__previousValue), 0)
+
+        calValue = max((self.getCurrentValue()) + (latestValue - self.__previousValue), 0)
+        self.__previousValue = calValue
+        return calValue
 
     def test(self):
         #If __lib is set, then test the .so file, other wise produce a default test value -1
