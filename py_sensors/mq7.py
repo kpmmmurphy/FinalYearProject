@@ -43,7 +43,7 @@ class MQ7(Sensor):
 
     def readValue(self):
         if self.__lib is None:
-            latestValue = self.setCurrentValue(self.test())
+            latestValue = self.test()
         else:        
             #self.setCurrentValue(self.__lib.MQ7_readValue(self.obj)) 
             latestValue = self.__lib.MQ7_readValue(self.obj) 
@@ -65,7 +65,7 @@ class MQ7(Sensor):
         if self.__previousValue is None:
             self.__previousValue = latestValue
 
-        return self.setCurrentValue(max(self.getCurrentValue() + (latestValue - self.__previousValue), 0))
+        return self.setCurrentValue(max((self.getCurrentValue()) + (latestValue - self.__previousValue), 0))
 
     def test(self):
         #If __lib is set, then test the .so file, other wise produce a default test value -1
