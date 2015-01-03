@@ -6,7 +6,7 @@
     require_once('database_manager.php');
 
     //---Constants
-    $debug = false;
+    $debug = true;
     //Request Params
     define('PARAM_SERVICE', 'service');
     define('PARAM_GET_CONFIG', 'get_config');
@@ -34,9 +34,6 @@
 
         echo "\n\nREQUEST::\n\n";
         var_dump($requestObj);
-
-        echo "\nFiles::\n\n";
-        var_dump($_FILES);
     }
 
     if(isset($headers[constant('PARAM_SERVICE')])){
@@ -101,13 +98,13 @@
 
         if(isset($_FILES[constant('PARAM_UPLOAD_CAMERA_STILL')])){
             if($debug){
-                echo "\Upload Camera Still\n";
+                echo "\nUpload Camera Still\n";
                 var_dump($_FILES);
             }
             verifiy_and_upload_file(constant('PARAM_UPLOAD_CAMERA_STILL'));
         }elseif(isset($_FILES[constant('PARAM_UPLOAD_CAMERA_VIDEO')])){
             if($debug){
-                echo "\Upload Camera Video\n";
+                echo "\nUpload Camera Video\n";
                 var_dump($_FILES);
             }
         }else{
@@ -123,7 +120,7 @@
 
 function verifiy_and_upload_file($fileName)
 {
-    $debug = false;
+    $debug = True;
     $target_file = constant("DIR_CAMERA") . basename($_FILES[$fileName]["name"]);
     $check = getimagesize($_FILES[$fileName]["tmp_name"]);
     $uploadOk = 1;

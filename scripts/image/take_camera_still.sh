@@ -15,4 +15,4 @@ mv /home/pi/FinalYearProject/camera/still/* /home/pi/FinalYearProject/camera/sti
 
 DATE=$(date +"%Y-%m-%d_%H%M")
 
-raspistill -vf -hf -o /home/pi/FinalYearProject/camera/still/$DATE.jpg
+raspistill -vf -hf --width 1280 --height 960 --quality 100 -o /home/pi/FinalYearProject/camera/still/$DATE.jpg
