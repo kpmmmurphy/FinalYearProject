@@ -6,7 +6,7 @@
     require_once('database_manager.php');
 
     //---Constants
-    $debug = true;
+    $debug = false;
     //Request Params
     define('PARAM_SERVICE', 'service');
     define('PARAM_GET_CONFIG', 'get_config');
@@ -120,7 +120,7 @@
 
 function verifiy_and_upload_file($fileName)
 {
-    $debug = True;
+    $debug = false;
     $target_file = constant("DIR_CAMERA") . basename($_FILES[$fileName]["name"]);
     $check = getimagesize($_FILES[$fileName]["tmp_name"]);
     $uploadOk = 1;
@@ -161,7 +161,7 @@ function verifiy_and_upload_file($fileName)
     } else {
         if (move_uploaded_file($_FILES[$fileName]["tmp_name"], $target_file)) {
             if($debug){
-                echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+                echo "The file ". basename( $_FILES[$fileName]["name"]). " has been uploaded.";
             }
         } else {
             if($debug){
