@@ -12,6 +12,7 @@ class Buzzer(object):
 	@staticmethod
 	def buzz():
 		sleep_time = 0.2
+		
 		#set up GPIO using BCM numbering
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(18, GPIO.OUT)

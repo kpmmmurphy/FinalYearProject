@@ -58,9 +58,9 @@ class MQ7(Sensor):
         if value >= self.getAlertThreshold():
             if self.DEBUG:
                 print self.getName().upper(), " :: ALERT"
-        Buzzer.buzz()
 
-
+            self.getAlertManager().ringBuzzer()
+        
     def getName(self):
         return self.__name
 

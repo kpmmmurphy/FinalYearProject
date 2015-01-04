@@ -54,7 +54,8 @@ class MotionDetector(Sensor):
         if value >= self.getAlertThreshold():
             if self.DEBUG:
                 print self.getName().upper(), " :: ALERT"
-            CameraManager.takeStill()
+
+            self.getAlertManager().activateCamera()
 
     def getName(self):
         return self.__name

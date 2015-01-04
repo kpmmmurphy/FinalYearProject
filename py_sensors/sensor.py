@@ -15,15 +15,17 @@ class Sensor(Configurable):
     LOGTAG = "Sensor"
 
     #Private: 
+    __alertManager = None
     __isActive  = True
     __probeRate = CONSTS.PROBE_RATE_DEFAULT
     __priority  = CONSTS.PRIORITY_DEFAULT
     __currentValue = -1
     __alertThreshold = None
 
-    def __init__(self):
-        raise NotImplementedError('Subclass must override Constructor')
-
+    def __init__(self, alertManager):
+        if alertManager is not None:
+            self.setAlertManager(alertManager)
+        
     def initPins(self):
         raise NotImplementedError('Subclass must override initPins')
 
@@ -38,6 +40,12 @@ class Sensor(Configurable):
 
     def getCurrentValue(self):
         return self.__currentValue
+
+    def setAlertManager(self, alertManager):
+        self.__alertManager = alertManager
+
+    def getAlertManager(self):
+        return self.__alertManager
 
     def getName(self):
         raise NotImplementedError('Subclass must override getName')

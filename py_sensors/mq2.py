@@ -54,6 +54,8 @@ class MQ2(Sensor):
             if self.DEBUG:
                 print self.getName().upper(), " :: ALERT"
 
+        self.getAlertManager().ringBuzzer()
+
     def getName(self):
         return self.__name
 
