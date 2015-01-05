@@ -12,7 +12,7 @@ class SystemDetailsManager(Configurable):
 	DEBUG  = True
 	LOGTAG = "SystemDetailsManager"
 
-	__database_manager = None
+	__database_manager = None	
 	__name       = None
 	__location   = None
 	__gps_lat    = None
@@ -32,12 +32,16 @@ class SystemDetailsManager(Configurable):
 			print self.LOGTAG, ":: Configuring"
 
 		if config is not None:
-			sysDetailsConfig = config[self.getJsonConfigKey()]
-			self.setName(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_NAME])
-			self.setLocation(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_LOCATION])
-			self.setGPSLat(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_GPS_LAT])
-			self.setGPSLng(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_GPS_LNG])
-			self.__databaseManager.insert_system_details(self.getDetails())
+			try:
+				sysDetailsConfig = config[self.getJsonConfigKey()]
+				self.setName(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_NAME])
+				self.setLocation(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_LOCATION])
+				self.setGPSLat(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_GPS_LAT])
+				self.setGPSLng(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_GPS_LNG])
+				self.__databaseManager.insert_system_details(self.getDetails())
+			except KeyError:
+				if self.DEBUG:
+					print self.LOGTAG, " :: Config not present"
 
 	def getDetails(self):
 		return { CONSTS.JSON_KEY_SYSTEM_DETAILS_NAME     : self.getName(),

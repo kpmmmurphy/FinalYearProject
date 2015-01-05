@@ -47,9 +47,13 @@ class SensorManager(Configurable):
         if self.DEBUG:
             print self.LOGTAG, " :: Updating Configuration"
 
-        sensorManagerConfig  = config[CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG]
-        self.setCollectionRate(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
-        self.setCollectionPriority(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
+        try:
+            sensorManagerConfig  = config[CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG]
+            self.setCollectionRate(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
+            self.setCollectionPriority(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
+        except KeyError:
+                if self.DEBUG:
+                    print self.LOGTAG, " :: Config not present"
         
         #Sensors Config
         for sensorConfig in config[CONSTS.JSON_KEY_SENSORS_ARRAY]:

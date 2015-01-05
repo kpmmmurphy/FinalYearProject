@@ -46,10 +46,14 @@ class APIManager(Configurable):
             print self.LOGTAG, ":: Configuring"
         
         if config is not None:
-            apiConfig = config[self.getJsonConfigKey()]
-            self.setSensorValueUploadRate(apiConfig[CONSTS.JSON_KEY_API_SENSOR_VALUE_UPLOAD_RATE])
-            self.setSystemConfigRequestRate(apiConfig[CONSTS.JSON_KEY_API_SYSTEM_CONFIG_REQUEST_RATE])
-            self.setCameraImageUploadRate(apiConfig[CONSTS.JSON_KEY_API_CAMERA_IMAGE_UPLOAD_RATE])
+            try:
+                apiConfig = config[self.getJsonConfigKey()]
+                self.setSensorValueUploadRate(apiConfig[CONSTS.JSON_KEY_API_SENSOR_VALUE_UPLOAD_RATE])
+                self.setSystemConfigRequestRate(apiConfig[CONSTS.JSON_KEY_API_SYSTEM_CONFIG_REQUEST_RATE])
+                self.setCameraImageUploadRate(apiConfig[CONSTS.JSON_KEY_API_CAMERA_IMAGE_UPLOAD_RATE])
+            except KeyError:
+                if self.DEBUG:
+                    print self.LOGTAG, " :: Config not present"
 
     #---------API CALLS-----------------------------
     def getSystemConfig(self):

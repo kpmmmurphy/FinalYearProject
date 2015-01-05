@@ -25,14 +25,18 @@ class AlertManager(Configurable):
             print self.LOGTAG, " :: Created"
 
     def configure(self, config):
-		if self.DEBUG:
-			print self.LOGTAG, ":: Configuring"
+        if self.DEBUG:
+            print self.LOGTAG, ":: Configuring"
 
-		if config is not None:
-			alertConfig = config[self.getJsonConfigKey()]
-        	self.setBuzzerStatus(alertConfig[CONSTS.JSON_KEY_ALERT_BUZZER_ON])
-        	self.setCameraStatus(alertConfig[CONSTS.JSON_KEY_ALERT_CAMERA_ON])
-        	self.setVideoMode(alertConfig[CONSTS.JSON_KEY_ALERT_VIDEO_MODE])
+        if config is not None:
+            try:
+                alertConfig = config[self.getJsonConfigKey()]
+                self.setBuzzerStatus(alertConfig[CONSTS.JSON_KEY_ALERT_BUZZER_ON])
+                self.setCameraStatus(alertConfig[CONSTS.JSON_KEY_ALERT_CAMERA_ON])
+                self.setVideoMode(alertConfig[CONSTS.JSON_KEY_ALERT_VIDEO_MODE])
+            except KeyError:
+                if self.DEBUG:
+                    print self.LOGTAG, " :: Config key not present"
 
     def ringBuzzer(self):
     	if self.getBuzzerStatus():

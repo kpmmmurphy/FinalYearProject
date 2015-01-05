@@ -78,10 +78,14 @@ class Sensor(Configurable):
         if config is None:
             config = self.toString()
 
-        self.setActiveStatus(config[CONSTS.JSON_KEY_SENSOR_IS_ACTIVE])
-        self.setProbeRate(config[CONSTS.JSON_KEY_SENSOR_PROBE_RATE])
-        self.setPriority(config[CONSTS.JSON_KEY_SENSOR_PRIORITY])
-        self.setAlertThreshold(config[CONSTS.JSON_KEY_SENSOR_ALERT_THRESHOLD])
+        try:
+            self.setActiveStatus(config[CONSTS.JSON_KEY_SENSOR_IS_ACTIVE])
+            self.setProbeRate(config[CONSTS.JSON_KEY_SENSOR_PROBE_RATE])
+            self.setPriority(config[CONSTS.JSON_KEY_SENSOR_PRIORITY])
+            self.setAlertThreshold(config[CONSTS.JSON_KEY_SENSOR_ALERT_THRESHOLD])
+        except KeyError:
+                if self.DEBUG:
+                    print self.LOGTAG, " :: Config not present"
 
         if self.DEBUG:
             print self.LOGTAG, " : ", self.getName().upper(), " -> New Config :: " , self.toString()
