@@ -22,7 +22,7 @@ class Thermistor(Sensor):
         else:
             if self.DEBUG:
                 print self.getName().upper(), " :: Constructing -> with shared lib... "
-            super(MQ2, self).__init__(alertManager)
+            super(Thermistor, self).__init__(alertManager)
             self.__lib = lib
             #Setup arg for ctypes
             self.__lib.Thermistor_newInstance.argtypes = [ctypes.c_char_p, ctypes.c_int]

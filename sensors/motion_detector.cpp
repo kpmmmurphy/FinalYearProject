@@ -18,7 +18,7 @@ using namespace std;
 #define ADC_CHANNEL_NO -1
 
 //Pin Definitions
-#define MOTION_D_INPUT_PIN 7 //Pi Pin 7 ~ BCM Pin 4
+#define MOTION_D_INPUT_PIN 4 //Pi Pin 16 ~ BCM Pin 23
 
 class MotionDetector : public Sensor
 {

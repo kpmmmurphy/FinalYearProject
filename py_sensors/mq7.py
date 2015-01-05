@@ -17,6 +17,7 @@ class MQ7(Sensor):
     __lib = None
 
     __previousValue = None
+    __platauCount   = 0
 
     def __init__(self, lib, alertManager):
         if lib is None:
@@ -70,7 +71,15 @@ class MQ7(Sensor):
         if self.__previousValue is None:
             self.__previousValue = latestValue
 
-        calValue = max((self.getCurrentValue()) + (latestValue - self.__previousValue), 0)
+        #Catch: Will CO ever reach 0 if it spikes too hight
+        valueDiff = latestValue - self.__previousValue
+        calValue = max((self.getCurrentValue()) + (valueDiff), 0)
+        if valueDiff < 0: 
+            self.__platauCount += 1
+            if self.__platauCount == 5:
+                calValue = 0
+                self.__platauCount = 0
+
         self.__previousValue = latestValue
         return calValue
 
