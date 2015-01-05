@@ -18,13 +18,14 @@ class MQ7(Sensor):
 
     __previousValue = None
 
-    def __init__(self, lib):
+    def __init__(self, lib, alertManager):
         if lib is None:
             if self.DEBUG:
                 print self.getName().upper(), " :: Constructing -> without shared lib... "
         else:
             if self.DEBUG:
                 print self.getName().upper(), " :: Constructing -> with shared lib... "
+            super(MQ7, self).__init__(alertManager)
             self.__lib = lib
     	    #Setup args for ctypes
             self.__lib.MQ7_newInstance.argtypes = [ctypes.c_char_p, ctypes.c_int]
@@ -59,7 +60,8 @@ class MQ7(Sensor):
             if self.DEBUG:
                 print self.getName().upper(), " :: ALERT"
 
-            self.getAlertManager().ringBuzzer()
+            if self.getAlertManager is not None:
+                self.getAlertManager().ringBuzzer()
         
     def getName(self):
         return self.__name

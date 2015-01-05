@@ -24,6 +24,8 @@ class SensorFactory(object):
     LIB_PATH  = "./sensors/libs/lib_SensorManager.so"
     __sensorLib = None
 
+    __alertManager = None
+
     #Singletons
     __mq7            = None
     __thermistor     = None
@@ -33,14 +35,17 @@ class SensorFactory(object):
     #Sensor Holder
     __sensors = []
 
-    def __init__(self):
+    def __init__(self, alertManager):
         if self.DEBUG:
             print self.LOGTAG , " :: Created..."
 
         if socket.gethostname() == CONSTS.RASP_PI:
+            if self.DEBUG:
+                print self.LOGTAG, " :: Running on Raspberry Pi"
             subprocess.call("gpio load spi", shell=True)
             self.__sensorLib = ctypes.cdll.LoadLibrary(self.LIB_PATH)
 
+        self.__alertManager = alertManager
         self.createAllSensors()
 
     def createAllSensors(self):
@@ -55,9 +60,9 @@ class SensorFactory(object):
     def getInstance_MQ7(self):
         if self.__mq7 is None:
             if self.__sensorLib is None:
-               self.__mq7 = MQ7(lib=None)
+               self.__mq7 = MQ7(lib=None, alertManager=None)
             else:
-               self.__mq7 = MQ7(lib=self.__sensorLib)
+               self.__mq7 = MQ7(lib=self.__sensorLib, alertManager=self.__alertManager)
 
             self.__sensors.append(self.__mq7)
 
@@ -66,10 +71,10 @@ class SensorFactory(object):
     def getInstance_MQ2(self):
         if self.__mq2 is None:
             if self.__sensorLib is None:
-               self.__mq2 = MQ2(lib=None)
+               self.__mq2 = MQ2(lib=None, alertManager=None)
             else:
                #self.__mq2 = MQ2(lib=self.__sensorLib)
-               self.__mq2 = MQ2(lib=None)
+               self.__mq2 = MQ2(lib=None, alertManager=None)
 
             self.__sensors.append(self.__mq2)
 
@@ -78,9 +83,9 @@ class SensorFactory(object):
     def getInstance_Thermistor(self):
         if self.__thermistor is None:
             if self.__sensorLib is None:
-               self.__thermistor = Thermistor(lib=None)
+               self.__thermistor = Thermistor(lib=None, alertManager=None)
             else:
-               self.__thermistor = Thermistor(lib=self.__sensorLib)
+               self.__thermistor = Thermistor(lib=self.__sensorLib, alertManager=self.__alertManager)
 
             self.__sensors.append(self.__thermistor)
 
@@ -89,9 +94,9 @@ class SensorFactory(object):
     def getInstance_MotionDetector(self):
         if self.__motionDetector is None:
             if self.__sensorLib is None:
-               self.__motionDetector = MotionDetector(lib=None)
+               self.__motionDetector = MotionDetector(lib=None, alertManager=None)
             else:
-               self.__motionDetector = MotionDetector(lib=self.__sensorLib)
+               self.__motionDetector = MotionDetector(lib=self.__sensorLib, alertManager=self.__alertManager)
 
             self.__sensors.append(self.__motionDetector) 
         

@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-#PIR Motion Detection Sensor 
+#Alerting Manager handles contact with Buzzer and Camera, eventually LEDS 
 #Author: Kevin Murphy
 #Date  : 4 - Dec - 15
 
+import json
 from configurable import Configurable
 import constants as CONSTS
-from buzzer import Buzzer
+from py_sensors.buzzer import Buzzer
 from camera_manager import CameraManager
 
 class AlertManager(Configurable):
@@ -25,13 +26,13 @@ class AlertManager(Configurable):
 
     def configure(self, config):
 		if self.DEBUG:
-            print self.LOGTAG, ":: Configuring"
-        
-        if config is not None:
-            alertConfig = config[self.getJsonConfigKey()]
-            self.setBuzzerStatus(alertConfig[CONSTS.JSON_KEY_ALERT_BUZZER_ON])
-            self.setCameraStatus(alertConfig[CONSTS.JSON_KEY_ALERT_CAMERA_ON])
-            self.setVideoMode(alertConfig[CONSTS.JSON_KEY_ALERT_VIDEO_MODE])
+			print self.LOGTAG, ":: Configuring"
+
+		if config is not None:
+			alertConfig = config[self.getJsonConfigKey()]
+        	self.setBuzzerStatus(alertConfig[CONSTS.JSON_KEY_ALERT_BUZZER_ON])
+        	self.setCameraStatus(alertConfig[CONSTS.JSON_KEY_ALERT_CAMERA_ON])
+        	self.setVideoMode(alertConfig[CONSTS.JSON_KEY_ALERT_VIDEO_MODE])
 
     def ringBuzzer(self):
     	if self.getBuzzerStatus():
@@ -43,7 +44,7 @@ class AlertManager(Configurable):
     			CameraManager.recordVideo()
     		else:
     			CameraManager.takeStill()
-    			
+
     def setBuzzerStatus(self, isOn):
     	self.__buzzerOn = isOn
 
@@ -62,12 +63,12 @@ class AlertManager(Configurable):
     def getVideoMode(self):
     	return self.__videoMode
 
-	def toString(self):
+    def toString(self):
 		data = { CONSTS.JSON_KEY_ALERT_BUZZER_ON  : self.getBuzzerStatus(), 
                  CONSTS.JSON_KEY_ALERT_CAMERA_ON  : self.getCameraStatus(), 
                  CONSTS.JSON_KEY_ALERT_VIDEO_MODE : self.getVideoMode()}
-        
-        if self.DEBUG:
-            print self.LOGTAG , json.dumps(data)
+ 		
+ 		if self.DEBUG:
+ 			print self.LOGTAG , json.dumps(data)
 
-        return data
+ 		return data
