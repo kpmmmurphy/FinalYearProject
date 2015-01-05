@@ -11,15 +11,15 @@ from database_manager import DatabaseManager
 from api_manager      import APIManager
 from configuration_manager import ConfigurationManager
 from alert_manager import AlertManager
+from system_details_manager import SystemDetailsManager
+
 #Constants
 DEBUG = True
 
 def main():
     ##TODO
-    # Configuration Manager/ Interface - @
     # System details configuration - naming etc 
     # Sensor Alerting and Info table - 1
-    # AlertManager - 1 
     # Implement MQ2 in c
     # Uploading Video?
     # Dropbox? / Google Drive? 
@@ -33,15 +33,17 @@ def main():
     # Graphing on cs1
 
     #Mon
-            #lights
-            #Order sensors
+        #lights
+        #Order sensors
+        #System Details
 
     databaseManager = DatabaseManager()
     alertManager    = AlertManager()  
     sensorFactory   = SensorFactory(alertManager=alertManager)
     sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
     apiManager      = APIManager(sensorManager=sensorManager)
-    configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager, alertManager})
+    systemDetailsManager = SystemDetailsManager(databaseManager=databaseManager)
+    configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager, alertManager, systemDetailsManager})
     configurationManager.writeoutConfiguration()
     #Api needs this to update configuration
     apiManager.setConfigManager(configurationManager)

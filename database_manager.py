@@ -27,23 +27,24 @@ class DatabaseManager(Configurable):
         pass
 
     #Creates the Tables
-    @staticmethod
-    def create_tables():
+    def create_tables(self):
         try:
             Current_Day_Sensor_Output.create_table()
         except peewee.OperationalError:
             print "DatabaseManager :: Exception -> Current Day Sensor_Output Table Already Exists"
-    
+
+        try:
+            System_Details.create_table()
+            self.insert_system_details(CONSTS.SYSTEM_NAME_DEFAULT, CONSTS.SYSTEM_LOCATION_DEFAULT, 
+                                       CONSTS.SYSTEM_GPS_LAT_DEFAULT, CONSTS.SYSTEM_GPS_LNG_DEFAULT)
+        except peewee.OperationalError:
+            print "DatabaseManager :: Exception -> System_Details Table Already Exists"
+
         '''
         try: 
             Sensor_Output_Averages.create_table()
         except peewee.OperationalError:
             print "Sensor output Averages Table Already Exists"
-
-        try:
-            System_Details.create_table()
-        except peewee.OperationalError:
-            print "System_Details Table Already Exists"
 
         try: 
             System_Admin_Details.create_table()
@@ -62,6 +63,22 @@ class DatabaseManager(Configurable):
 
         if self.DEBUG:
             print self.LOGTAG, " :: Sensor Data Inserted.."
+
+    def insert_system_details(self, name, location, gps_lat, gps_lng):
+
+        system_details = System_Details(name     = name,
+                                        location = location, 
+                                        gps_lat  = gps_lat,
+                                        gps_lng  = gps_lng)
+        system_details.save()
+
+        if self.DEBUG:
+            print self.LOGTAG, " :: Updated System Details.."
+
+    #Select methods
+    def select_system_details(self):
+        systemDetails = System_Details.select().order_by(System_Details.id.desc())
+        return systemDetails[0]
    
     #Test Functions
     def insert_test_data(self, simulated_output_level):
@@ -182,9 +199,8 @@ class System_Admin_Details(BaseModel):
     date_and_time = peewee.DateTimeField(formats=CONSTS.SQL_DATE_FORMAT)
 
 class System_Details(BaseModel):
-
     #Define DB Fields
-    name              = peewee.CharField()
-    location          = peewee.CharField()
-    ip_address        = peewee.CharField()
-    gps_coords_aprrox = peewee.CharField()   
+    name       = peewee.CharField()
+    location   = peewee.CharField()
+    gps_lat    = peewee.CharField()   
+    gps_lng    = peewee.CharField()   

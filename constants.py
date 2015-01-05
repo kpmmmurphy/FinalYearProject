@@ -11,15 +11,21 @@ RASP_PI = "raspberrypi"
 #File Locations
 CONFIGURATION_DEFAULT = "./config/default_config.json"
 
-#SQL-----------------------------------------
+#---SQL-----------------------------------------
 COLLECTION_RATE_DEFAULT     = 15
 COLLECTION_PRIORITY_DEFAULT = 1
 
+#System Details Defaults
+SYSTEM_NAME_DEFAULT     = "Security Centre" 
+SYSTEM_LOCATION_DEFAULT = "Where am I located?"
+SYSTEM_GPS_LAT_DEFAULT  = "Not set"
+SYSTEM_GPS_LNG_DEFAULT  = "Not set"
+
 #Test - Local - Database Credentials
-TESTING_SQL = True
-DB_NAME   = 'fyp'
-DB_USER   = 'root'
-DB_PASSWD_PI = '111314826'
+TESTING_SQL      = True
+DB_NAME          = 'fyp'
+DB_USER          = 'root'
+DB_PASSWD_PI     = '111314826'
 DB_PASSWD_UBUNTU = 'kevinmurphy'
 
 #Production - CS1 - Database Credentials
@@ -48,6 +54,13 @@ JSON_KEY_DEFAULT = "default"
 
 #Database
 JSON_KEY_DATABASE_MANAGER_CONFIG = "database_manager"
+
+#System Details
+JSON_KEY_SYSTEM_DETAILS_MANAGER_CONFIG = "system_details_manager "
+JSON_KEY_SYSTEM_DETAILS_NAME     = "name"
+JSON_KEY_SYSTEM_DETAILS_LOCATION = "location"
+JSON_KEY_SYSTEM_DETAILS_GPS_LAT  = "gps_lat"
+JSON_KEY_SYSTEM_DETAILS_GPS_LNG  = "gps_lng"
 
 #Sensors
 JSON_KEY_SENSORS_ARRAY     = "sensors"
