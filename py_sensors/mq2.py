@@ -55,7 +55,7 @@ class MQ2(Sensor):
             if self.DEBUG:
                 print self.getName().upper(), " :: ALERT"
 
-            if self.getAlertManager is not None:
+            if self.getAlertManager() is not None:
                 self.getAlertManager().ringBuzzer()
 
     def getName(self):
