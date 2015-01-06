@@ -29,40 +29,60 @@ class WifiDirectManager(Configurable):
 		super(WifiDirectManager, self).__init__(CONSTS.JSON_KEY_WIFI_DIRECT_MANAGER)
 
 		self.__sensorManager = sensorManager
-
-		adds = netifaces.ifaddresses('wlan0')
-		self.__ipAddress = adds[netifaces.AF_INET][0]['addr']
-
-		self.__socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-		self.__socket.bind((self.__ipAddress, self.MCAST_PORT))
-		self.__socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+		self.setupMulticastSocket()
 		self.test()
 
 		if self.DEBUG:
-            print self.LOGTAG, " :: Created"
+			print self.LOGTAG, " :: Created"
 
-    def sendSensorValues(self):
-    	self.sendData(sensorManager.getSensorValues())
-    	timer = Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
-        timer.start()
+	def setupMulticastSocket(self):
+		try:
+			adds = netifaces.ifaddresses('wlan0')
+			self.__ipAddress = adds[netifaces.AF_INET][0]['addr']
+			self.__socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+			self.__socket.bind((self.__ipAddress, self.MCAST_PORT))
+			self.__socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+		except KeyError:
+			if self.DEBUG:
+				print self.LOGTAG, "Cannot detect Wlan0 IP Address" 
 
-    def test(self):
-    	self.sendData("This is a Test")
-    	timer = Timer(self.__testRate, self.test,())
-        timer.start()
+	def sendSensorValues(self):
+		self.sendData(sensorManager.getSensorValues())
+		timer = Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
+		timer.start()
 
-    def sendData(self, data):
-    	self.__socket.sendto(data, (self.MCAST_GRP, self.MCAST_PORT))
+	def test(self):
+		self.sendData("This is a Test")
+		timer = Timer(self.__testRate, self.test,())
+		timer.start()
 
-    def getSensorValueSendRate(self):
-    	return self.__sensorValueSendRate
+	def sendData(self, data):
+		if self.__socket is not None:
+			self.__socket.sendto(data, (self.MCAST_GRP, self.MCAST_PORT))
 
-    def setSensorValueSendRate(self, newRate):
-    	self.__sensorValueSendRate = newRate
+	def getSensorValueSendRate(self):
+		return self.__sensorValueSendRate
 
-    def configure(self, config):
-    	pass
+	def setSensorValueSendRate(self, newRate):
+		self.__sensorValueSendRate = newRate
 
-    def toString(self):
-    	pass
+	def configure(self, config):
+		if self.DEBUG:
+			print self.LOGTAG, ":: Configuring"
+
+		if config is not None:
+			try:
+				wifiDirectConfig = config[self.getJsonConfigKey()]
+				self.setSensorValueSendRate(wifiDirectConfig[CONSTS.JSON_KEY_WIFI_DIRECT_SENSOR_SEND_RATE])
+			except KeyError:
+				if self.DEBUG:
+					print self.LOGTAG, " :: Config key not present"
+
+	def toString(self):
+		data = { CONSTS.JSON_KEY_WIFI_DIRECT_SENSOR_SEND_RATE : self.getSensorValueSendRate()}
+ 		
+ 		if self.DEBUG:
+ 			print self.LOGTAG , json.dumps(data)
+
+ 		return data
 

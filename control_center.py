@@ -12,6 +12,7 @@ from api_manager      import APIManager
 from configuration_manager import ConfigurationManager
 from alert_manager import AlertManager
 from system_details_manager import SystemDetailsManager
+from wifi_direct_manager import WifiDirectManager
 
 #Constants
 DEBUG = True
@@ -41,9 +42,11 @@ def main():
     alertManager    = AlertManager()  
     sensorFactory   = SensorFactory(alertManager=alertManager)
     sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
+    wifiDirectManager = WifiDirectManager(sensorManager=sensorManager)
     apiManager      = APIManager(sensorManager=sensorManager)
     systemDetailsManager = SystemDetailsManager(databaseManager=databaseManager)
-    configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager, alertManager, systemDetailsManager})
+    configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager, 
+                                                 alertManager, systemDetailsManager, wifiDirectManager})
     configurationManager.writeoutConfiguration()
     #Api needs this to update configuration
     apiManager.setConfigManager(configurationManager)

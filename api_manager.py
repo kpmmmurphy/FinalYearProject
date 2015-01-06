@@ -107,22 +107,26 @@ class APIManager(Configurable):
         if self.DEBUG and payload is not None: 
             print self.LOGTAG, " :: Uploading -> " , payload
 
-        if payload is not None:
-            response = requests.post(url, headers=headers, data=json.dumps(payload))
-        elif filez is not None:
-            response = requests.post(url, headers=None, files=filez)
-        else:
-            response = requests.post(url, headers=headers)
+        try:
+            if payload is not None:
+                response = requests.post(url, headers=headers, data=json.dumps(payload))
+            elif filez is not None:
+                response = requests.post(url, headers=None, files=filez)
+            else:
+                response = requests.post(url, headers=headers)
+    
+            if self.DEBUG and response.text != "" and response.text != None:
+                print self.LOGTAG, " :: Response Content -> ", response.text, "\n"
 
-        if self.DEBUG and response.text != "" and response.text != None:
-            print self.LOGTAG, " :: Response Content -> ", response.text, "\n"
-
-        if self.DEBUG and response.status_code == requests.codes.ok:
-            print self.LOGTAG, " :: ", service, " -> Completed Successfully"
-        else:
-            print self.LOGTAG, " :: ERROR: ",service, " -> status_code:", sendResponse.status_code
-
-        return response
+            if self.DEBUG and response.status_code == requests.codes.ok:
+                print self.LOGTAG, " :: ", service, " -> Completed Successfully"
+            else:
+                print self.LOGTAG, " :: ERROR: ",service, " -> status_code:", sendResponse.status_code
+    
+            return response
+        except requests.ConnectionError:
+            if self.DEBUG:
+                print self.LOGTAG, ":: ConnectionError Thrown"
 
     #-------Polling Calls---------------------------
     def schedule_SysConfigCheck(self):
