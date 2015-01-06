@@ -2,7 +2,7 @@
 
 #Alerting Manager handles contact with Buzzer and Camera, eventually LEDS 
 #Author: Kevin Murphy
-#Date  : 4 - Dec - 15
+#Date  : 4 - Jan - 15
 
 import json
 from configurable import Configurable
