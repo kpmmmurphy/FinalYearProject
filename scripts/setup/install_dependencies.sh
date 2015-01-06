@@ -14,3 +14,5 @@ sudo pip install peewee
 sudo apt-get install mysql-server python-mysqldb
 
 sudo apt-get install python-picamera
+
+sudo apt-get install psutil

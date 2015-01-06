@@ -18,8 +18,7 @@ DEBUG = True
 
 def main():
     ##TODO
-    # System details configuration - naming etc 
-    # Sensor Alerting and Info table - 1
+    # Info table - 1
     # Implement MQ2 in c
     # Uploading Video?
     # Dropbox? / Google Drive? 
@@ -32,10 +31,11 @@ def main():
     # Data Truncation
     # Graphing on cs1
 
-    #Mon
-        #lights
-        #Order sensors
-        #System Details
+    #Tues
+    #Get dongle working
+    #Pi as AP
+    #Wifi Direct
+    #System Stat Manager
 
     databaseManager = DatabaseManager()
     alertManager    = AlertManager()  
