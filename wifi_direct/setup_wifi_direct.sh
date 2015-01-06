@@ -45,4 +45,4 @@ sudo cp ./config/def_p2p_config ./wpa_supplicant-2.3/wpa_supplicant/.config
 sudo ./wpa_supplicant-2.3/wpa_supplicant/ make BINDIR=/sbin LIBDIR=/lib && sudo ./wpa_supplicant-2.3/wpa_supplicant/ make install
 
 #Create p2p interface
-#iw phy 'ls /sys/class/ieee80211/' interface add p2p0 type managed
+#iw phy 'ls /sys/class/ieee80211/' interface add p2p0 type manage
