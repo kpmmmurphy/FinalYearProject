@@ -7,6 +7,7 @@
 import json
 import socket
 import time
+import struct
 from threading import Timer
 import netifaces
 from configurable import Configurable
@@ -47,10 +48,10 @@ class WifiDirectManager(Configurable):
 			self.__multicastSocket.bind((self.__ipAddress, self.MCAST_PORT))
 			#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
 			self.__multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
+			mreq = struct.pack("4sl", socket.inet_aton(self.MCAST_GRP), socket.INADDR_ANY)
 			self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 			while True:
-    			print self.__multicastSocket.recv(10240)
+				print self.__multicastSocket.recv(10240)
 		except KeyError:
 			if self.DEBUG:
 				print self.LOGTAG, "Cannot detect Wlan0 IP Address" 
