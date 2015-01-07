@@ -21,7 +21,9 @@ class WifiDirectManager(Configurable):
 
 	__sensorManager = None
 
-	__socket = None
+	__currentPeers = {}
+
+	__multicastSocket = None
 	__sensorValueSendRate = CONSTS.WIFI_DIRECT_SENSOR_VALUE_SEND_RATE
 	__testRate = 10
 
@@ -34,18 +36,21 @@ class WifiDirectManager(Configurable):
 		self.__sensorManager = sensorManager
 		self.setupMulticastSocket()
 
-		if self.__socket is not None:
-			self.sendSensorValues()
-
-		
+		#if self.__multicastSocket is not None:
+		#	self.sendSensorValues()
 
 	def setupMulticastSocket(self):
 		try:
 			adds = netifaces.ifaddresses('wlan0')
 			self.__ipAddress = adds[netifaces.AF_INET][0]['addr']
-			self.__socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-			self.__socket.bind((self.__ipAddress, self.MCAST_PORT))
-			self.__socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+			self.__multicastSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+			self.__multicastSocket.bind((self.__ipAddress, self.MCAST_PORT))
+			#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+			self.__multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
+			self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+			while True:
+    			print self.__multicastSocket.recv(10240)
 		except KeyError:
 			if self.DEBUG:
 				print self.LOGTAG, "Cannot detect Wlan0 IP Address" 
@@ -62,10 +67,10 @@ class WifiDirectManager(Configurable):
 		timer.start()
 
 	def sendData(self, data):
-		if self.__socket is not None:
+		if self.__multicastSocket is not None:
 			if self.DEBUG:
 				print self.LOGTAG, " :: Multicasting Data -> ", data
-			self.__socket.sendto(json.dumps(data), (self.MCAST_GRP, self.MCAST_PORT))
+			self.__multicas.sendto(json.dumps(data), (self.MCAST_GRP, self.MCAST_PORT))
 
 	def getSensorValueSendRate(self):
 		return self.__sensorValueSendRate
