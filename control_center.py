@@ -17,7 +17,6 @@ from wifi_direct_manager import WifiDirectManager
 #Constants
 DEBUG = True
 
-def main():
     ##TODO
     # Info table - 1
     # Implement MQ2 in c
@@ -32,12 +31,11 @@ def main():
     # Data Truncation
     # Graphing on cs1
 
-    #Tues
-    #Get dongle working
-    #Pi as AP
-    #Wifi Direct
+    #Wed
+    #Wifi Direct Manager - Wireshark
+    #APP
     #System Stat Manager
-
+def main():
     databaseManager = DatabaseManager()
     alertManager    = AlertManager()  
     sensorFactory   = SensorFactory(alertManager=alertManager)

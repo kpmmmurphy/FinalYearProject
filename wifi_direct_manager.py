@@ -30,7 +30,9 @@ class WifiDirectManager(Configurable):
 
 		self.__sensorManager = sensorManager
 		self.setupMulticastSocket()
-		self.test()
+
+		if self.__socket is not None:
+			self.sendSensorValues()
 
 		if self.DEBUG:
 			print self.LOGTAG, " :: Created"
@@ -47,7 +49,8 @@ class WifiDirectManager(Configurable):
 				print self.LOGTAG, "Cannot detect Wlan0 IP Address" 
 
 	def sendSensorValues(self):
-		self.sendData(sensorManager.getSensorValues())
+		if self.__sensorManager is not None:
+			self.sendData(self.__sensorManager.getSensorValues())
 		timer = Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
 		timer.start()
 
@@ -58,7 +61,9 @@ class WifiDirectManager(Configurable):
 
 	def sendData(self, data):
 		if self.__socket is not None:
-			self.__socket.sendto(data, (self.MCAST_GRP, self.MCAST_PORT))
+			if self.DEBUG:
+				print self.LOGTAG, " :: Multicasting Data -> ", data
+			self.__socket.sendto(json.dumps(data), (self.MCAST_GRP, self.MCAST_PORT))
 
 	def getSensorValueSendRate(self):
 		return self.__sensorValueSendRate
@@ -85,4 +90,3 @@ class WifiDirectManager(Configurable):
  			print self.LOGTAG , json.dumps(data)
 
  		return data
-
