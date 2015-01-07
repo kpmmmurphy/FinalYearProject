@@ -12,7 +12,7 @@ class SystemDetailsManager(Configurable):
 	DEBUG  = True
 	LOGTAG = "SystemDetailsManager"
 
-	__database_manager = None	
+	__databaseManager = None	
 	__name       = None
 	__location   = None
 	__gps_lat    = None
@@ -23,9 +23,9 @@ class SystemDetailsManager(Configurable):
 
 		if self.DEBUG:
 			print self.LOGTAG, " :: Created"
-		self.__database_manager = databaseManager
+		self.__databaseManager = databaseManager
 
-		self.setSystemDetails(self.__database_manager.select_system_details())
+		self.setSystemDetails(self.__databaseManager.select_system_details())
 
 	def configure(self, config):
 		if self.DEBUG:

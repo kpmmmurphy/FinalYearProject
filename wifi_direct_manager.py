@@ -28,14 +28,16 @@ class WifiDirectManager(Configurable):
 	def __init__(self, sensorManager):
 		super(WifiDirectManager, self).__init__(CONSTS.JSON_KEY_WIFI_DIRECT_MANAGER)
 
+		if self.DEBUG:
+			print self.LOGTAG, " :: Created"
+
 		self.__sensorManager = sensorManager
 		self.setupMulticastSocket()
 
 		if self.__socket is not None:
 			self.sendSensorValues()
 
-		if self.DEBUG:
-			print self.LOGTAG, " :: Created"
+		
 
 	def setupMulticastSocket(self):
 		try:
