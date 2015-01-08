@@ -35,12 +35,13 @@ class WifiDirectManager(Configurable):
 			print self.LOGTAG, " :: Created"
 
 		self.__sensorManager = sensorManager
-		self.setupMulticastSocket()
+		#self.setupMulticastSocket()
+		self.setupSendMulticastSocket()
 
 		#if self.__multicastSocket is not None:
 		#	self.sendSensorValues()
 
-	def setupMulticastSocket(self):
+	def setupRecvMulticastSocket(self):
 		try:
 			adds = netifaces.ifaddresses('wlan0')
 			self.__ipAddress = adds[netifaces.AF_INET][0]['addr']
@@ -52,6 +53,22 @@ class WifiDirectManager(Configurable):
 			self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 			while True:
 				print self.__multicastSocket.recv(10240)
+				time.sleep(2)
+		except KeyError:
+			if self.DEBUG:
+				print self.LOGTAG, "Cannot detect Wlan0 IP Address" 
+
+	def setupSendMulticastSocket(self):
+		try:
+			adds = netifaces.ifaddresses('wlan0')
+			self.__ipAddress = adds[netifaces.AF_INET][0]['addr']
+			self.__socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+			self.__socket.bind((self.__ipAddress, self.MCAST_PORT))
+			self.__socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+			while True:
+				self.__socket.sendto("TEST", (self.MCAST_GRP, self.MCAST_PORT))
+				time.sleep(2)
+
 		except KeyError:
 			if self.DEBUG:
 				print self.LOGTAG, "Cannot detect Wlan0 IP Address" 
@@ -67,11 +84,11 @@ class WifiDirectManager(Configurable):
 		timer = Timer(self.__testRate, self.test,())
 		timer.start()
 
-	def sendData(self, data):
-		if self.__multicastSocket is not None:
+	def sendData(self, socket, data):
+		if socket is not None:
 			if self.DEBUG:
 				print self.LOGTAG, " :: Multicasting Data -> ", data
-			self.__multicas.sendto(json.dumps(data), (self.MCAST_GRP, self.MCAST_PORT))
+			self.socket.sendto(json.dumps(data), (self.MCAST_GRP, self.MCAST_PORT))
 
 	def getSensorValueSendRate(self):
 		return self.__sensorValueSendRate
@@ -98,3 +115,5 @@ class WifiDirectManager(Configurable):
  			print self.LOGTAG , json.dumps(data)
 
  		return data
+
+
