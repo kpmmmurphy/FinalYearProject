@@ -35,23 +35,29 @@ class WifiDirectManager(Configurable):
 			print self.LOGTAG, " :: Created"
 
 		self.__sensorManager = sensorManager
-		#self.setupMulticastSocket()
-		self.setupSendMulticastSocket()
+		self.getIPAddress()
+		self.setupRecvMulticastSocket()
+		#self.setupSendMulticastSocket()
 
 		#if self.__multicastSocket is not None:
 		#	self.sendSensorValues()
 
+	def getIPAddress(self):
+		adds = netifaces.ifaddresses('wlan0')
+		self.__ipAddress = adds[netifaces.AF_INET][0]['addr']
+		print self.LOGTAG, " :: IP Address ->", self.__ipAddress
+
+
 	def setupRecvMulticastSocket(self):
 		try:
-			adds = netifaces.ifaddresses('wlan0')
-			self.__ipAddress = adds[netifaces.AF_INET][0]['addr']
 			self.__multicastSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+			self.__multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			self.__multicastSocket.bind((self.__ipAddress, self.MCAST_PORT))
 			#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-			self.__multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			mreq = struct.pack("4sl", socket.inet_aton(self.MCAST_GRP), socket.INADDR_ANY)
 			self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 			while True:
+				print self.LOGTAG, " :: Waiting to Recv..."
 				print self.__multicastSocket.recv(10240)
 				time.sleep(2)
 		except KeyError:
@@ -116,4 +122,5 @@ class WifiDirectManager(Configurable):
 
  		return data
 
+wifiMan = WifiDirectManager(sensorManager=None)
 
