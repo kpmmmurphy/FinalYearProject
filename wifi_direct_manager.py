@@ -52,7 +52,8 @@ class WifiDirectManager(Configurable):
 		try:
 			self.__multicastSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 			self.__multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			self.__multicastSocket.bind((self.__ipAddress, self.MCAST_PORT))
+			#Bind to our default Multicast Port.
+			self.__multicastSocket.bind((self.MCAST_GRP, self.MCAST_PORT))
 			#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
 			mreq = struct.pack("4sl", socket.inet_aton(self.MCAST_GRP), socket.INADDR_ANY)
 			self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
