@@ -53,13 +53,16 @@ class WifiDirectManager(Configurable):
 			self.__multicastSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 			self.__multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			#Bind to our default Multicast Port.
-			self.__multicastSocket.bind((self.MCAST_GRP, self.MCAST_PORT))
 			#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-			mreq = struct.pack("4sl", socket.inet_aton(self.MCAST_GRP), socket.INADDR_ANY)
-			self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+			mreq = struct.pack("4sL", socket.inet_aton(self.MCAST_GRP), socket.INADDR_ANY)
+			#self.__multicastSocket.connect((self.MCAST_GRP ,self.MCAST_PORT ))
+			#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+			self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(self.MCAST_GRP)+socket.inet_aton(self.__ipAddress))
+			
+			self.__multicastSocket.bind((self.MCAST_GRP, self.MCAST_PORT))
 			while True:
 				print self.LOGTAG, " :: Waiting to Recv..."
-				print self.__multicastSocket.recv(10240)
+				print self.__multicastSocket.recvfrom(10240)
 				time.sleep(2)
 		except KeyError:
 			if self.DEBUG:
