@@ -77,8 +77,8 @@ class WifiDirectManager(Configurable):
 				if self.DEBUG:
 					print self.LOGTAG, " :: Waiting to Recveive Packet..."
 
-				#packet = json.load(multicastSocket.recvfrom(10240))
-				packet = json.loads('{"payload":{"DEBUG":true,"device_id":"e1cadbafc6804e3f","ip_address":"192.168.42.2","connected":false},"service":"connect"}')
+				packet = json.load(multicastSocket.recvfrom(10240))
+				#packet = json.loads('{"payload":{"DEBUG":true,"device_id":"e1cadbafc6804e3f","ip_address":"192.168.42.2","connected":false},"service":"connect"}')
 				
 				if self.DEBUG:
 					time.sleep(2)
