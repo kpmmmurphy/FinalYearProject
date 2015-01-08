@@ -8,8 +8,9 @@ import json
 import socket
 import time
 import struct
-from threading import Timer
+import threading 
 import netifaces
+from model.peer import Peer
 from configurable import Configurable
 import constants as CONSTS
 
@@ -36,52 +37,76 @@ class WifiDirectManager(Configurable):
 
 		self.__sensorManager = sensorManager
 		self.getIPAddress()
-		self.setupRecvMulticastSocket()
+
+		self.__multicastSocket = self.createMulticatSocket(self.__ipAddress, CONSTS.MULTICAST_GRP, CONSTS.MULTICAST_PORT)
+		multicastThread        = threading.Thread(target=self.listenOnMulticastSocket,args=(self.__multicastSocket,))
+		multicastThread.start()
+
 		#self.setupSendMulticastSocket()
 
 		#if self.__multicastSocket is not None:
 		#	self.sendSensorValues()
 
 	def getIPAddress(self):
-		adds = netifaces.ifaddresses('wlan0')
-		self.__ipAddress = adds[netifaces.AF_INET][0]['addr']
-		print self.LOGTAG, " :: IP Address ->", self.__ipAddress
-
-
-	def setupRecvMulticastSocket(self):
-		try:
-			self.__multicastSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-			self.__multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			#Bind to our default Multicast Port.
-			#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-			mreq = struct.pack("4sL", socket.inet_aton(self.MCAST_GRP), socket.INADDR_ANY)
-			#self.__multicastSocket.connect((self.MCAST_GRP ,self.MCAST_PORT ))
-			#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-			self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(self.MCAST_GRP)+socket.inet_aton(self.__ipAddress))
-			
-			self.__multicastSocket.bind((self.MCAST_GRP, self.MCAST_PORT))
-			while True:
-				print self.LOGTAG, " :: Waiting to Recv..."
-				print self.__multicastSocket.recvfrom(10240)
-				time.sleep(2)
-		except KeyError:
-			if self.DEBUG:
-				print self.LOGTAG, "Cannot detect Wlan0 IP Address" 
-
-	def setupSendMulticastSocket(self):
 		try:
 			adds = netifaces.ifaddresses('wlan0')
 			self.__ipAddress = adds[netifaces.AF_INET][0]['addr']
-			self.__socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-			self.__socket.bind((self.__ipAddress, self.MCAST_PORT))
-			self.__socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-			while True:
-				self.__socket.sendto("TEST", (self.MCAST_GRP, self.MCAST_PORT))
-				time.sleep(2)
-
+			if self.DEBUG:
+				print self.LOGTAG, " :: IP Address ->", self.__ipAddress
 		except KeyError:
 			if self.DEBUG:
 				print self.LOGTAG, "Cannot detect Wlan0 IP Address" 
+
+	def createMulticatSocket(self, inetIP, multicastGroup, multicastPort):
+		multicastSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+		multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+		#mreq = struct.pack("4sL", socket.inet_aton(self.MCAST_GRP), socket.INADDR_ANY)
+		#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+
+		#Socket must be connected to the wlan0 interface's IP address
+		multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(multicastGroup)+socket.inet_aton(inetIP))
+		#Bind to our default Multicast Port.
+		multicastSocket.bind((multicastGroup, multicastPort))
+		return multicastSocket
+
+
+	def listenOnMulticastSocket(self, multicastSocket):
+		if multicastSocket is not None:
+			while True:
+				if self.DEBUG:
+					print self.LOGTAG, " :: Waiting to Recveive Packet..."
+
+				#packet = json.load(multicastSocket.recvfrom(10240))
+				packet = json.loads('{"payload":{"DEBUG":true,"device_id":"e1cadbafc6804e3f","ip_address":"192.168.42.2","connected":false},"service":"connect"}')
+				
+				if self.DEBUG:
+					time.sleep(2)
+					print self.LOGTAG, " :: Received Packet ->", json.dumps(packet)
+				try:
+					service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_SERVICE]
+					payload = packet[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_PAYLOAD]
+					if service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONNECT:
+						self.addPeer(payload)
+
+				except KeyError:
+					if self.DEBUG:
+						print self.LOGTAG, " :: Exception thrown -> KeyError"
+
+	def createSocket(self, bindToIP, connectToIP):
+		#newSocket = socket.socket(self.__ipAddress, socket.SOCK_STREAM)
+		newSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		#socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+		if bindToIP is not None:
+			#For receiving 
+			newSocket.bind((bindToIP, CONSTS.DEFAULT_PORT))
+			newSocket.listen(5)
+		elif connectToIP is not None:
+			#For sending
+			newSocket.connect((connectToIP, CONSTS.DEFAULT_PORT))
+
+		return newSocket
 
 	def sendSensorValues(self):
 		if self.__sensorManager is not None:
@@ -99,6 +124,21 @@ class WifiDirectManager(Configurable):
 			if self.DEBUG:
 				print self.LOGTAG, " :: Multicasting Data -> ", data
 			self.socket.sendto(json.dumps(data), (self.MCAST_GRP, self.MCAST_PORT))
+
+	def addPeer(self, payload):
+		try:
+			peerIP = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS]
+			peerDeviceID = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_DEVICE_ID]
+			self.__currentPeers[peerDeviceID] = Peer(ipAddress=peerIP, deviceID=peerDeviceID)
+			if self.DEBUG:
+				print self.LOGTAG, " :: Current Peers -> ", self.printPeers()
+		except KeyError:
+			if self.DEBUG:
+				print self.LOGTAG, " :: Exception thrown -> KeyError"
+
+	def printPeers(self):
+		for deviceID, peer in self.__currentPeers.iteritems():
+			peer.toString()
 
 	def getSensorValueSendRate(self):
 		return self.__sensorValueSendRate
