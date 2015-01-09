@@ -115,7 +115,7 @@ class WifiDirectManager(Configurable):
 
 	def sendSensorValues(self):
 		if self.__sensorManager is not None:
-			sensorValues = self.__sensorManager.getSensorValues()
+			sensorValues = json.dumps(self.__sensorManager.getSensorValues())
 
 			if self.DEBUG:
 				print self.LOGTAG, " :: Sending Sensor Values"
