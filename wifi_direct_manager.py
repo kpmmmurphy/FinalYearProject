@@ -42,6 +42,8 @@ class WifiDirectManager(Configurable):
 		multicastThread        = threading.Thread(target=self.listenOnMulticastSocket,args=(self.__multicastSocket,))
 		multicastThread.start()
 
+		self.sendSensorValues()
+
 		#self.setupSendMulticastSocket()
 
 		#if self.__multicastSocket is not None:
@@ -70,7 +72,6 @@ class WifiDirectManager(Configurable):
 		multicastSocket.bind((multicastGroup, multicastPort))
 		return multicastSocket
 
-
 	def listenOnMulticastSocket(self, multicastSocket):
 		if multicastSocket is not None:
 			while True:
@@ -85,12 +86,12 @@ class WifiDirectManager(Configurable):
 				if self.DEBUG:
 					time.sleep(2)
 					print self.LOGTAG, " :: Received Packet ->", json.dumps(packet)
+
 				try:
 					service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_SERVICE]
 					payload = packet[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_PAYLOAD]
 					if service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONNECT:
 						self.addPeer(payload)
-
 				except KeyError:
 					if self.DEBUG:
 						print self.LOGTAG, " :: Exception thrown -> KeyError"
@@ -106,13 +107,17 @@ class WifiDirectManager(Configurable):
 			newSocket.listen(5)
 		elif connectToIP is not None:
 			#For sending
+			newSocket.bind((self.__ipAddress, CONSTS.DEFAULT_PORT))
 			newSocket.connect((connectToIP, CONSTS.DEFAULT_PORT))
 
 		return newSocket
 
 	def sendSensorValues(self):
 		if self.__sensorManager is not None:
-			self.sendData(self.__sensorManager.getSensorValues())
+			sensorValues = self.__sensorManager.getSensorValues()
+			for deviceID, peer in self.__currentPeers.iteritems():
+				peer.getSocket().send(sensorValues)
+
 		timer = Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
 		timer.start()
 
@@ -129,11 +134,21 @@ class WifiDirectManager(Configurable):
 
 	def addPeer(self, payload):
 		try:
-			peerIP = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS]
+			peerIP       = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS]
 			peerDeviceID = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_DEVICE_ID]
-			self.__currentPeers[peerDeviceID] = Peer(ipAddress=peerIP, deviceID=peerDeviceID)
+			timeStamp    = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_TIMESTAMP]
+			peerSocket   = self.createSocket(bindToIP=None, connectToIP=peerIP)       
+
+			peer = Peer(ipAddress=peerIP, deviceID=peerDeviceID, timeStamp=timeStamp, socket=peerSocket)
+
+			if self.DEBUG:
+				print self.LOGTAG, " :: Added new Peer -> ", peer.toString()
+
+			self.__currentPeers[peerDeviceID] = peer
+			
 			if self.DEBUG:
 				print self.LOGTAG, " :: Current Peers -> ", self.printPeers()
+
 		except KeyError:
 			if self.DEBUG:
 				print self.LOGTAG, " :: Exception thrown -> KeyError"
