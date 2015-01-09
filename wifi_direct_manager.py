@@ -116,9 +116,13 @@ class WifiDirectManager(Configurable):
 	def sendSensorValues(self):
 		if self.__sensorManager is not None:
 			sensorValues = self.__sensorManager.getSensorValues()
+
 			if self.DEBUG:
 				print self.LOGTAG, " :: Sending Sensor Values"
+
 			for deviceID, peer in self.__currentPeers.iteritems():
+				if self.DEBUG:
+					print self.LOGTAG, " :: Sending to DeviceID", deviceID 
 				peer.getSocket().send(sensorValues)
 
 		timer = threading.Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
@@ -185,6 +189,4 @@ class WifiDirectManager(Configurable):
  			print self.LOGTAG , json.dumps(data)
 
  		return data
-
-wifiMan = WifiDirectManager(sensorManager=None)
 

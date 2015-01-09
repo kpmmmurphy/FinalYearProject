@@ -21,7 +21,7 @@ class Peer(object):
 		return self.__deviceID
 
 	def getTimeStamp(self):
-		return self.__dateAndTime
+		return self.__timeStamp
 
 	def getSocket(self):
 		return self.__socket
