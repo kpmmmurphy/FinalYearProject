@@ -42,7 +42,8 @@ class WifiDirectManager(Configurable):
 		multicastThread        = threading.Thread(target=self.listenOnMulticastSocket,args=(self.__multicastSocket,))
 		multicastThread.start()
 
-		self.sendSensorValues()
+		sendSensorValuesThread = threading.Thread(target=self.sendSensorValues, args=())
+		sendSensorValuesThread.start()
 
 		#self.setupSendMulticastSocket()
 
@@ -79,7 +80,7 @@ class WifiDirectManager(Configurable):
 					print self.LOGTAG, " :: Waiting to Recveive Packet..."
 
 				rawPacket = multicastSocket.recv(10240)
-				packet = json.loads(rawPacket)
+				packet    = json.loads(rawPacket)
 
 				#packet = json.loads('{"payload":{"DEBUG":true,"device_id":"e1cadbafc6804e3f","ip_address":"192.168.42.2","connected":false},"service":"connect"}')
 				
