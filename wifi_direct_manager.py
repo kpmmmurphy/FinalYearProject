@@ -162,10 +162,8 @@ class WifiDirectManager(Configurable):
 
 			#Send the response ACK
 			responsePacket = {}
-			#payload = {}
 			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_SERVICE] = CONSTS.JSON_VALUE_WIFI_DIRECT_PAIRED
 			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_STATUS_CODE] = CONSTS.JSON_VALUE_WIFI_DIRECT_STATUS_CODE_SUCCESS
-			#responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_PAYLOAD] = payload
 			peer.getSocket().send(json.dumps(responsePacket))
 			
 			if self.DEBUG:
