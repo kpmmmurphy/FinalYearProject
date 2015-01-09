@@ -38,6 +38,13 @@ class WifiDirectManager(Configurable):
 		self.__sensorManager = sensorManager
 		self.getIPAddress()
 
+		# clientSocket = self.createSocket(bindToIP=None, connectToIP="192.168.42.2")
+		
+		# print "Sending Hello..."
+		# clientSocket.send("Hello????")
+		# time.sleep(2)
+		# clientSocket.close()
+
 		self.__multicastSocket = self.createMulticatSocket(self.__ipAddress, CONSTS.MULTICAST_GRP, CONSTS.MULTICAST_PORT)
 		multicastThread        = threading.Thread(target=self.listenOnMulticastSocket,args=(self.__multicastSocket,))
 		multicastThread.start()
@@ -100,7 +107,7 @@ class WifiDirectManager(Configurable):
 	def createSocket(self, bindToIP, connectToIP):
 		#newSocket = socket.socket(self.__ipAddress, socket.SOCK_STREAM)
 		newSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		#socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		newSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 		if bindToIP is not None:
 			#For receiving 
@@ -108,7 +115,7 @@ class WifiDirectManager(Configurable):
 			newSocket.listen(5)
 		elif connectToIP is not None:
 			#For sending
-			newSocket.bind((self.__ipAddress, CONSTS.DEFAULT_PORT))
+			#newSocket.bind((self.__ipAddress, CONSTS.DEFAULT_PORT))
 			newSocket.connect((connectToIP, CONSTS.DEFAULT_PORT))
 
 		return newSocket
@@ -152,6 +159,14 @@ class WifiDirectManager(Configurable):
 				print self.LOGTAG, " :: Added new Peer -> ", peer.toString()
 
 			self.__currentPeers[peerDeviceID] = peer
+
+			#Send the response ACK
+			responsePacket = {}
+			payload = {}
+			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_SERVICE] = CONSTS.JSON_VALUE_WIFI_DIRECT_PAIRED
+			payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_STATUS_CODE] = CONSTS.JSON_VALUE_WIFI_DIRECT_STATUS_CODE_SUCCESS
+			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_PAYLOAD] = payload
+			peer.getSocket().send(json.dumps(responsePacket))
 			
 			if self.DEBUG:
 				print self.LOGTAG, " :: Current Peers -> ", self.printPeers()
@@ -190,3 +205,4 @@ class WifiDirectManager(Configurable):
 
  		return data
 
+wifiDirect = WifiDirectManager(sensorManager=None)
