@@ -129,8 +129,8 @@ class WifiDirectManager(Configurable):
 
 			for deviceID, peer in self.__currentPeers.iteritems():
 				if self.DEBUG:
-					print self.LOGTAG, " :: Sending to DeviceID", deviceID 
-				peer.getSocket().send(sensorValues)
+					print self.LOGTAG, " :: Sending to DeviceID ->", deviceID 
+				peer.sendPacket(sensorValues)
 
 		timer = threading.Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
 		timer.start()
@@ -151,9 +151,8 @@ class WifiDirectManager(Configurable):
 			peerIP       = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS]
 			peerDeviceID = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_DEVICE_ID]
 			timeStamp    = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_TIMESTAMP]
-			peerSocket   = self.createSocket(bindToIP=None, connectToIP=peerIP)       
 
-			peer = Peer(ipAddress=peerIP, deviceID=peerDeviceID, timeStamp=timeStamp, socket=peerSocket)
+			peer = Peer(ipAddress=peerIP, deviceID=peerDeviceID, timeStamp=timeStamp)
 
 			if self.DEBUG:
 				print self.LOGTAG, " :: Added new Peer -> ", peer.toString()
@@ -164,7 +163,10 @@ class WifiDirectManager(Configurable):
 			responsePacket = {}
 			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_SERVICE] = CONSTS.JSON_VALUE_WIFI_DIRECT_PAIRED
 			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_STATUS_CODE] = CONSTS.JSON_VALUE_WIFI_DIRECT_STATUS_CODE_SUCCESS
-			peer.getSocket().send(json.dumps(responsePacket))
+			if self.DEBUG:
+				print self.LOGTAG, " :: Sending Response -> ", responsePacket
+
+			peer.sendPacket(json.dumps(responsePacket))
 			
 			if self.DEBUG:
 				print self.LOGTAG, " :: Current Peers -> ", self.printPeers()
@@ -202,5 +204,3 @@ class WifiDirectManager(Configurable):
  			print self.LOGTAG , json.dumps(data)
 
  		return data
-
-wifiDirect = WifiDirectManager(sensorManager=None)
