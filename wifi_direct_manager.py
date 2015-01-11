@@ -97,7 +97,8 @@ class WifiDirectManager(Configurable):
 
 				try:
 					service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_SERVICE]
-					payload = packet[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_PAYLOAD]
+					#Payload will be a string
+					payload = json.loads(packet[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_PAYLOAD])
 					if service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONNECT:
 						self.addPeer(payload)
 				except KeyError:

@@ -25,7 +25,6 @@ DEBUG = True
     # User Pairing System
     # Automated Setup
     # System Status readings
-    # Rasberry as AP
     # Amazon Datastore
     # Push Notifications
     # Data Truncation
@@ -35,6 +34,9 @@ DEBUG = True
     #Wifi Direct Manager - Wireshark
     #APP
     #System Stat Manager
+    #PAcket format, service and payload.. /'s could be a problem
+    #Implement socket for config/other android client packets
+
 def main():
     databaseManager = DatabaseManager()
     alertManager    = AlertManager()  
