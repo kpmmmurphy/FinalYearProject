@@ -57,7 +57,7 @@ class APIManager(Configurable):
 
     #---------API CALLS-----------------------------
     def getSystemConfig(self):
-        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_CONFIG, payload=None, filez=None)   
+        configResponse = self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_CONFIG, payload=None, filez=None)   
         if self.__polling:
             self.schedule_SysConfigCheck()
 
@@ -66,7 +66,7 @@ class APIManager(Configurable):
 
 
     def uploadSensorValues(self):
-        self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES, payload=self.__sensorManager.getSensorValues(), filez=None)
+        self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_UPLOAD_SENSOR_VALUES, payload=self.__sensorManager.getSensorValues(), filez=None)
         if self.__polling:
             self.schedule_UploadSensorValues()
 
@@ -82,13 +82,13 @@ class APIManager(Configurable):
 
     #Purely for testing server side api 
     def getLatestSensorValues(self):
-        valuesResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, payload=None, filez=None)
+        valuesResponse = self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, payload=None, filez=None)
         return valuesResponse.content
 
     #Purely for testing server side api 
     def updateSystemConfig(self):
         file = open('config/test_config.json', 'r')
-        configResponse = self.sendRequest(CONSTS.JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG, payload=file.read(), filez=None)
+        configResponse = self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG, payload=file.read(), filez=None)
 
         return configResponse.content
 
