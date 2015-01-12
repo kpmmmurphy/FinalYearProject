@@ -42,14 +42,15 @@ def main():
     alertManager    = AlertManager()  
     sensorFactory   = SensorFactory(alertManager=alertManager)
     sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
-    wifiDirectManager = WifiDirectManager(sensorManager=sensorManager)
     apiManager      = APIManager(sensorManager=sensorManager)
     systemDetailsManager = SystemDetailsManager(databaseManager=databaseManager)
+    wifiDirectManager = WifiDirectManager(sensorManager=sensorManager)
     configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager, 
                                                  alertManager, systemDetailsManager, wifiDirectManager})
-    configurationManager.writeoutConfiguration()
-    #Api needs this to update configuration
+    #configurationManager.writeoutConfiguration()
+    #Api and WifiDirectManager both need to update configuration
     apiManager.setConfigManager(configurationManager)
+    wifiDirectManager.setConfigManager(configurationManager)
 
 try:
     main()

@@ -61,7 +61,7 @@ class APIManager(Configurable):
         if self.__polling:
             self.schedule_SysConfigCheck()
 
-        if self.getConfigManager() is not None:
+        if configResponse is not None and self.getConfigManager() is not None:
             self.getConfigManager().reconfigure(configResponse.content)
 
 

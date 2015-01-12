@@ -35,18 +35,19 @@ class ConfigurationManager(Configurable):
 		for item in self.getConfigurables():
 			item.configure(json.loads(config))
 
-	def writeoutConfiguration(self):
+	def getConfig(self):
 		config = {}
 		for item in self.getConfigurables():
 			config[item.getJsonConfigKey()] = item.toString()
 			if item.getJsonConfigKey() == CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG:
 				config[CONSTS.JSON_KEY_SENSORS_ARRAY] = item.sensorsToString()
+		return config
 
+	def writeoutConfiguration(self):
+		config = self.getConfig()
 		obj = open(CONSTS.DIR_CONFIG + "config.json", 'wb')
 		obj.write(json.dumps(config))
 		obj.close()
-
-		return config
 
 	def setConfigurables(self, configurables):
 		self.__configurables = configurables

@@ -38,7 +38,7 @@ class SystemDetailsManager(Configurable):
 				self.setLocation(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_LOCATION])
 				self.setGPSLat(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_GPS_LAT])
 				self.setGPSLng(sysDetailsConfig[CONSTS.JSON_KEY_SYSTEM_DETAILS_GPS_LNG])
-				self.__databaseManager.insert_system_details(self.getDetails())
+				self.__databaseManager.insert_system_details(**self.getDetails())
 			except KeyError:
 				if self.DEBUG:
 					print self.LOGTAG, " :: Config not present"

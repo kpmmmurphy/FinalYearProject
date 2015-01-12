@@ -22,11 +22,14 @@ class WifiDirectManager(Configurable):
 	MCAST_PORT = CONSTS.MULTICAST_PORT
 
 	__sensorManager = None
+	__configManager = None
 
 	__currentPeers = {}
 
 	__multicastSocket = None
+	__ipAddress = None
 	__sensorValueSendRate = CONSTS.WIFI_DIRECT_SENSOR_VALUE_SEND_RATE
+	__configSendRate      = CONSTS.WIFI_DIRECT_CONFIG_SEND_RATE
 	__testRate = 10
 
 	def __init__(self, sensorManager):
@@ -44,6 +47,12 @@ class WifiDirectManager(Configurable):
 
 		sendSensorValuesThread = threading.Thread(target=self.sendSensorValues, args=())
 		sendSensorValuesThread.start()
+
+		sendConfigThread = threading.Thread(target=self.sendConfig, args=())
+		sendConfigThread.start()
+
+		peerPacketThread = threading.Thread(target=self.listenForPeerPacket, args=())
+		peerPacketThread.start()
 
 		#self.setupSendMulticastSocket()
 
@@ -63,10 +72,6 @@ class WifiDirectManager(Configurable):
 	def createMulticatSocket(self, inetIP, multicastGroup, multicastPort):
 		multicastSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 		multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-		#mreq = struct.pack("4sL", socket.inet_aton(self.MCAST_GRP), socket.INADDR_ANY)
-		#self.__multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-
 		#Socket must be connected to the wlan0 interface's IP address
 		multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(multicastGroup)+socket.inet_aton(inetIP))
 		#Bind to our default Multicast Port.
@@ -82,10 +87,7 @@ class WifiDirectManager(Configurable):
 				rawPacket = multicastSocket.recv(10240)
 				packet    = json.loads(rawPacket)
 
-				#packet = json.loads('{"payload":{"DEBUG":true,"device_id":"e1cadbafc6804e3f","ip_address":"192.168.42.2","connected":false},"service":"connect"}')
-				
 				if self.DEBUG:
-					time.sleep(2)
 					print self.LOGTAG, " :: Received Packet ->", json.dumps(packet)
 
 				try:
@@ -123,27 +125,43 @@ class WifiDirectManager(Configurable):
 			payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES] = sensorValues;
 			packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD] = payload
 
-			if self.DEBUG:
-				print self.LOGTAG, " :: Sending Sensor Values"
-
 			for deviceID, peer in self.__currentPeers.iteritems():
 				if self.DEBUG:
-					print self.LOGTAG, " :: Sending to DeviceID ->", deviceID 
+					print self.LOGTAG, " :: Sending Sensor values to DeviceID -> ", deviceID 
 				peer.sendPacket(json.dumps(packet))
 
 		timer = threading.Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
 		timer.start()
 
-	def test(self):
-		self.sendData("This is a Test")
-		timer = Timer(self.__testRate, self.test,())
+	def sendConfig(self):
+		if self.__configManager is not None:
+			config = self.getConfigManager().getConfig()
+			packet = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG, payload=config)
+
+			for deviceID, peer in self.__currentPeers.iteritems():
+				if self.DEBUG:
+					print self.LOGTAG, " :: Sending Config to DeviceID ->", deviceID 
+				peer.sendPacket(json.dumps(packet))
+
+		timer = threading.Timer(self.getConfigSendRate(), self.sendConfig,())
 		timer.start()
 
-	def sendData(self, socket, data):
-		if socket is not None:
+	def listenForPeerPacket(self):
+		peerSocket  = self.createSocket(self.__ipAddress, None)
+		(conn, addr) = peerSocket.accept()
+		while True:
+			rawPacket = conn.recv(10200)
+			packet    = json.loads(rawPacket)
+
 			if self.DEBUG:
-				print self.LOGTAG, " :: Multicasting Data -> ", data
-			self.socket.sendto(json.dumps(data), (self.MCAST_GRP, self.MCAST_PORT))
+				print self.LOGTAG, " Packet Recieved -> ", rawPacket
+
+			service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]
+			payload = packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]
+			if service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
+				if self.DEBUG:
+					print self.LOGTAG, " :: Config from Peer"
+					self.getConfigManager().reconfigure(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG])
 
 	def addPeer(self, payload):
 		try:
@@ -181,11 +199,29 @@ class WifiDirectManager(Configurable):
 		for deviceID, peer in self.__currentPeers.iteritems():
 			peer.toString()
 
+	def createPacket(self, service, payload):
+		_packet  = {}
+		_payload = {}
+
+		_packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]   = service 
+		_payload[service] = payload
+		_packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]   = _payload
+		return _packet
+
 	def getSensorValueSendRate(self):
 		return self.__sensorValueSendRate
 
 	def setSensorValueSendRate(self, newRate):
 		self.__sensorValueSendRate = newRate
+
+	def getConfigSendRate(self):
+		return self.__configSendRate 
+
+	def getConfigManager(self):
+		return self.__configManager
+
+	def setConfigManager(self, configManager):
+		self.__configManager = configManager 
 
 	def configure(self, config):
 		if self.DEBUG:
