@@ -38,13 +38,6 @@ class WifiDirectManager(Configurable):
 		self.__sensorManager = sensorManager
 		self.getIPAddress()
 
-		# clientSocket = self.createSocket(bindToIP=None, connectToIP="192.168.42.2")
-		
-		# print "Sending Hello..."
-		# clientSocket.send("Hello????")
-		# time.sleep(2)
-		# clientSocket.close()
-
 		self.__multicastSocket = self.createMulticatSocket(self.__ipAddress, CONSTS.MULTICAST_GRP, CONSTS.MULTICAST_PORT)
 		multicastThread        = threading.Thread(target=self.listenOnMulticastSocket,args=(self.__multicastSocket,))
 		multicastThread.start()
@@ -96,9 +89,9 @@ class WifiDirectManager(Configurable):
 					print self.LOGTAG, " :: Received Packet ->", json.dumps(packet)
 
 				try:
-					service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_SERVICE]
+					service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]
 					#Payload will be a string
-					payload = json.loads(packet[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_PAYLOAD])
+					payload = packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]
 					if service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONNECT:
 						self.addPeer(payload)
 				except KeyError:
@@ -123,7 +116,12 @@ class WifiDirectManager(Configurable):
 
 	def sendSensorValues(self):
 		if self.__sensorManager is not None:
-			sensorValues = json.dumps(self.__sensorManager.getSensorValues())
+			sensorValues = self.__sensorManager.getSensorValues()
+			packet = {}
+			payload = {}
+			packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE] = CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES 
+			payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES] = sensorValues;
+			packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD] = payload
 
 			if self.DEBUG:
 				print self.LOGTAG, " :: Sending Sensor Values"
@@ -131,7 +129,7 @@ class WifiDirectManager(Configurable):
 			for deviceID, peer in self.__currentPeers.iteritems():
 				if self.DEBUG:
 					print self.LOGTAG, " :: Sending to DeviceID ->", deviceID 
-				peer.sendPacket(sensorValues)
+				peer.sendPacket(json.dumps(packet))
 
 		timer = threading.Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
 		timer.start()
@@ -149,9 +147,10 @@ class WifiDirectManager(Configurable):
 
 	def addPeer(self, payload):
 		try:
-			peerIP       = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS]
-			peerDeviceID = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_DEVICE_ID]
-			timeStamp    = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_TIMESTAMP]
+			session      = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_SESSION]
+			peerIP       = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS]
+			peerDeviceID = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_DEVICE_ID]
+			timeStamp    = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_TIMESTAMP]
 
 			peer = Peer(ipAddress=peerIP, deviceID=peerDeviceID, timeStamp=timeStamp)
 
@@ -162,8 +161,10 @@ class WifiDirectManager(Configurable):
 
 			#Send the response ACK
 			responsePacket = {}
-			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_REQUEST_SERVICE] = CONSTS.JSON_VALUE_WIFI_DIRECT_PAIRED
-			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_STATUS_CODE] = CONSTS.JSON_VALUE_WIFI_DIRECT_STATUS_CODE_SUCCESS
+			payload        = {}
+			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE] = CONSTS.JSON_VALUE_WIFI_DIRECT_PAIRED
+			payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_STATUS_CODE] = CONSTS.JSON_VALUE_WIFI_DIRECT_STATUS_CODE_SUCCESS
+			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD] = payload
 			if self.DEBUG:
 				print self.LOGTAG, " :: Sending Response -> ", responsePacket
 
