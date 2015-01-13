@@ -104,6 +104,7 @@ class WifiDirectManager(Configurable):
 	def createSocket(self, bindToIP, connectToIP):
 		newSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		newSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		newSocket.setblocking(True)
 
 		if bindToIP is not None:
 			#For receiving 
@@ -148,7 +149,6 @@ class WifiDirectManager(Configurable):
 
 	def listenForPeerPacket(self):
 		peerSocket  = self.createSocket(self.__ipAddress, None)
-		peerSocket.setblocking(True)
 		conn, addr = peerSocket.accept()
 		while True:
 			rawPacket = conn.recv(10240)
@@ -188,6 +188,11 @@ class WifiDirectManager(Configurable):
 				print self.LOGTAG, " :: Sending Response -> ", responsePacket
 
 			peer.sendPacket(json.dumps(responsePacket))
+
+			#Send Peer Current Sys Config
+			config = self.getConfigManager().getConfig()
+			packet = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG, payload=config)
+			peer.sendPacket(json.dumps(packet))
 			
 			if self.DEBUG:
 				print self.LOGTAG, " :: Current Peers -> ", self.printPeers()
