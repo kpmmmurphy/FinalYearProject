@@ -48,8 +48,8 @@ class WifiDirectManager(Configurable):
 		sendSensorValuesThread = threading.Thread(target=self.sendSensorValues, args=())
 		sendSensorValuesThread.start()
 
-		sendConfigThread = threading.Thread(target=self.sendConfig, args=())
-		sendConfigThread.start()
+		#sendConfigThread = threading.Thread(target=self.sendConfig, args=())
+		#sendConfigThread.start()
 
 		peerPacketThread = threading.Thread(target=self.listenForPeerPacket, args=())
 		peerPacketThread.start()
@@ -73,9 +73,10 @@ class WifiDirectManager(Configurable):
 		multicastSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 		multicastSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		#Socket must be connected to the wlan0 interface's IP address
-		multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(multicastGroup)+socket.inet_aton(inetIP))
 		#Bind to our default Multicast Port.
 		multicastSocket.bind((multicastGroup, multicastPort))
+		multicastSocket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(multicastGroup)+socket.inet_aton(inetIP))
+		multicastSocket.setblocking(True)	
 		return multicastSocket
 
 	def listenOnMulticastSocket(self, multicastSocket):
@@ -84,7 +85,7 @@ class WifiDirectManager(Configurable):
 				if self.DEBUG:
 					print self.LOGTAG, " :: Waiting to Recveive Packet..."
 
-				rawPacket = multicastSocket.recv(10240)
+				rawPacket = multicastSocket.recv(1024)
 				packet    = json.loads(rawPacket)
 
 				if self.DEBUG:
@@ -101,13 +102,12 @@ class WifiDirectManager(Configurable):
 						print self.LOGTAG, " :: Exception thrown -> KeyError"
 
 	def createSocket(self, bindToIP, connectToIP):
-		#newSocket = socket.socket(self.__ipAddress, socket.SOCK_STREAM)
 		newSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		newSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 		if bindToIP is not None:
 			#For receiving 
-			newSocket.bind((bindToIP, CONSTS.DEFAULT_PORT))
+			newSocket.bind((bindToIP, CONSTS.DEFAULT_SERVER_PORT))
 			newSocket.listen(5)
 		elif connectToIP is not None:
 			#For sending
@@ -148,9 +148,10 @@ class WifiDirectManager(Configurable):
 
 	def listenForPeerPacket(self):
 		peerSocket  = self.createSocket(self.__ipAddress, None)
-		(conn, addr) = peerSocket.accept()
+		peerSocket.setblocking(True)
+		conn, addr = peerSocket.accept()
 		while True:
-			rawPacket = conn.recv(10200)
+			rawPacket = conn.recv(10240)
 			packet    = json.loads(rawPacket)
 
 			if self.DEBUG:
