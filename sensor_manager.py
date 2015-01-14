@@ -80,11 +80,11 @@ class SensorManager(Configurable):
         if sensor.isActive():
             sensor.readValue()
 
-            if self.USING_TIMER:
-                timer = Timer(sensor.getProbeRate(), self.probeSensor, (sensor,))
-                timer.start()
-            else:    
-                self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor,(sensor,))
+        if self.USING_TIMER:
+            timer = Timer(sensor.getProbeRate(), self.probeSensor, (sensor,))
+            timer.start()
+        else:    
+            self.__schedular.enter(sensor.getProbeRate(), sensor.getPriority(), self.probeSensor,(sensor,))
 
     #COLLECTING DATA-----------------------------------------------------
     def startCollecting(self):
