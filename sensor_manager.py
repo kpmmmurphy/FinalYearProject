@@ -51,13 +51,12 @@ class SensorManager(Configurable):
             sensorManagerConfig  = config[CONSTS.JSON_KEY_SENSOR_MANAGER_CONFIG]
             self.setCollectionRate(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_RATE])
             self.setCollectionPriority(sensorManagerConfig[CONSTS.JSON_KEY_COLLECTION_PRIORITY])
+            #Sensors Config
+            for sensorConfig in config[CONSTS.JSON_KEY_SENSORS_ARRAY]:
+                self.getSensors()[sensorConfig[CONSTS.JSON_KEY_SENSOR_NAME]].configure(sensorConfig)
         except KeyError:
                 if self.DEBUG:
                     print self.LOGTAG, " :: Config not present"
-        
-        #Sensors Config
-        for sensorConfig in config[CONSTS.JSON_KEY_SENSORS_ARRAY]:
-            self.getSensors()[sensorConfig[CONSTS.JSON_KEY_SENSOR_NAME]].configure(sensorConfig)
         
     #PROBING SENSORS------------------------------------------------------
     #Starts all sensors probing depending on current configuration
