@@ -73,8 +73,7 @@ class SensorFactory(object):
             if self.__sensorLib is None:
                self.__mq2 = MQ2(lib=None, alertManager=None)
             else:
-               #self.__mq2 = MQ2(lib=self.__sensorLib)
-               self.__mq2 = MQ2(lib=None, alertManager=None)
+               self.__mq2 = MQ2(lib=self.__sensorLib, alertManager=self.__alertManager)
 
             self.__sensors.append(self.__mq2)
 

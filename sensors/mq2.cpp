@@ -1,4 +1,4 @@
-//MQ2 Carbon Dioxide Sensor Implementation
+//MQ2 Flammable Gas Sensor Implementation
 //Author: Kevin Murphy
 //Date  : 15 - Oct - 14
 
