@@ -13,6 +13,7 @@
     define('PARAM_UPDATE_CONFIG', 'update_config');
     define('PARAM_UPLOAD_SENSOR_VALUES', 'upload_sensor_values');
     define('PARAM_GET_SENSOR_VALUES', 'get_sensor_values');
+    define('PARAM_LIST_IMAGES', 'list_images');
     define('PARAM_SENSOR_VALUES', 'sensor_values');
     define('PARAM_UPLOAD_CAMERA_STILL', 'camera_still');
     define('PARAM_UPLOAD_CAMERA_VIDEO', 'camera_video');
@@ -87,7 +88,17 @@
                 if($debug){
                     echo "\nGetting Sensor Values\n";
                 }
-                echo json_encode($database_manager->selectLatestSensorValues());
+                echo json_encode($database_manager->selectLatestSensorValues(), JSON_FORCE_OBJECT);
+                break;
+
+            case constant('PARAM_LIST_IMAGES'):
+                //Get the list of images
+                if($debug){
+                    echo "\nGetting Images List\n";
+                }
+                $imgList = scandir(constant("DIR_CAMERA"));
+                $imgListResponse = array('images' => $imgList);
+                echo json_encode($imgList, JSON_FORCE_OBJECT);
                 break;
 
             default:
