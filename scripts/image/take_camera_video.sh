@@ -13,6 +13,6 @@ fi
 
 mv /home/pi/FinalYearProject/camera/video/* /home/pi/FinalYearProject/camera/video_backup/
 
-DATE=$(date +"%Y-%m-%d_%H%M")
+DATE=$(date +"%Y - %m - %d  // %H : %M")
 
 raspivid -o /home/pi/FinalYearProject/camera/video/$DATE.h264 -t 10000

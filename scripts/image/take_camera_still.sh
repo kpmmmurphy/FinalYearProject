@@ -13,6 +13,6 @@ fi
 
 mv /home/pi/FinalYearProject/camera/still/* /home/pi/FinalYearProject/camera/still_backup/
 
-DATE=$(date +"%Y-%m-%d_%H%M")
+DATE=$(date +"%Y - %m - %d  // %H : %M")
 
 raspistill -vf -hf --width 1080 --height 720 --quality 100 -o /home/pi/FinalYearProject/camera/still/$DATE.jpg
