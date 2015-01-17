@@ -43,10 +43,11 @@ class MQ2(Sensor):
 
     def readValue(self):
         if self.__lib is None:
-            self.setCurrentValue(self.test())
+            latestValue = self.test()
         else:        
-            self.setCurrentValue(self.__lib.MQ2_readValue(self.obj)) 
+            latestValue = self.__lib.MQ2_readValue(self.obj) 
         
+        self.setCurrentValue(self.calculateCurrentValue(latestValue))
         self.react(self.getCurrentValue())
         return self.getCurrentValue()
 

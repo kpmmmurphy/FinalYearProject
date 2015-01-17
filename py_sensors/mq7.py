@@ -16,9 +16,6 @@ class MQ7(Sensor):
     __adcChannelNo = 1
     __lib = None
 
-    __previousValue = None
-    __platauCount   = 0
-
     def __init__(self, lib, alertManager):
         if lib is None:
             if self.DEBUG:
@@ -48,7 +45,6 @@ class MQ7(Sensor):
         if self.__lib is None:
             latestValue = self.test()
         else:        
-            #self.setCurrentValue(self.__lib.MQ7_readValue(self.obj)) 
             latestValue = self.__lib.MQ7_readValue(self.obj) 
 
         self.setCurrentValue(self.calculateCurrentValue(latestValue))
@@ -66,22 +62,6 @@ class MQ7(Sensor):
         
     def getName(self):
         return self.__name
-
-    def calculateCurrentValue(self, latestValue):
-        if self.__previousValue is None:
-            self.__previousValue = latestValue
-
-        #Catch: Will CO ever reach 0 if it spikes too hight
-        valueDiff = latestValue - self.__previousValue
-        calValue = max((self.getCurrentValue()) + (valueDiff), 0)
-        if valueDiff < 0: 
-            self.__platauCount += 1
-            if self.__platauCount == 5:
-                calValue = 0
-                self.__platauCount = 0
-
-        self.__previousValue = latestValue
-        return calValue
 
     def test(self):
         #If __lib is set, then test the .so file, other wise produce a default test value -1

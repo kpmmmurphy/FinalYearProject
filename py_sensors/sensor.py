@@ -21,6 +21,8 @@ class Sensor(Configurable):
     __priority  = CONSTS.PRIORITY_DEFAULT
     __currentValue = -1
     __alertThreshold = None
+    __previousValue = None
+    __platauCount   = 0
 
     def __init__(self, alertManager):
         if alertManager is not None:
@@ -73,6 +75,22 @@ class Sensor(Configurable):
 
     def setAlertThreshold(self, newThreshold):
         self.__alertThreshold = newThreshold
+
+    def calculateCurrentValue(self, latestValue):
+        if self.__previousValue is None:
+            self.__previousValue = latestValue
+
+        #Catch: Will CO ever reach 0 if it spikes too hight
+        valueDiff = latestValue - self.__previousValue
+        calValue = max((self.getCurrentValue()) + (valueDiff), 0)
+        if valueDiff < 0: 
+            self.__platauCount += 1
+            if self.__platauCount == 5:
+                calValue = 0
+                self.__platauCount = 0
+
+        self.__previousValue = latestValue
+        return calValue
 
     def configure(self, config):
         if config is None:

@@ -13,7 +13,7 @@
 using namespace std;
 
 //General Definitions
-#define DEBUG 1
+#define DEBUG 0
 #define NAME "MQ2 Flammable Gas"
 #define ADC_CHANNEL_NO 2
 
