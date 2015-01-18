@@ -36,6 +36,7 @@ DEBUG = True
     #System Stat Manager
     #PAcket format, service and payload.. /'s could be a problem
     #Implement socket for config/other android client packets
+    #Updated COnfig on
 
 def main():
     databaseManager = DatabaseManager()
