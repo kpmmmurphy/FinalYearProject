@@ -85,6 +85,8 @@ class APIManager(Configurable):
         #Should select latest image dynamically 
         videos = os.listdir(CONSTS.DIR_CAMERA_VIDEO)
         if len(videos) > 0:
+            if self.DEBUG:
+                print "Trying to upload Video"
             camera_video = {CONSTS.JSON_KEY_CAMERA_STILL : (videos[0], open(CONSTS.DIR_CAMERA_VIDEO + videos[0], 'rb'), 'image/h264')}
             self.sendRequest(service=None, payload=None, filez=camera_video)
 

@@ -6,7 +6,7 @@
     require_once('database_manager.php');
 
     //---Constants
-    $debug = true;
+    $debug = false;
     //Request Params
     define('PARAM_SERVICE', 'service');
     define('PARAM_GET_CONFIG', 'get_config');
@@ -141,7 +141,7 @@ function verifiy_and_upload_file($fileName)
     $uploadOk = 1;
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 
-    if($check !== false) {
+    /*if($check !== false) {
         if($debug){
             echo "File is an image - " . $check["mime"] . ".";
         }
@@ -151,7 +151,7 @@ function verifiy_and_upload_file($fileName)
             echo "File is not an image.";
         }
         $uploadOk = 0;
-    }
+    }*/
 
     // Check file size
     if ($_FILES[$fileName]["size"] > 1000000) {
