@@ -33,7 +33,7 @@ class ConfigurationManager(Configurable):
 			print self.LOGTAG, " :: Reconfiguring System"
 
 		for item in self.getConfigurables():
-			item.configure(json.loads(config)
+			item.configure(json.loads(config))
 
 	def getConfig(self):
 		config = {}
