@@ -6,7 +6,7 @@
     require_once('database_manager.php');
 
     //---Constants
-    $debug = false;
+    $debug = true;
     //Request Params
     define('PARAM_SERVICE', 'service');
     define('PARAM_GET_CONFIG', 'get_config');

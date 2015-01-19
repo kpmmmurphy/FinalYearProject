@@ -86,7 +86,7 @@ class APIManager(Configurable):
         videos = os.listdir(CONSTS.DIR_CAMERA_VIDEO)
         if len(videos) > 0:
             if self.DEBUG:
-                print "Trying to upload Video"
+                print "\n\nTrying to upload Video\n\n\n"
             camera_video = {CONSTS.JSON_KEY_CAMERA_STILL : (videos[0], open(CONSTS.DIR_CAMERA_VIDEO + videos[0], 'rb'), 'image/h264')}
             self.sendRequest(service=None, payload=None, filez=camera_video)
 
