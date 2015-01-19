@@ -52,12 +52,12 @@
                 }
                 
                 $file = constant("DIR_CONFIG") . constant("FILE_CONFIG");
-                if(!file_exists($file)){
+                if(!file_exists($file) || filesize($file) == 0){
                     $file = constant("DIR_CONFIG") . constant('FILE_CONFIG_DEFAULT');
                 }
                 $config_file = fopen($file, "r") or die("Unable to open file!");
                 echo fread($config_file, filesize($file));
-                fclose($config_file);
+                fclose($config_file);      
                 break;
 
             case constant('PARAM_UPDATE_CONFIG'):
@@ -70,8 +70,8 @@
                 if(!file_exists($file)){
                     file_put_contents($file, '');
                 }
-                $config_file = fopen($file, "w") or die("Unable to open file!");
-                fwrite($config_file, $requestObj);
+                $config_file = fopen($file, "wb") or die("Unable to open file!");
+                fwrite($config_file, json_encode($requestObj));
                 fclose($config_file);
                 break;
 
@@ -88,7 +88,7 @@
                 if($debug){
                     echo "\nGetting Sensor Values\n";
                 }
-                echo json_encode($database_manager->selectLatestSensorValues(), JSON_FORCE_OBJECT);
+                echo json_encode($database_manager->selectLatestSensorValues());
                 break;
 
             case constant('PARAM_LIST_IMAGES'):
@@ -96,9 +96,13 @@
                 if($debug){
                     echo "\nGetting Images List\n";
                 }
-                $imgList = scandir(constant("DIR_CAMERA"));
+                $imgDirList = scandir(constant("DIR_CAMERA"));
+                $imgList = array();
+                foreach( $imgDirList as $k => $v){
+                    $imgList[] = $v;
+                }
                 $imgListResponse = array('images' => $imgList);
-                echo json_encode($imgList, JSON_FORCE_OBJECT);
+                echo json_encode($imgListResponse);
                 break;
 
             default:
