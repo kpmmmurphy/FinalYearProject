@@ -40,6 +40,7 @@ class APIManager(Configurable):
             self.schedule_UploadSensorValues()
             self.schedule_UploadCameraStill()
             self.schedule_SysConfigCheck()
+            self.schedule_UploadCameraVideo()
 
     def configure(self, config):
         if self.DEBUG:
@@ -79,6 +80,16 @@ class APIManager(Configurable):
 
         if self.__polling:
             self.schedule_UploadCameraStill()
+
+    def uploadVideo(self):
+        #Should select latest image dynamically 
+        videos = os.listdir(CONSTS.DIR_CAMERA_VIDEO)
+        if len(videos) > 0:
+            camera_video = {CONSTS.JSON_KEY_CAMERA_STILL : (images[0], open(CONSTS.DIR_CAMERA_VIDEO + videos[0], 'rb'), 'image/h264')}
+            self.sendRequest(service=None, payload=None, filez=camera_video)
+
+        if self.__polling:
+            self.schedule_UploadCameraVideo()
 
     #Purely for testing server side api 
     def getLatestSensorValues(self):
@@ -139,6 +150,10 @@ class APIManager(Configurable):
 
     def schedule_UploadCameraStill(self):
         timer = Timer(self.getCameraImageUploadRate(), self.uploadImage,())
+        timer.start()
+
+    def schedule_UploadCameraVideo(self):
+        timer = Timer(self.getCameraImageUploadRate(), self.uploadVideo,())
         timer.start()
 
     #------Getters and Setters-------------------------
