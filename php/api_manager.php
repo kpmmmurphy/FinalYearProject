@@ -6,7 +6,7 @@
     require_once('database_manager.php');
 
     //---Constants
-    $debug = true;
+    $debug = false;
     //Request Params
     define('PARAM_SERVICE', 'service');
     define('PARAM_GET_CONFIG', 'get_config');
@@ -135,9 +135,9 @@
 
 function verifiy_and_upload_file($fileName)
 {
-    $debug = true;
+    $debug = false;
     $target_file = constant("DIR_CAMERA") . basename($_FILES[$fileName]["name"]);
-    $check = getimagesize($_FILES[$fileName]["tmp_name"]);
+    //$check = getimagesize($_FILES[$fileName]["tmp_name"]);
     $uploadOk = 1;
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 
@@ -161,13 +161,13 @@ function verifiy_and_upload_file($fileName)
         $uploadOk = 0;
     }
 
-    if($imageFileType === "image/jpg" or $imageFileType === "image/png" or $imageFileType === "image/jpeg"
+    /*if($imageFileType === "image/jpg" or $imageFileType === "image/png" or $imageFileType === "image/jpeg"
        or $imageFileType === "image/h264") {
         if($debug){
             echo "Sorry, only JPG, JPEG, PNG & h264 files are allowed.";
         }
         $uploadOk = 0;
-    }
+    }*/
 
     if ($uploadOk == 0) {
         if($debug){
