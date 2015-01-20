@@ -6,7 +6,7 @@
     require_once('database_manager.php');
 
     //---Constants
-    $debug = false;
+    $debug = true;
     //Request Params
     define('PARAM_SERVICE', 'service');
     define('PARAM_GET_CONFIG', 'get_config');
@@ -135,7 +135,7 @@
 
 function verifiy_and_upload_file($fileName)
 {
-    $debug = false;
+    $debug = true;
     $target_file = constant("DIR_CAMERA") . basename($_FILES[$fileName]["name"]);
     //$check = getimagesize($_FILES[$fileName]["tmp_name"]);
     $uploadOk = 1;
