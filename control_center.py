@@ -14,29 +14,19 @@ from alert_manager import AlertManager
 from system_details_manager import SystemDetailsManager
 from wifi_direct_manager import WifiDirectManager
 
+##---TODO
+#January
+#System Stat Manager
+#Implement socket for config/other android client packets
+#Video // Streaming?
+#Data Truncation
+#Graphing
+#Push Notifications
+#User Feedback
+#Max and Min values on Sensor Fragment
+
 #Constants
 DEBUG = True
-
-    ##TODO
-    # Info table - 1
-    # Implement MQ2 in c
-    # Uploading Video?
-    # Dropbox? / Google Drive? 
-    # User Pairing System
-    # Automated Setup
-    # System Status readings
-    # Amazon Datastore
-    # Push Notifications
-    # Data Truncation
-    # Graphing on cs1
-
-    #Wed
-    #Wifi Direct Manager - Wireshark
-    #APP
-    #System Stat Manager
-    #PAcket format, service and payload.. /'s could be a problem
-    #Implement socket for config/other android client packets
-    #Updated COnfig on
 
 def main():
     databaseManager = DatabaseManager()
