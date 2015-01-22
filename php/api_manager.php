@@ -12,11 +12,18 @@
     define('PARAM_GET_CONFIG', 'get_config');
     define('PARAM_UPDATE_CONFIG', 'update_config');
     define('PARAM_UPLOAD_SENSOR_VALUES', 'upload_sensor_values');
+    define('PARAM_GET_ALL_CURRENT_DAY_SENSOR_VALUES', 'get_all_current_day_sensor_values');
+    define('PARAM_GET_CURRENT_HOUR_SENSOR_VALUES', 'get_current_hour_sensor_values');
+    define('PARAM_GET_AGG_SENSOR_VALUES_PER_HOUR', 'get_agg_sensor_values_per_hour');
+    define('PARAM_GET_AGG_SENSOR_VALUES_PER_DAY', 'get_agg_sensor_values_per_day');
+    
     define('PARAM_GET_SENSOR_VALUES', 'get_sensor_values');
     define('PARAM_LIST_IMAGES', 'list_images');
     define('PARAM_SENSOR_VALUES', 'sensor_values');
+    define('PARAM_SENSOR_VALUES_LIST', 'sensor_values_list');
     define('PARAM_UPLOAD_CAMERA_STILL', 'camera_still');
     define('PARAM_UPLOAD_CAMERA_VIDEO', 'camera_video');
+    define('PARAM_STATUS_CODE', 'status_code');
     //Files
     define('DIR_CONFIG', './config/');
     define('DIR_CAMERA', './camera/');
@@ -36,7 +43,11 @@
         echo "\n\nREQUEST::\n\n";
         var_dump($requestObj);
     }
-
+    
+    //$database_manager = new DatabaseManager();
+    //$outputs = array(constant("PARAM_SENSOR_VALUES_LIST") => $database_manager->selectAverageSensorValuesPerHour());
+    //echo json_encode($outputs);
+    
     if(isset($headers[constant('PARAM_SERVICE')])){
 
         $requestedService = htmlspecialchars($headers[constant('PARAM_SERVICE')]);
@@ -65,14 +76,19 @@
                 if($debug){
                     echo "\nUpdate System Config\n";
                 }
-
-                $file = constant("DIR_CONFIG") . constant("FILE_CONFIG");
-                if(!file_exists($file)){
-                    file_put_contents($file, '');
+                try{
+                    $file = constant("DIR_CONFIG") . constant("FILE_CONFIG");
+                    if(!file_exists($file)){
+                        file_put_contents($file, '');
+                    }
+                    $config_file = fopen($file, "wb") or die("Unable to open file!");
+                    fwrite($config_file, json_encode($requestObj));
+                    fclose($config_file);
+                    $response = array(constant("PARAM_STATUS_CODE") => 200);
+                }catch(Exception $e){
+                    $response = array(constant("PARAM_STATUS_CODE") => 400);
                 }
-                $config_file = fopen($file, "wb") or die("Unable to open file!");
-                fwrite($config_file, json_encode($requestObj));
-                fclose($config_file);
+                echo json_encode($response);
                 break;
 
             case constant('PARAM_UPLOAD_SENSOR_VALUES'):
@@ -103,6 +119,41 @@
                 }
                 $imgListResponse = array('images' => $imgList);
                 echo json_encode($imgListResponse);
+                break;
+                
+            case constant('PARAM_GET_ALL_CURRENT_DAY_SENSOR_VALUES'):
+                //Get the list of images
+                if($debug){
+                    echo "\nGetting All Current Day Sensor Outputs\n";
+                }
+                echo json_encode($database_manager->selectAllCurrentDaySensorValues());
+                break;
+                
+           case constant('PARAM_GET_CURRENT_HOUR_SENSOR_VALUES'):
+                //Get the list of images
+                if($debug){
+                    echo "\nGetting Current Hour Sensor Outputs\n";
+                }
+                $outputs = array(constant("PARAM_SENSOR_VALUES_LIST") => $database_manager->selectCurrentHourSensorValues());
+                echo json_encode($outputs);
+                break;
+                
+           case constant('PARAM_GET_AGG_SENSOR_VALUES_PER_HOUR'):
+                //Get the list of images
+                if($debug){
+                    echo "\nGetting Current Hour Sensor Outputs\n";
+                }
+                $outputs = array(constant("PARAM_SENSOR_VALUES_LIST") => $database_manager->selectAggSensorValuesPerHour());
+                echo json_encode($outputs);
+                break;
+                
+          case constant('PARAM_GET_AGG_SENSOR_VALUES_PER_DAY'):
+                //Get the list of images
+                if($debug){
+                    echo "\nGetting Current Hour Sensor Outputs\n";
+                }
+                $outputs = array(constant("PARAM_SENSOR_VALUES_LIST") => $database_manager->selectAggSensorValuesPerDay());
+                echo json_encode($outputs);
                 break;
 
             default:
