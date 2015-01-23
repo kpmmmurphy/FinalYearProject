@@ -17,6 +17,7 @@
     define('PARAM_GET_AGG_SENSOR_VALUES_PER_HOUR', 'get_agg_sensor_values_per_hour');
     define('PARAM_GET_AGG_SENSOR_VALUES_PER_DAY', 'get_agg_sensor_values_per_day');
     
+    
     define('PARAM_GET_SENSOR_VALUES', 'get_sensor_values');
     define('PARAM_LIST_IMAGES', 'list_images');
     define('PARAM_SENSOR_VALUES', 'sensor_values');
@@ -44,9 +45,9 @@
         var_dump($requestObj);
     }
     
-    //$database_manager = new DatabaseManager();
-    //$outputs = array(constant("PARAM_SENSOR_VALUES_LIST") => $database_manager->selectAverageSensorValuesPerHour());
-    //echo json_encode($outputs);
+    #$database_manager = new DatabaseManager();
+    #$outputs = array(constant("PARAM_SENSOR_VALUES_LIST") => $database_manager->selectCurrentHourSensorValues());
+    #echo json_encode($outputs);
     
     if(isset($headers[constant('PARAM_SERVICE')])){
 

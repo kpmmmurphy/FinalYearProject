@@ -75,10 +75,13 @@ class DatabaseManager
         {
             try
             {
-                $currentHour = date("Y-m-d H");
-                #$currentHour = "2015-01-20 12";
+                #$currentHour = date("Y-m-d H");
+                #$currentDay = date("Y-m-d H");
+                $currentDay = "2015-01-20";
+                $currentHour = "09";
                 $sql = $this->conn->prepare("SELECT * FROM " . self::SQL_TABLE_CURRENT .
-                        " WHERE date_and_time >= '" . $currentHour . "'");
+                        " WHERE '$currentHour' = HOUR(date_and_time) AND "
+                        . "     '$currentDay'  = DAY(date_and_time)");
                 $sql->execute();
                 return $sql->fetchAll(PDO::FETCH_ASSOC); 
             }
@@ -112,10 +115,12 @@ class DatabaseManager
         {
             try
             {
+                //$currentDay = date("Y-m-d");
+                $currentDay = "2015-01-20";
                 $sql = $this->conn->prepare("SELECT date_and_time, "
                         . " AVG(carbon_monoxide) AS avg_carbon_monoxide,"
-                        . " AVG(temperature) AS avg_temperature, "
-                        . " AVG(flammable_gas) AS avg_flammable_gas , "
+                        . " AVG(temperature)     AS avg_temperature, "
+                        . " AVG(flammable_gas)   AS avg_flammable_gas , "
                         . " MAX(carbon_monoxide) AS max_carbon_monoxide,"
                         . " MAX(temperature)     AS max_temperature, "
                         . " MAX(flammable_gas)   AS max_flammable_gas , "
@@ -124,6 +129,7 @@ class DatabaseManager
                         . " MIN(flammable_gas)   AS min_flammable_gas , "
                         . " SUM(motion)/COUNT(motion)*100 AS motion"
                         . " FROM " . self::SQL_TABLE_CURRENT 
+                        . " WHERE '$currentDay' = DATE(date_and_time)"    
                         . " GROUP BY hour(date_and_time)");
                 $sql->execute();
                 return $sql->fetchAll(PDO::FETCH_ASSOC); 
