@@ -75,13 +75,11 @@ class DatabaseManager
         {
             try
             {
-                #$currentHour = date("Y-m-d H");
-                #$currentDay = date("Y-m-d H");
-                $currentDay = "2015-01-20";
-                $currentHour = "09";
+                $currentDateAndHour = date("Y-m-d");
+                $currentHour = date("H");
                 $sql = $this->conn->prepare("SELECT * FROM " . self::SQL_TABLE_CURRENT .
-                        " WHERE '$currentHour' = HOUR(date_and_time) AND "
-                        . "     '$currentDay'  = DAY(date_and_time)");
+                        " WHERE '$currentDateAndHour' = DATE(date_and_time)
+                          AND '$currentHour' = HOUR(date_and_time)");
                 $sql->execute();
                 return $sql->fetchAll(PDO::FETCH_ASSOC); 
             }
@@ -115,8 +113,8 @@ class DatabaseManager
         {
             try
             {
-                //$currentDay = date("Y-m-d");
-                $currentDay = "2015-01-20";
+                $currentDay = date("Y-m-d");
+                //$currentDay = "2015-01-20";
                 $sql = $this->conn->prepare("SELECT date_and_time, "
                         . " AVG(carbon_monoxide) AS avg_carbon_monoxide,"
                         . " AVG(temperature)     AS avg_temperature, "
