@@ -47,7 +47,15 @@ class DatabaseManager
         {
             try
             {
-                $sql = $this->conn->prepare("SELECT * FROM " . self::SQL_TABLE_CURRENT . " ORDER BY id DESC LIMIT 1");
+                $sql = $this->conn->prepare("SELECT  carbon_monoxide, temperature, flammable_gas, motion, date_and_time,"
+                        . " MAX(carbon_monoxide) AS max_carbon_monoxide,"
+                        . " MAX(temperature)     AS max_temperature, "
+                        . " MAX(flammable_gas)   AS max_flammable_gas , "
+                        . " MIN(carbon_monoxide) AS min_carbon_monoxide,"
+                        . " MIN(temperature)     AS min_temperature, "
+                        . " MIN(flammable_gas)   AS min_flammable_gas , "
+                        . " SUM(motion)/COUNT(motion)*100 AS percentage_motion" 
+                        . " FROM " . self::SQL_TABLE_CURRENT . " ORDER BY id DESC LIMIT 1");
                 $sql->execute();
                 return $sql->fetchAll(PDO::FETCH_ASSOC); 
             }
