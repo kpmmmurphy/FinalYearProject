@@ -18,12 +18,11 @@ from wifi_direct_manager import WifiDirectManager
 #January
 #System Stat Manager
 #Implement socket for config/other android client packets
-#Video // Streaming?
-#Data Truncation
-#Graphing
+#Video // Streaming, local?
 #Push Notifications
 #User Feedback
-#Max and Min values on Sensor Fragment
+#Galileo?....
+#Fix thermistor
 
 #Constants
 DEBUG = True

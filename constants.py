@@ -84,6 +84,9 @@ JSON_KEY_API_CAMERA_IMAGE_UPLOAD_RATE   = "camera_image_upload_rate"
 #Config Manager
 JSON_KEY_CONFIG_MANAGER_CONFIG = "config_manager"
 
+#PN Manager
+JSON_KEY_PN_MANAGER_CONFIG = "push_notification_manager"
+
 #Wifi Direct Manager
 JSON_KEY_WIFI_DIRECT_MANAGER          = "wifi_direct_manager"
 JSON_KEY_WIFI_DIRECT_SENSOR_SEND_RATE = "sensor_value_send_rate"
@@ -166,4 +169,7 @@ DEFAULT_PORT   = 5006
 DEFAULT_SERVER_PORT = 5005
 WIFI_DIRECT_SENSOR_VALUE_SEND_RATE = 10
 WIFI_DIRECT_CONFIG_SEND_RATE       = 60
+
+#GCM Server
+GCM_API_KEY = "AIzaSyBb-mQWtxAJkaT1iV4hJlrbnjyfwHvgM2k"
 
