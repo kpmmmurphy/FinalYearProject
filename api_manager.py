@@ -91,6 +91,9 @@ class APIManager(Configurable):
         if self.__polling:
             self.schedule_UploadCameraVideo()
 
+    def getPNRegIDs(self):
+        return self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_REG_IDS, payload=None, filez=None)
+       
     #Purely for testing server side api 
     def getLatestSensorValues(self):
         valuesResponse = self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, payload=None, filez=None)

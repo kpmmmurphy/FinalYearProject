@@ -8,6 +8,7 @@ import json
 from configurable import Configurable
 import constants as CONSTS
 from gcm import GCM
+from api_manager import APIManager
 
 class PNManager(object):
     DEBUG  = True
@@ -22,9 +23,10 @@ class PNManager(object):
             print self.LOGTAG, " :: Created"
 
     def sendJsonPush(self, data):
-        reg_ids = ['12', '34', '69']
-        response = self.__gcm.json_request(registration_ids=reg_ids, data=self.testData)
-        print response
+        apiManager = APIManager(sensorManager=None)
+        response = self.__gcm.json_request(registration_ids=apiManager.getPNRegIDs(), data=self.testData)
+        if self.DEBUG:
+            print response
 
 pnManager = PNManager()
 pnManager.sendJsonPush(None)
