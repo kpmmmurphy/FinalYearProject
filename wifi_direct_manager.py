@@ -23,6 +23,7 @@ class WifiDirectManager(Configurable):
 
 	__sensorManager = None
 	__configManager = None
+	__databaseManager = None
 
 	__currentPeers = {}
 
@@ -32,13 +33,15 @@ class WifiDirectManager(Configurable):
 	__configSendRate      = CONSTS.WIFI_DIRECT_CONFIG_SEND_RATE
 	__testRate = 10
 
-	def __init__(self, sensorManager):
+	def __init__(self, sensorManager, databaseManager):
 		super(WifiDirectManager, self).__init__(CONSTS.JSON_KEY_WIFI_DIRECT_MANAGER)
 
 		if self.DEBUG:
 			print self.LOGTAG, " :: Created"
 
-		self.__sensorManager = sensorManager
+		self.__sensorManager   = sensorManager
+		self.__databaseManager = databaseManager
+
 		self.getIPAddress()
 
 		self.__multicastSocket = self.createMulticatSocket(self.__ipAddress, CONSTS.MULTICAST_GRP, CONSTS.MULTICAST_PORT)
@@ -119,11 +122,9 @@ class WifiDirectManager(Configurable):
 	def sendSensorValues(self):
 		if self.__sensorManager is not None:
 			sensorValues = self.__sensorManager.getSensorValues()
-			packet = {}
 			payload = {}
-			packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE] = CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES 
-			payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES] = sensorValues;
-			packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD] = payload
+			payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES] = dict(sensorValues + self.__databaseManager.select_current_day_max_min_sensor_values())
+			packet = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES, payload=payload)
 
 			for deviceID, peer in self.__currentPeers.iteritems():
 				if self.DEBUG:
@@ -178,11 +179,10 @@ class WifiDirectManager(Configurable):
 			self.__currentPeers[peerDeviceID] = peer
 
 			#Send the response ACK
-			responsePacket = {}
 			payload        = {}
-			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE] = CONSTS.JSON_VALUE_WIFI_DIRECT_PAIRED
 			payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_STATUS_CODE] = CONSTS.JSON_VALUE_WIFI_DIRECT_STATUS_CODE_SUCCESS
-			responsePacket[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD] = payload
+			responsePacket = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_PAIRED, payload=payload)
+
 			if self.DEBUG:
 				print self.LOGTAG, " :: Sending Response -> ", responsePacket
 

@@ -50,8 +50,9 @@ class DatabaseManager
                         . " FROM " . self::SQL_TABLE_CURRENT
                         . " ORDER BY id DESC LIMIT 1");
                 
+                #This should just be for the current day, not entire data set...
                 $sqlMaxValues = $this->conn->prepare("SELECT MAX(carbon_monoxide) AS max_carbon_monoxide,"
-                        . " MAX(temperature)     AS max_temperatur, "
+                        . " MAX(temperature)     AS max_temperature, "
                         . " MAX(flammable_gas)   AS max_flammable_gas , "
                         . " MIN(carbon_monoxide) AS min_carbon_monoxide,"
                         . " MIN(temperature)     AS min_temperature, "
