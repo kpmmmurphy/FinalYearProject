@@ -7,7 +7,7 @@
 #Import infrastructure modules
 from sensor_factory   import SensorFactory
 from sensor_manager   import SensorManager
-from database_manager import DatabaseManagerg   
+from database_manager import DatabaseManager   
 from api_manager      import APIManager
 from configuration_manager import ConfigurationManager
 from alert_manager import AlertManager
