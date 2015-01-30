@@ -101,7 +101,8 @@ class DatabaseManager(Configurable):
                                                           fn.Min(Current_Day_Sensor_Output.flammable_gas).alias(self.__min_flam),
                                                           fn.Max(Current_Day_Sensor_Output.temperature).alias(self.__max_temp),
                                                           fn.Min(Current_Day_Sensor_Output.temperature).alias(self.__min_temp),
-                                                          (fn.SUM(Current_Day_Sensor_Output.motion)/fn.COUNT(Current_Day_Sensor_Output.motion)*100).alias(self.__precentage_motion))
+                                                          (fn.SUM(Current_Day_Sensor_Output.motion)/fn.COUNT(Current_Day_Sensor_Output.motion)*100).alias(self.__precentage_motion)
+                                                          ).where(Current_Day_Sensor_Output.date_and_time == datetime.date.today())
         max_min_values = max_min_values[0]
         return { self.__max_co   : max_min_values.max_carbon_monoxide, self.__min_co   : max_min_values.min_carbon_monoxide,
                 self.__max_flam : max_min_values.max_flammable_gas,   self.__min_flam : max_min_values.min_flammable_gas, 
