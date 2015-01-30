@@ -8,6 +8,8 @@ import constants as CONSTS
 import socket
 
 class Peer(object):
+	DEBUG  = True
+	LOGTAG = "Peer"
 
 	__paired = False
 	__lock = None 
@@ -27,9 +29,13 @@ class Peer(object):
 		return self.__timeStamp
 
 	def sendPacket(self, packet):
-		tmpSocket = self.createSocket(bindToIP=None, connectToIP=self.getIPAddress())
-		tmpSocket.send(packet)
-		tmpSocket.close()
+		try:
+			tmpSocket = self.createSocket(bindToIP=None, connectToIP=self.getIPAddress())
+			tmpSocket.send(packet)
+			tmpSocket.close()
+		except:
+			if self.DEBUG:
+				print self.LOGTAG, " :: ", self.getDeviceID(), " -> Refused Connection" 
 
 	def toString(self):
 		print {CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS : self.getIPAddress(),
