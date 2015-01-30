@@ -9,6 +9,7 @@ import random
 import socket
 import constants as CONSTS
 import json
+import bson 
 from configurable import Configurable
 
 class DatabaseManager(Configurable):
@@ -35,7 +36,7 @@ class DatabaseManager(Configurable):
         super(DatabaseManager, self).__init__(CONSTS.JSON_KEY_DATABASE_MANAGER_CONFIG)
         __db = self.loadDatabase()
         self.createTables()
-        self.select_current_day_max_min_sensor_values()
+        self.select_agg_day_sensor_values()
 
     def configure(self, config):
         pass
@@ -114,9 +115,55 @@ class DatabaseManager(Configurable):
         except TypeError:
             if self.DEBUG:
                 print self.LOGTAG, " :: Max/Min values type error",
-                
+
         return minMaxVals
-   
+
+    def select_current_hour_sensor_values(self):
+        currentDayValues = []
+        now = datetime.datetime.now()
+        cur_day_vals = Current_Day_Sensor_Output.select().dicts().where(Current_Day_Sensor_Output.date_and_time.between(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=1)) & (Current_Day_Sensor_Output.date_and_time.hour == now.hour))
+        for item in cur_day_vals:
+            currentDayValues.append(item)
+        print currentDayValues
+
+    def select_agg_hour_current_day_sensor_values(self):
+        aggHourValues = []
+        today = datetime.datetime.now()
+        agg_values = Current_Day_Sensor_Output.select(Current_Day_Sensor_Output.date_and_time,
+                                                      fn.Max(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__max_co),
+                                                      fn.Min(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__min_co),
+                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_co),
+                                                      fn.Max(Current_Day_Sensor_Output.flammable_gas).alias(self.__max_flam),
+                                                      fn.Min(Current_Day_Sensor_Output.flammable_gas).alias(self.__min_flam),
+                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_flam),
+                                                      fn.Max(Current_Day_Sensor_Output.temperature).alias(self.__max_temp),
+                                                      fn.Min(Current_Day_Sensor_Output.temperature).alias(self.__min_temp),
+                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_temp),
+                                                     (fn.Sum(Current_Day_Sensor_Output.motion)/fn.Count(Current_Day_Sensor_Output.motion)*100).alias(self.__precentage_motion)
+                                                     ).where(Current_Day_Sensor_Output.date_and_time.between(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=1))).group_by(Current_Day_Sensor_Output.date_and_time.hour).dicts()
+        for item in agg_values:
+            aggHourValues.append(item)
+        print aggHourValues
+
+    def select_agg_day_sensor_values(self):
+        aggDayValues = []
+        today = datetime.datetime.now()
+        agg_values = Current_Day_Sensor_Output.select(Current_Day_Sensor_Output.date_and_time,
+                                                      fn.Max(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__max_co),
+                                                      fn.Min(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__min_co),
+                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_co),
+                                                      fn.Max(Current_Day_Sensor_Output.flammable_gas).alias(self.__max_flam),
+                                                      fn.Min(Current_Day_Sensor_Output.flammable_gas).alias(self.__min_flam),
+                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_flam),
+                                                      fn.Max(Current_Day_Sensor_Output.temperature).alias(self.__max_temp),
+                                                      fn.Min(Current_Day_Sensor_Output.temperature).alias(self.__min_temp),
+                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_temp),
+                                                     (fn.Sum(Current_Day_Sensor_Output.motion)/fn.Count(Current_Day_Sensor_Output.motion)*100).alias(self.__precentage_motion)
+                                                     ).group_by(Current_Day_Sensor_Output.date_and_time.day).dicts()
+        for item in agg_values:
+            aggDayValues.append(item)
+        return aggDayValues
+
     #Test Functions
     def insert_test_data(self, simulated_output_level):
         sensor_output = None
@@ -165,12 +212,6 @@ class DatabaseManager(Configurable):
     def createTables(self):
         #Main Section
         self.create_tables()
-        '''
-        if self.DEBUG:
-            self.insert_test_data("NORMAL")
-            self.insert_test_data("EARLY_SIGNS")
-            self.insert_test_data("RED_ALERT")
-        '''
     
     def getDatabase(self):
         return self.__db  
@@ -240,6 +281,4 @@ class System_Details(BaseModel):
     name       = peewee.CharField()
     location   = peewee.CharField()
     gps_lat    = peewee.CharField()   
-    gps_lng    = peewee.CharField()   
-
-databaseMan = DatabaseManager()
+    gps_lng    = peewee.CharField()  

@@ -6,6 +6,7 @@
 
 import constants as CONSTS
 import socket
+import json
 
 class Peer(object):
 	DEBUG  = True
@@ -31,7 +32,7 @@ class Peer(object):
 	def sendPacket(self, packet):
 		try:
 			tmpSocket = self.createSocket(bindToIP=None, connectToIP=self.getIPAddress())
-			tmpSocket.send(packet)
+			tmpSocket.send(json.dumps(packet, default=json_serial))
 			tmpSocket.close()
 		except:
 			if self.DEBUG:
@@ -55,3 +56,18 @@ class Peer(object):
 			newSocket.connect((connectToIP, CONSTS.DEFAULT_PORT))
 
 		return newSocket
+
+"""
+JSON serializer for objects not serializable by default json code.
+Required as the datetime object won't serialize by default.
+"""
+def json_serial(obj):
+    from datetime import datetime
+    from decimal import Decimal
+
+    if isinstance(obj, datetime):
+        serial = obj.isoformat()
+        return serial 
+
+    if isinstance(obj, Decimal):
+        return int(float(obj)) 
