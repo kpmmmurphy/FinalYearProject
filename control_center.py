@@ -35,7 +35,7 @@ def main():
     sensorManager   = SensorManager(sensorFactory.getSensors(), databaseManager) 
     apiManager      = APIManager(sensorManager=sensorManager)
     systemDetailsManager = SystemDetailsManager(databaseManager=databaseManager)
-    wifiDirectManager = WifiDirectManager(sensorManager=sensorManager)
+    wifiDirectManager = WifiDirectManager(sensorManager=sensorManager, databaseManager=databaseManager)
     configurationManager = ConfigurationManager({apiManager, databaseManager, sensorManager, 
                                                  alertManager, systemDetailsManager, wifiDirectManager})
     #configurationManager.writeoutConfiguration()
