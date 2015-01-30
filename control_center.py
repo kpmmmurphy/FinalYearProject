@@ -7,7 +7,7 @@
 #Import infrastructure modules
 from sensor_factory   import SensorFactory
 from sensor_manager   import SensorManager
-from database_manager import DatabaseManager
+from database_manager import DatabaseManagerg   
 from api_manager      import APIManager
 from configuration_manager import ConfigurationManager
 from alert_manager import AlertManager
@@ -18,6 +18,7 @@ from wifi_direct_manager import WifiDirectManager
 #January
 #System Stat Manager
 #Implement socket for config/other android client packets
+#--- Direct Chart Data, Direct Images, and Max and min values
 #Video // Streaming, local?
 #Push Notifications
 #User Feedback

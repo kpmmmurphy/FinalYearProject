@@ -16,15 +16,20 @@
     define('PARAM_GET_CURRENT_HOUR_SENSOR_VALUES', 'get_current_hour_sensor_values');
     define('PARAM_GET_AGG_SENSOR_VALUES_PER_HOUR', 'get_agg_sensor_values_per_hour');
     define('PARAM_GET_AGG_SENSOR_VALUES_PER_DAY', 'get_agg_sensor_values_per_day');
-    
-    
     define('PARAM_GET_SENSOR_VALUES', 'get_sensor_values');
+    define('PARAM_GET_PN_REG_IDS', 'get_reg_ids');
+    define('PARAM_INSERT_PN_REG_ID', 'insert_reg_ids');
+    
+    //Response Params
     define('PARAM_LIST_IMAGES', 'list_images');
     define('PARAM_SENSOR_VALUES', 'sensor_values');
     define('PARAM_SENSOR_VALUES_LIST', 'sensor_values_list');
     define('PARAM_UPLOAD_CAMERA_STILL', 'camera_still');
     define('PARAM_UPLOAD_CAMERA_VIDEO', 'camera_video');
     define('PARAM_STATUS_CODE', 'status_code');
+    define('PARAM_PN_REG_IDS', 'pn_reg_ids');
+    
+    
     //Files
     define('DIR_CONFIG', './config/');
     define('DIR_CAMERA', './camera/');
@@ -45,9 +50,9 @@
         var_dump($requestObj);
     }
     
-    #$database_manager = new DatabaseManager();
-    #$outputs = array(constant("PARAM_SENSOR_VALUES_LIST") => $database_manager->selectCurrentHourSensorValues());
-    #echo json_encode($outputs);
+    //$database_manager = new DatabaseManager();
+    //$outputs = array(constant("PARAM_PN_REG_IDS") => $database_manager->selectPNRegIDs());
+    //echo json_encode($outputs);
     
     if(isset($headers[constant('PARAM_SERVICE')])){
 
@@ -105,7 +110,7 @@
                 if($debug){
                     echo "\nGetting Sensor Values\n";
                 }
-                echo json_encode($database_manager->selectLatestSensorValues());
+                echo json_encode(array($database_manager->selectLatestSensorValues()));
                 break;
 
             case constant('PARAM_LIST_IMAGES'):
@@ -156,7 +161,24 @@
                 $outputs = array(constant("PARAM_SENSOR_VALUES_LIST") => $database_manager->selectAggSensorValuesPerDay());
                 echo json_encode($outputs);
                 break;
-
+                
+          case constant('PARAM_GET_PN_REG_IDS'):
+                //Get the list of images
+                if($debug){
+                    echo "\nGetting Push Reg IDs\n";
+                }
+                $outputs = array(constant("PARAM_PN_REG_IDS") => $database_manager->selectPNRegIDs());
+                echo json_encode($outputs);
+                break;
+                
+          case constant('PARAM_INSERT_PN_REG_ID'):
+                //Get the list of images
+                if($debug){
+                    echo "\nInserting Push Reg ID\n";
+                }
+                $database_manager->insertPNRegID($requestObj);
+                break;
+                
             default:
                 echo "ERROR :: Requested service not present";
         }

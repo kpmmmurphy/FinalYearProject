@@ -3,9 +3,8 @@
 class DatabaseManager
 {
     //SQL Tables
-    const SQL_TABLE_CURRENT       = 'current_day_sensor_output';
-    const SQL_TABLE_HOUR_VALUES   = 'sensor_output_hour_values';
-    const SQL_TABLE_DAY_VALUES    = 'sensor_output_day_values';
+    const SQL_TABLE_CURRENT    = 'current_day_sensor_output';
+    const SQL_TABLE_PN_DETAILS = 'push_notification_details';
 
     private $conn = NULL;
 
@@ -47,17 +46,27 @@ class DatabaseManager
         {
             try
             {
-                $sql = $this->conn->prepare("SELECT  carbon_monoxide, temperature, flammable_gas, motion, date_and_time,"
-                        . " MAX(carbon_monoxide) AS max_carbon_monoxide,"
-                        . " MAX(temperature)     AS max_temperature, "
+                $sqlLatestValues = $this->conn->prepare("SELECT carbon_monoxide, temperature, flammable_gas, motion, date_and_time"
+                        . " FROM " . self::SQL_TABLE_CURRENT
+                        . " ORDER BY id DESC LIMIT 1");
+                
+                $sqlMaxValues = $this->conn->prepare("SELECT MAX(carbon_monoxide) AS max_carbon_monoxide,"
+                        . " MAX(temperature)     AS max_temperatur, "
                         . " MAX(flammable_gas)   AS max_flammable_gas , "
                         . " MIN(carbon_monoxide) AS min_carbon_monoxide,"
                         . " MIN(temperature)     AS min_temperature, "
-                        . " MIN(flammable_gas)   AS min_flammable_gas , "
+                        . " MIN(flammable_gas)   AS min_flammable_gas, "
                         . " SUM(motion)/COUNT(motion)*100 AS percentage_motion" 
-                        . " FROM " . self::SQL_TABLE_CURRENT . " ORDER BY id DESC LIMIT 1");
-                $sql->execute();
-                return $sql->fetchAll(PDO::FETCH_ASSOC); 
+                        . " FROM " . self::SQL_TABLE_CURRENT);
+                
+                $sqlLatestValues->execute();
+                $sqlMaxValues->execute();
+                
+                $sqlLatestValuesArray = $sqlLatestValues->fetch(PDO::FETCH_ASSOC);
+                $sqlMaxValuesArray    = $sqlMaxValues->fetch(PDO::FETCH_ASSOC);
+                
+                $merge_array = array_merge($sqlLatestValuesArray, $sqlMaxValuesArray);
+                return $merge_array;
             }
             catch(PDOException $e)
             {
@@ -85,6 +94,7 @@ class DatabaseManager
             {
                 $currentDateAndHour = date("Y-m-d");
                 $currentHour = date("H");
+                //$currentHour = date("09");
                 $sql = $this->conn->prepare("SELECT * FROM " . self::SQL_TABLE_CURRENT .
                         " WHERE '$currentDateAndHour' = DATE(date_and_time)
                           AND '$currentHour' = HOUR(date_and_time)");
@@ -165,6 +175,37 @@ class DatabaseManager
                         . " GROUP BY day(date_and_time)");
                 $sql->execute();
                 return $sql->fetchAll(PDO::FETCH_ASSOC); 
+            }
+            catch(PDOException $e)
+            {
+                echo "Error: " . $e->getMessage();
+            }
+	}
+        
+        public function selectPNRegIDs()
+        {
+            try
+            {
+                $sql = $this->conn->prepare("SELECT reg_id "
+                        . " FROM " . self::SQL_TABLE_PN_DETAILS);
+                $sql->execute();
+                return $sql->fetchAll(PDO::FETCH_COLUMN); 
+            }
+            catch(PDOException $e)
+            {
+                echo "Error: " . $e->getMessage();
+            }
+	}
+        
+        public function insertPNRegID($obj)
+        {
+            try
+            {
+                $sql = $this->conn->prepare("INSERT INTO ". self::SQL_TABLE_PN_DETAILS . 
+	           " (reg_id) VALUES (:reg_id)");
+        
+                $sql->bindParam(":reg_id", $values->reg_id);
+                $sql->execute();
             }
             catch(PDOException $e)
             {
