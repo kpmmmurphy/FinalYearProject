@@ -95,6 +95,8 @@ class DatabaseManager(Configurable):
         return systemDetails[0]
 
     def select_current_day_max_min_sensor_values(self):
+        minMaxVals = None
+        today = datetime.datetime.now()
         max_min_values = Current_Day_Sensor_Output.select(fn.Max(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__max_co),
                                                           fn.Min(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__min_co),
                                                           fn.Max(Current_Day_Sensor_Output.flammable_gas).alias(self.__max_flam),
@@ -102,14 +104,18 @@ class DatabaseManager(Configurable):
                                                           fn.Max(Current_Day_Sensor_Output.temperature).alias(self.__max_temp),
                                                           fn.Min(Current_Day_Sensor_Output.temperature).alias(self.__min_temp),
                                                           (fn.SUM(Current_Day_Sensor_Output.motion)/fn.COUNT(Current_Day_Sensor_Output.motion)*100).alias(self.__precentage_motion)
-                                                          ).where(Current_Day_Sensor_Output.date_and_time == datetime.date.today())
+                                                          ).where(Current_Day_Sensor_Output.date_and_time.between(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=1)))
         max_min_values = max_min_values[0]
-        return { self.__max_co   : max_min_values.max_carbon_monoxide, self.__min_co   : max_min_values.min_carbon_monoxide,
-                self.__max_flam : max_min_values.max_flammable_gas,   self.__min_flam : max_min_values.min_flammable_gas, 
-                self.__max_temp : max_min_values.max_temperature,     self.__min_temp : max_min_values.min_temperature,
-                self.__precentage_motion : int(float(max_min_values.precentage_motion))}
-
-        
+        try: 
+            minMaxVals = { self.__max_co   : max_min_values.max_carbon_monoxide, self.__min_co   : max_min_values.min_carbon_monoxide,
+                           self.__max_flam : max_min_values.max_flammable_gas,   self.__min_flam : max_min_values.min_flammable_gas, 
+                           self.__max_temp : max_min_values.max_temperature,     self.__min_temp : max_min_values.min_temperature,
+                           self.__precentage_motion : int(float(max_min_values.precentage_motion))}
+        except TypeError:
+            if self.DEBUG:
+                print self.LOGTAG, " :: Max/Min values type error",
+                
+        return minMaxVals
    
     #Test Functions
     def insert_test_data(self, simulated_output_level):

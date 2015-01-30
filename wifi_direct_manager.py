@@ -122,8 +122,13 @@ class WifiDirectManager(Configurable):
 	def sendSensorValues(self):
 		if self.__sensorManager is not None:
 			sensorValues = self.__sensorManager.getSensorValues()
+			minMaxValues = self.__databaseManager.select_current_day_max_min_sensor_values()
 			payload = {}
-			payload = dict(sensorValues.items() + self.__databaseManager.select_current_day_max_min_sensor_values().items())
+			if minMaxValues is not None:
+				payload = dict(sensorValues.items() + minMaxValues.items())
+			else:
+				payload = sensorValues.items()
+
 			packet = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES, payload=payload)
 
 			for deviceID, peer in self.__currentPeers.iteritems():
