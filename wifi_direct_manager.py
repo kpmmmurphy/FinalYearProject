@@ -162,7 +162,7 @@ class WifiDirectManager(Configurable):
 			if service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
 				if self.DEBUG:
 					print self.LOGTAG, " :: Config from Peer"
-					self.getConfigManager().reconfigure(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG])
+					self.getConfigManager().reconfigure(json.dumps(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG]))
 
 	def addPeer(self, payload):
 		try:
