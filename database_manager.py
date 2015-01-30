@@ -106,7 +106,7 @@ class DatabaseManager(Configurable):
         return { self.__max_co   : max_min_values.max_carbon_monoxide, self.__min_co   : max_min_values.min_carbon_monoxide,
                 self.__max_flam : max_min_values.max_flammable_gas,   self.__min_flam : max_min_values.min_flammable_gas, 
                 self.__max_temp : max_min_values.max_temperature,     self.__min_temp : max_min_values.min_temperature,
-                self.__precentage_motion : max_min_values.precentage_motion}
+                self.__precentage_motion : int(float(max_min_values.precentage_motion))}
 
         
    
