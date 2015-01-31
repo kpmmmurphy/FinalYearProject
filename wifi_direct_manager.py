@@ -10,6 +10,7 @@ import time
 import struct
 import threading 
 import netifaces
+import subprocess
 from model.peer import Peer
 from configurable import Configurable
 import constants as CONSTS
@@ -184,6 +185,9 @@ class WifiDirectManager(Configurable):
 					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_HOUR, payload=currentHourVals))
 					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR, payload=currentDayAggHourVals))
 					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY, payload=aggDayVals))
+				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_STREAM:
+					subprocess.call(CONSTS.SCRIPT_START_STREAM)
+
 			except KeyError:
 				if self.DEBUG:
 						print self.LOGTAG, " :: KeyError -> No Service Supplied"
