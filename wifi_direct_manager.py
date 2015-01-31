@@ -156,6 +156,9 @@ class WifiDirectManager(Configurable):
 			rawPacket = conn.recv(10240)
 			packet    = json.loads(rawPacket)
 
+			service = None
+			payload = None
+
 			if self.DEBUG:
 				print self.LOGTAG, " Packet Recieved -> ", rawPacket
 
@@ -167,8 +170,7 @@ class WifiDirectManager(Configurable):
 					if self.DEBUG:
 						print self.LOGTAG, " :: KeyError -> No Payload Supplied"
 				
-
-				if payload is not None && service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
+				if payload is not None and service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
 					if self.DEBUG:
 						print self.LOGTAG, " :: Config from Peer"
 						self.getConfigManager().reconfigure(json.dumps(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG]))
