@@ -34,8 +34,6 @@ class DatabaseManager(Configurable):
     def __init__(self):
         super(DatabaseManager, self).__init__(CONSTS.JSON_KEY_DATABASE_MANAGER_CONFIG)
         __db = self.loadDatabase()
-        self.createTables()
-        self.select_agg_day_sensor_values()
 
     def configure(self, config):
         pass
@@ -123,7 +121,7 @@ class DatabaseManager(Configurable):
         cur_day_vals = Current_Day_Sensor_Output.select().dicts().where(Current_Day_Sensor_Output.date_and_time.between(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=1)) & (Current_Day_Sensor_Output.date_and_time.hour == now.hour))
         for item in cur_day_vals:
             currentDayValues.append(item)
-        print currentDayValues
+        return currentDayValues
 
     def select_agg_hour_current_day_sensor_values(self):
         aggHourValues = []
@@ -142,7 +140,7 @@ class DatabaseManager(Configurable):
                                                      ).where(Current_Day_Sensor_Output.date_and_time.between(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=1))).group_by(Current_Day_Sensor_Output.date_and_time.hour).dicts()
         for item in agg_values:
             aggHourValues.append(item)
-        print aggHourValues
+        return aggHourValues
 
     def select_agg_day_sensor_values(self):
         aggDayValues = []
