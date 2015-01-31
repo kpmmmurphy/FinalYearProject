@@ -169,7 +169,7 @@ class WifiDirectManager(Configurable):
 				except KeyError:
 					if self.DEBUG:
 						print self.LOGTAG, " :: KeyError -> No Payload Supplied"
-				
+
 				if payload is not None and service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
 					if self.DEBUG:
 						print self.LOGTAG, " :: Config from Peer"
