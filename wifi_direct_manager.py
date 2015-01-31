@@ -151,8 +151,8 @@ class WifiDirectManager(Configurable):
 
 	def listenForPeerPacket(self):
 		peerSocket  = self.createSocket(self.__ipAddress, None)
-		conn, addr = peerSocket.accept()
 		while True:
+			conn, addr = peerSocket.accept()
 			rawPacket = conn.recv(10240)
 			packet    = json.loads(rawPacket)
 
