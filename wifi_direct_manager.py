@@ -155,30 +155,37 @@ class WifiDirectManager(Configurable):
 		while True:
 			rawPacket = conn.recv(10240)
 			packet    = json.loads(rawPacket)
-			device_ip = conn.getpeername()
-
-			print device_ip
 
 			if self.DEBUG:
 				print self.LOGTAG, " Packet Recieved -> ", rawPacket
 
-			service  = packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]
-			payload  = packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]
+			try:
+				service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]
+				try:
+					payload  = packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]
+				except KeyError:
+					if self.DEBUG:
+						print self.LOGTAG, " :: KeyError -> No Payload Supplied"
+				
 
-			if service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
-				if self.DEBUG:
-					print self.LOGTAG, " :: Config from Peer"
-					self.getConfigManager().reconfigure(json.dumps(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG]))
-			elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA:
-				if self.DEBUG:
-					print self.LOGTAG, " :: Peer Requested Graphing Values"
-				currentHourVals       = self.__databaseManager.select_current_hour_sensor_values()
-				currentDayAggHourVals = self.__databaseManager.select_agg_hour_current_day_sensor_values()
-				aggDayVals            = self.__databaseManager.select_agg_day_sensor_values()
+				if payload is not None && service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
+					if self.DEBUG:
+						print self.LOGTAG, " :: Config from Peer"
+						self.getConfigManager().reconfigure(json.dumps(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG]))
+				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA:
+					if self.DEBUG:
+						print self.LOGTAG, " :: Peer Requested Graphing Values"
+					currentHourVals       = self.__databaseManager.select_current_hour_sensor_values()
+					currentDayAggHourVals = self.__databaseManager.select_agg_hour_current_day_sensor_values()
+					aggDayVals            = self.__databaseManager.select_agg_day_sensor_values()
 
-				self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_HOUR, payload=currentHourVals))
-				self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR, payload=currentDayAggHourVals))
-				self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY, payload=aggDayVals))
+					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_HOUR, payload=currentHourVals))
+					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR, payload=currentDayAggHourVals))
+					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY, payload=aggDayVals))
+			except KeyError:
+				if self.DEBUG:
+						print self.LOGTAG, " :: KeyError -> No Service Supplied"
+
 
 	def addPeer(self, payload):
 		try:
