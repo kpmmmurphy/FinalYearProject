@@ -9,7 +9,6 @@ import random
 import socket
 import constants as CONSTS
 import json
-import bson 
 from configurable import Configurable
 
 class DatabaseManager(Configurable):

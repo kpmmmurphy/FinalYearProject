@@ -1,0 +1,47 @@
+DatabaseManager :: Exception -> Current Day Sensor_Output Table Already Exists
+DatabaseManager :: Exception -> System_Details Table Already Exists
+AlertManager  :: Created
+SensorFactory  :: Created...
+SensorFactory  :: Running on Raspberry Pi
+CARBON_MONOXIDE  :: Constructing -> with shared lib... 
+FLAMMABLE_GAS  :: Constructing -> with shared lib... 
+TEMPERATURE  :: Constructing -> with shared lib... 
+MOTION  :: Constructing -> with shared lib... 
+SensorManager  :: Created...
+SensorManager  :: Starting Data Collection
+SensorManager  :: Starting Sensor Probing..
+APIManager  :: Created
+SystemDetailsManager  :: Created
+WifiDirectManager  :: Created
+WifiDirectManager  :: IP Address -> 192.168.42.1
+WifiDirectManager  :: Waiting to Recveive Packet...
+ConfigurationManager  :: Created
+MOTION  :: ALERT
+CameraManager :: Taking Still
+TEMPERATURE  :: ALERT
+APIManager  :: Service ->  upload_sensor_values
+APIManager  :: Uploading ->  {'motion': 1, 'flammable_gas': -1, 'carbon_monoxide': 0, 'temperature': 61}
+APIManager  ::  upload_sensor_values  -> Completed Successfully
+SensorManager  :: Inserting into DB ->  {'motion': 1, 'flammable_gas': 0, 'carbon_monoxide': 0, 'temperature': 61}
+DatabaseManager  :: Sensor Data Inserted..
+CARBON_MONOXIDE  :: ALERT
+TEMPERATURE  :: ALERT
+APIManager  :: Service ->  upload_sensor_values
+APIManager  :: Uploading ->  {'motion': 1, 'flammable_gas': 0, 'carbon_monoxide': 80, 'temperature': 65}
+APIManager  ::  upload_sensor_values  -> Completed Successfully
+SensorManager  :: Inserting into DB ->  {'motion': 0, 'flammable_gas': 0, 'carbon_monoxide': 80, 'temperature': 65}
+DatabaseManager  :: Sensor Data Inserted..
+CARBON_MONOXIDE  :: ALERT
+APIManager  :: Service ->  upload_sensor_values
+APIManager  :: Uploading ->  {'motion': 0, 'flammable_gas': 0, 'carbon_monoxide': 80, 'temperature': 65}
+APIManager  ::  upload_sensor_values  -> Completed Successfully
+TEMPERATURE  :: ALERT
+MOTION  :: ALERT
+CameraManager :: Taking Still
+APIManager  :: Service ->  upload_sensor_values
+APIManager  :: Uploading ->  {'motion': 1, 'flammable_gas': 0, 'carbon_monoxide': 80, 'temperature': 65}
+CARBON_MONOXIDE  :: ALERT
+APIManager  ::  upload_sensor_values  -> Completed Successfully
+TEMPERATURE  :: ALERT
+SensorManager  :: Inserting into DB ->  {'motion': 1, 'flammable_gas': 0, 'carbon_monoxide': 66, 'temperature': 66}
+DatabaseManager  :: Sensor Data Inserted..
