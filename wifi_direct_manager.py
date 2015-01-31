@@ -186,7 +186,7 @@ class WifiDirectManager(Configurable):
 					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR, payload=currentDayAggHourVals))
 					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY, payload=aggDayVals))
 				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_STREAM:
-					subprocess.call(CONSTS.SCRIPT_START_STREAM)
+					subprocess.call(CONSTS.SCRIPT_START_STREAM, shell=True)
 
 			except KeyError:
 				if self.DEBUG:
