@@ -29,7 +29,6 @@
     define('PARAM_STATUS_CODE', 'status_code');
     define('PARAM_PN_REG_IDS', 'pn_reg_ids');
     
-    
     //Files
     define('DIR_CONFIG', './config/');
     define('DIR_CAMERA', './camera/');
@@ -128,6 +127,7 @@
                 break;
                 
             case constant('PARAM_GET_ALL_CURRENT_DAY_SENSOR_VALUES'):
+                //Get the list of images
                 if($debug){
                     echo "\nGetting All Current Day Sensor Outputs\n";
                 }
@@ -135,6 +135,7 @@
                 break;
                 
            case constant('PARAM_GET_CURRENT_HOUR_SENSOR_VALUES'):
+                //Get the list of images
                 if($debug){
                     echo "\nGetting Current Hour Sensor Outputs\n";
                 }
@@ -143,6 +144,7 @@
                 break;
                 
            case constant('PARAM_GET_AGG_SENSOR_VALUES_PER_HOUR'):
+                //Get the list of images
                 if($debug){
                     echo "\nGetting Current Hour Sensor Outputs\n";
                 }
@@ -151,6 +153,7 @@
                 break;
                 
           case constant('PARAM_GET_AGG_SENSOR_VALUES_PER_DAY'):
+                //Get the list of images
                 if($debug){
                     echo "\nGetting Current Hour Sensor Outputs\n";
                 }
@@ -159,6 +162,7 @@
                 break;
                 
           case constant('PARAM_GET_PN_REG_IDS'):
+                //Get the list of images
                 if($debug){
                     echo "\nGetting Push Reg IDs\n";
                 }
@@ -167,14 +171,18 @@
                 break;
                 
           case constant('PARAM_INSERT_PN_REG_ID'):
+                //Get the list of images
                 if($debug){
                     echo "\nInserting Push Reg ID\n";
                 }
                 $database_manager->insertPNRegID($requestObj);
+                $response = array(constant("PARAM_STATUS_CODE") => 200);
+                echo json_encode($response);
                 break;
                 
             default:
-                echo "ERROR :: Requested service not present";
+                $response = array(constant("PARAM_STATUS_CODE") => 404);
+                echo json_encode($response);
         }
 
     }else{

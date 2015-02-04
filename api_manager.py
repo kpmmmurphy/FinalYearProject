@@ -137,7 +137,7 @@ class APIManager(Configurable):
             else:
                 print self.LOGTAG, " :: ERROR: ",service, " -> status_code:", sendResponse.status_code
     
-            return response
+            return response.content
         except requests.ConnectionError:
             if self.DEBUG:
                 print self.LOGTAG, ":: ConnectionError Thrown"

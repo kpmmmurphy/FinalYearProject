@@ -85,7 +85,8 @@ JSON_KEY_API_CAMERA_IMAGE_UPLOAD_RATE   = "camera_image_upload_rate"
 JSON_KEY_CONFIG_MANAGER_CONFIG = "config_manager"
 
 #PN Manager
-JSON_KEY_PN_MANAGER_CONFIG = "push_notification_manager"
+JSON_KEY_PN_MANAGER_CONFIG  = "push_notification_manager"
+JSON_KEY_PN_MANAGER_REG_IDS = "pn_reg_ids"
 
 #Wifi Direct Manager
 JSON_KEY_WIFI_DIRECT_MANAGER          = "wifi_direct_manager"

@@ -24,7 +24,8 @@ class PNManager(object):
 
     def sendJsonPush(self, data):
         apiManager = APIManager(sensorManager=None)
-        response = self.__gcm.json_request(registration_ids=apiManager.getPNRegIDs(), data=self.testData)
+        registration_ids = json.loads(apiManager.getPNRegIDs())
+        response = self.__gcm.json_request(registration_ids=registration_ids[CONSTS.JSON_KEY_PN_MANAGER_REG_IDS], data=self.testData)
         if self.DEBUG:
             print response
 

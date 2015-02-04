@@ -16,11 +16,11 @@ from wifi_direct_manager import WifiDirectManager
 
 ##---TODO
 #January
-#System Stat Manager
+#User Feedback - Test
+#Push Notifications
 #--- Direct Images
 #Video // Streaming, local?
-#Push Notifications
-#User Feedback
+#System Stat Manager
 #Galileo?....
 
 #Constants

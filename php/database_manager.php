@@ -50,9 +50,8 @@ class DatabaseManager
                         . " FROM " . self::SQL_TABLE_CURRENT
                         . " ORDER BY id DESC LIMIT 1");
                 
-                #This should just be for the current day, not entire data set...
                 $sqlMaxValues = $this->conn->prepare("SELECT MAX(carbon_monoxide) AS max_carbon_monoxide,"
-                        . " MAX(temperature)     AS max_temperature, "
+                        . " MAX(temperature)     AS max_temperatur, "
                         . " MAX(flammable_gas)   AS max_flammable_gas , "
                         . " MIN(carbon_monoxide) AS min_carbon_monoxide,"
                         . " MIN(temperature)     AS min_temperature, "
@@ -205,7 +204,7 @@ class DatabaseManager
                 $sql = $this->conn->prepare("INSERT INTO ". self::SQL_TABLE_PN_DETAILS . 
 	           " (reg_id) VALUES (:reg_id)");
         
-                $sql->bindParam(":reg_id", $values->reg_id);
+                $sql->bindParam(":reg_id", $obj->reg_id);
                 $sql->execute();
             }
             catch(PDOException $e)
