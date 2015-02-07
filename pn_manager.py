@@ -10,11 +10,10 @@ import constants as CONSTS
 from gcm import GCM
 from api_manager import APIManager
 
+
 class PNManager(object):
     DEBUG  = True
     LOGTAG = "PNManager"
-
-    testData = {'param1': 'value1', 'param2': 'value2'}
 
     def __init__(self):
         self.__gcm = GCM(CONSTS.GCM_API_KEY)
@@ -25,9 +24,10 @@ class PNManager(object):
     def sendJsonPush(self, data):
         apiManager = APIManager(sensorManager=None)
         registration_ids = json.loads(apiManager.getPNRegIDs())
-        response = self.__gcm.json_request(registration_ids=registration_ids[CONSTS.JSON_KEY_PN_MANAGER_REG_IDS], data=self.testData)
+        response = self.__gcm.json_request(registration_ids=registration_ids[CONSTS.JSON_KEY_PN_MANAGER_REG_IDS], data=data)
         if self.DEBUG:
             print response
 
 pnManager = PNManager()
-pnManager.sendJsonPush(None)
+testData = {'sensor': 'temperature', 'value': 50}
+pnManager.sendJsonPush(testData)
