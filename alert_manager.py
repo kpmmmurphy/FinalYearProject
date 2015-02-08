@@ -9,12 +9,14 @@ from configurable import Configurable
 import constants as CONSTS
 from py_sensors.buzzer import Buzzer
 from camera_manager import CameraManager
+from pn_manager import PNManager
 
 class AlertManager(Configurable):
     DEBUG  = True
     LOGTAG = "AlertManager"
 
     __buzzerOn  = True
+    __pushOn    = True
     __cameraOn  = True
     __videoMode = False
 
@@ -34,6 +36,7 @@ class AlertManager(Configurable):
                 self.setBuzzerStatus(alertConfig[CONSTS.JSON_KEY_ALERT_BUZZER_ON])
                 self.setCameraStatus(alertConfig[CONSTS.JSON_KEY_ALERT_CAMERA_ON])
                 self.setVideoMode(alertConfig[CONSTS.JSON_KEY_ALERT_VIDEO_MODE])
+                self.setPushStatus(alertConfig[CONSTS.JSON_KEY_ALERT_PUSH_ON])
             except KeyError:
                 if self.DEBUG:
                     print self.LOGTAG, " :: Config key not present"
@@ -49,11 +52,23 @@ class AlertManager(Configurable):
     		else:
     			CameraManager.takeStill()
 
+    def sendPush(self, sensor, value):
+        if self.getPushStatus():
+            data = {"sensor" : sensor, "value" : value}
+            pnManager = PNManager()
+            pnManager.sendJsonPush(data)
+
     def setBuzzerStatus(self, isOn):
     	self.__buzzerOn = isOn
 
     def getBuzzerStatus(self):
     	return self.__buzzerOn
+
+    def setPushStatus(self, isOn):
+        self.__pushOn = isOn
+
+    def getPushStatus(self):
+        return self.__pushOn
 
     def setCameraStatus(self, isOn):
     	self.__cameraOn = isOn
@@ -70,6 +85,7 @@ class AlertManager(Configurable):
     def toString(self):
 		data = { CONSTS.JSON_KEY_ALERT_BUZZER_ON  : self.getBuzzerStatus(), 
                  CONSTS.JSON_KEY_ALERT_CAMERA_ON  : self.getCameraStatus(), 
+                 CONSTS.JSON_KEY_ALERT_PUSH_ON    : self.getPushStatus(),
                  CONSTS.JSON_KEY_ALERT_VIDEO_MODE : self.getVideoMode()}
  		
  		if self.DEBUG:

@@ -55,6 +55,7 @@ class Thermistor(Sensor):
 
             if self.getAlertManager() is not None:
                 self.getAlertManager().ringBuzzer()
+                self.getAlertManager().sendPush(sensor=self.getName().lower(),value=self.getCurrentValue())
 
     def getName(self):
         return self.__name

@@ -63,7 +63,7 @@ class APIManager(Configurable):
             self.schedule_SysConfigCheck()
 
         if configResponse is not None and self.getConfigManager() is not None:
-            self.getConfigManager().reconfigure(configResponse.content)
+            self.getConfigManager().reconfigure(configResponse)
 
 
     def uploadSensorValues(self):
@@ -96,15 +96,12 @@ class APIManager(Configurable):
        
     #Purely for testing server side api 
     def getLatestSensorValues(self):
-        valuesResponse = self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, payload=None, filez=None)
-        return valuesResponse.content
+        return self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_GET_SENSOR_VALUES, payload=None, filez=None)
 
     #Purely for testing server side api 
     def updateSystemConfig(self):
         file = open('config/test_config.json', 'r')
-        configResponse = self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG, payload=file.read(), filez=None)
-
-        return configResponse.content
+        return self.sendRequest(service=CONSTS.JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG, payload=file.read(), filez=None)
 
     def sendRequest(self, service, payload, filez):
         url = CONSTS.API_URL_CS1 + CONSTS.API_URL_MANAGER

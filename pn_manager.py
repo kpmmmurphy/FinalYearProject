@@ -22,12 +22,18 @@ class PNManager(object):
             print self.LOGTAG, " :: Created"
 
     def sendJsonPush(self, data):
-        apiManager = APIManager(sensorManager=None)
-        registration_ids = json.loads(apiManager.getPNRegIDs())
-        response = self.__gcm.json_request(registration_ids=registration_ids[CONSTS.JSON_KEY_PN_MANAGER_REG_IDS], data=data)
-        if self.DEBUG:
-            print response
+        try:
+            apiManager = APIManager(sensorManager=None)
+            registration_ids = json.loads(apiManager.getPNRegIDs())
+            response = self.__gcm.json_request(registration_ids=registration_ids[CONSTS.JSON_KEY_PN_MANAGER_REG_IDS], data=data)
+            if self.DEBUG:
+                print response
+        except:
+            if self.DEBUG:
+                print self.LOGTAG, " :: Sending Push Notification Failed"
 
+'''
 pnManager = PNManager()
 testData = {'sensor': 'temperature', 'value': 50}
 pnManager.sendJsonPush(testData)
+'''

@@ -119,6 +119,7 @@ JSON_KEY_ALERT_MANAGER_CONFIG = "alert_manager"
 JSON_KEY_ALERT_BUZZER_ON      = "buzzer_on"
 JSON_KEY_ALERT_CAMERA_ON      = "camera_on"
 JSON_KEY_ALERT_VIDEO_MODE     = "video_mode"
+JSON_KEY_ALERT_PUSH_ON        = "push_on"
 
 #Requests
 JSON_KEY_REQUEST_SERVICE       = "service"
@@ -134,10 +135,10 @@ JSON_VALUE_REQUEST_SERVICE_UPLOAD_CAMERA_STILL  = "upload_camera_still"
 JSON_VALUE_REQUEST_SERVICE_GET_REG_IDS          = "get_reg_ids"
 
 #---ALERTING-----------------------------------
-ALERT_THRESHOLD_DEFAULT_THERMISTOR = 50
-ALERT_THRESHOLD_DEFAULT_MQ7        = 50
-ALERT_THRESHOLD_DEFAULT_MOTION     = 1
-ALERT_THRESHOLD_DEFAULT_MQ2        = 50
+ALERT_THRESHOLD_DEFAULT_THERMISTOR = -1
+ALERT_THRESHOLD_DEFAULT_MQ7        = -1
+ALERT_THRESHOLD_DEFAULT_MOTION     = -1
+ALERT_THRESHOLD_DEFAULT_MQ2        = -1
 
 #---SCRIPTS------------------------------------
 SCRIPTS_DIR              = "./scripts/"
