@@ -120,6 +120,7 @@ JSON_KEY_ALERT_BUZZER_ON      = "buzzer_on"
 JSON_KEY_ALERT_CAMERA_ON      = "camera_on"
 JSON_KEY_ALERT_VIDEO_MODE     = "video_mode"
 JSON_KEY_ALERT_PUSH_ON        = "push_on"
+JSON_KEY_ALERT_LOCKDOWN_ON    = "lockdown_on"
 
 #Requests
 JSON_KEY_REQUEST_SERVICE       = "service"

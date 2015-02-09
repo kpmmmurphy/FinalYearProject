@@ -15,10 +15,11 @@ class AlertManager(Configurable):
     DEBUG  = True
     LOGTAG = "AlertManager"
 
-    __buzzerOn  = True
-    __pushOn    = True
-    __cameraOn  = True
-    __videoMode = False
+    __buzzerOn   = True
+    __pushOn     = True
+    __lockdownOn = False
+    __cameraOn   = True
+    __videoMode  = False
 
     def __init__(self):
     	super(AlertManager, self).__init__(CONSTS.JSON_KEY_ALERT_MANAGER_CONFIG)
@@ -37,6 +38,7 @@ class AlertManager(Configurable):
                 self.setCameraStatus(alertConfig[CONSTS.JSON_KEY_ALERT_CAMERA_ON])
                 self.setVideoMode(alertConfig[CONSTS.JSON_KEY_ALERT_VIDEO_MODE])
                 self.setPushStatus(alertConfig[CONSTS.JSON_KEY_ALERT_PUSH_ON])
+                self.setLockdownStatus(alertConfig[CONSTS.JSON_KEY_ALERT_LOCKDOWN_ON])
             except KeyError:
                 if self.DEBUG:
                     print self.LOGTAG, " :: Config key not present"
@@ -54,9 +56,13 @@ class AlertManager(Configurable):
 
     def sendPush(self, sensor, value):
         if self.getPushStatus():
-            data = {"sensor" : sensor, "value" : value}
-            pnManager = PNManager()
-            pnManager.sendJsonPush(data)
+            if sensor == CONSTS.SENSOR_MOTION and not self.getLockdownStatus():
+                #Do nothing when motion is detected
+                pass
+            else:
+                data = {"sensor" : sensor, "value" : value}
+                pnManager = PNManager()
+                pnManager.sendJsonPush(data)
 
     def setBuzzerStatus(self, isOn):
     	self.__buzzerOn = isOn
@@ -69,6 +75,12 @@ class AlertManager(Configurable):
 
     def getPushStatus(self):
         return self.__pushOn
+
+    def setLockdownStatus(self, isOn):
+        self.__lockdownOn = isOn
+
+    def getLockdownStatus(self):
+        return self.__lockdownOn
 
     def setCameraStatus(self, isOn):
     	self.__cameraOn = isOn
@@ -86,7 +98,8 @@ class AlertManager(Configurable):
 		data = { CONSTS.JSON_KEY_ALERT_BUZZER_ON  : self.getBuzzerStatus(), 
                  CONSTS.JSON_KEY_ALERT_CAMERA_ON  : self.getCameraStatus(), 
                  CONSTS.JSON_KEY_ALERT_PUSH_ON    : self.getPushStatus(),
-                 CONSTS.JSON_KEY_ALERT_VIDEO_MODE : self.getVideoMode()}
+                 CONSTS.JSON_KEY_ALERT_LOCKDOWN_ON : self.getLockdownStatus(),
+                 CONSTS.JSON_KEY_ALERT_VIDEO_MODE  : self.getVideoMode()}
  		
  		if self.DEBUG:
  			print self.LOGTAG , json.dumps(data)
