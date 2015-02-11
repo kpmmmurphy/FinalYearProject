@@ -15,9 +15,7 @@ from system_details_manager import SystemDetailsManager
 from wifi_direct_manager import WifiDirectManager
 
 ##---TODO
-#January
-#User Feedback - Test
-#Push Notifications
+#FEB
 #--- Direct Images
 #Video // Streaming, local?
 #System Stat Manager

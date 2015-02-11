@@ -48,6 +48,7 @@
         echo "\n\nREQUEST::\n\n";
         var_dump($requestObj);
     }
+    echo $_SERVER['REMOTE_ADDR'];
     
     //$database_manager = new DatabaseManager();
     //$outputs = array(constant("PARAM_PN_REG_IDS") => $database_manager->selectPNRegIDs());
