@@ -21,6 +21,8 @@ class AlertManager(Configurable):
     __cameraOn   = True
     __videoMode  = False
 
+    __lastNotificationSent = None
+
     def __init__(self):
     	super(AlertManager, self).__init__(CONSTS.JSON_KEY_ALERT_MANAGER_CONFIG)
 
@@ -56,13 +58,16 @@ class AlertManager(Configurable):
 
     def sendPush(self, sensor, value):
         if self.getPushStatus():
-            if sensor == CONSTS.SENSOR_MOTION and not self.getLockdownStatus():
-                #Do nothing when motion is detected
-                pass
-            else:
-                data = {"sensor" : sensor, "value" : value}
-                pnManager = PNManager()
-                pnManager.sendJsonPush(data)
+            #Only send a push every 120 seconds
+            if self.__lastNotificationSent is None or int(round(time.time() * 1000)) - self.__lastNotificationSent > 120000:
+                self.__lastNotificationSent = int(round(time.time() * 1000))
+                if sensor == CONSTS.SENSOR_MOTION and not self.getLockdownStatus():
+                    #Do nothing when motion is detected
+                    pass
+                else:
+                    data = {"sensor" : sensor, "value" : value}
+                    pnManager = PNManager()
+                    pnManager.sendJsonPush(data)
 
     def setBuzzerStatus(self, isOn):
     	self.__buzzerOn = isOn
