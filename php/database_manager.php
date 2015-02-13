@@ -3,8 +3,9 @@
 class DatabaseManager
 {
     //SQL Tables
-    const SQL_TABLE_CURRENT    = 'current_day_sensor_output';
-    const SQL_TABLE_PN_DETAILS = 'push_notification_details';
+    const SQL_TABLE_CURRENT        = 'current_day_sensor_output';
+    const SQL_TABLE_PN_DETAILS     = 'push_notification_details';
+    const SQL_TABLE_SYSTEM_DETAILS = 'system_details';
 
     private $conn = NULL;
 
@@ -217,6 +218,23 @@ class DatabaseManager
             echo "Error: " . $e->getMessage();
         }
 	}
+    
+    public function insertPiPublicIP($obj)
+    {
+        try
+        {
+            $sql = $this->conn->prepare("UPDATE  ". self::SQL_TABLE_SYSTEM_DETAILS 
+                . " SET ip_address=:ip_address"
+                . " WHERE id = 1");
+    
+            $sql->bindParam(":ip_address", $obj);
+            $sql->execute();
+        }
+        catch(PDOException $e)
+        {
+            echo "Error: " . $e->getMessage();
+        }
+    }
         
 	private function closeConn()
 	{

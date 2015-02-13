@@ -19,6 +19,7 @@
     define('PARAM_GET_SENSOR_VALUES', 'get_sensor_values');
     define('PARAM_GET_PN_REG_IDS', 'get_reg_ids');
     define('PARAM_INSERT_PN_REG_ID', 'insert_reg_ids');
+    define('PARAM_INSERT_PI_PUBLIC_IP', 'update_pi_public_pi');
     
     //Response Params
     define('PARAM_LIST_IMAGES', 'list_images');
@@ -48,7 +49,14 @@
         echo "\n\nREQUEST::\n\n";
         var_dump($requestObj);
     }
-    echo $_SERVER['REMOTE_ADDR'];
+
+    $ip = getenv('HTTP_CLIENT_IP')?:
+          getenv('HTTP_X_FORWARDED_FOR')?:
+          getenv('HTTP_X_FORWARDED')?:
+          getenv('HTTP_FORWARDED_FOR')?:
+          getenv('HTTP_FORWARDED')?:
+          getenv('REMOTE_ADDR');
+
     
     //$database_manager = new DatabaseManager();
     //$outputs = array(constant("PARAM_PN_REG_IDS") => $database_manager->selectPNRegIDs());
@@ -59,6 +67,9 @@
         $requestedService = htmlspecialchars($headers[constant('PARAM_SERVICE')]);
 
         $database_manager = new DatabaseManager();
+        
+        #Store Raspberry Pi's Public IP 
+        $database_manager->insertPiPublicIP($ip);
 
         switch($requestedService){
 
@@ -110,7 +121,8 @@
                 if($debug){
                     echo "\nGetting Sensor Values\n";
                 }
-                echo json_encode(array($database_manager->selectLatestSensorValues()));
+                #echo json_encode(array($database_manager->selectLatestSensorValues()));
+                echo json_encode($database_manager->selectLatestSensorValues());
                 break;
 
             case constant('PARAM_LIST_IMAGES'):
@@ -180,12 +192,21 @@
                 $response = array(constant("PARAM_STATUS_CODE") => 200);
                 echo json_encode($response);
                 break;
+
+            case constant('PARAM_INSERT_PI_PUBLIC_IP'):
+                if($debug){
+                    echo "\nUpdate Pi Public IP \n";
+                }
+                #$database_manager->insertPiPublicIP($requestObj);
+                #$response = array(constant("PARAM_STATUS_CODE") => 200);
+                #echo json_encode($response);
+                break;
                 
             default:
                 $response = array(constant("PARAM_STATUS_CODE") => 404);
                 echo json_encode($response);
         }
-
+        
     }else{
 
         if(isset($_FILES[constant('PARAM_UPLOAD_CAMERA_STILL')])){
