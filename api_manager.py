@@ -83,7 +83,6 @@ class APIManager(Configurable):
             self.schedule_UploadCameraStill()
 
     def uploadVideo(self):
-        #Should select latest image dynamically 
         videos = os.listdir(CONSTS.DIR_CAMERA_VIDEO)
         if len(videos) > 0:
             camera_video = {CONSTS.JSON_KEY_CAMERA_STILL : (videos[0], open(CONSTS.DIR_CAMERA_VIDEO + videos[0], 'rb'), 'video/mp4')}

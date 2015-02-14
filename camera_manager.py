@@ -34,7 +34,7 @@ class CameraManager(object):
         pro = subprocess.Popen([CONSTS.SCRIPT_TAKE_CAMERA_VIDEO], 
                        shell=True, preexec_fn=os.setsid) 
 
-        time.sleep(20)
+        time.sleep(40)
         os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
 
 
