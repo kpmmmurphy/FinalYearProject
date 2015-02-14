@@ -6,6 +6,11 @@
 
 import subprocess
 import constants as CONSTS
+import os
+import sys
+import signal
+import subprocess
+import time
 
 class CameraManager(object):
     DEBUG = True
@@ -24,5 +29,11 @@ class CameraManager(object):
     @staticmethod
     def startStream():
         print "CameraManager :: Starting Remote Stream"
-        subprocess.call(CONSTS.SCRIPT_START_REMOTE_STREAM, shell=True)
+        # The os.setsid() is passed in the argument preexec_fn so
+        # it's run after the fork() and before  exec() to run the shell.
+        pro = subprocess.Popen([CONSTS.SCRIPT_START_REMOTE_STREAM], 
+                       shell=True, preexec_fn=os.setsid) 
+
+        time.sleep(30)
+        os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
 
