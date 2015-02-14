@@ -49,7 +49,7 @@ class DatabaseManager
         {
             $currentDateAndHour = date("Y-m-d");
             $currentHour = date("H");
-
+            
             $sqlLatestValues = $this->conn->prepare("SELECT carbon_monoxide, temperature, flammable_gas, motion, date_and_time"
                     . " FROM " . self::SQL_TABLE_CURRENT
                     . " ORDER BY id DESC LIMIT 1");
@@ -219,7 +219,7 @@ class DatabaseManager
         }
 	}
     
-    public function insertPiPublicIP($obj)
+    public function updatePiPublicIP($obj)
     {
         try
         {
@@ -235,11 +235,60 @@ class DatabaseManager
             echo "Error: " . $e->getMessage();
         }
     }
+    
+    public function getPiPublicIP()
+    {
+        try
+        {
+            $sql = $this->conn->prepare("SELECT ip_address FROM ". self::SQL_TABLE_SYSTEM_DETAILS 
+                . " ORDER BY id DESC LIMIT 1");
+    
+            $sql->bindParam(":ip_address", $obj);
+            $sql->execute();
+            return $sql->fetch(PDO::FETCH_ASSOC);
+        }
+        catch(PDOException $e)
+        {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+    
+    public function updateRequestingStreamFlag($obj)
+    {
+        try
+        {
+            $sql = $this->conn->prepare("UPDATE ". self::SQL_TABLE_SYSTEM_DETAILS 
+                . " SET requesting_stream=:requesting_stream"
+                . " WHERE id = 1");
+    
+            $sql->bindParam(":requesting_stream", $obj);
+            $sql->execute();
+        }
+        catch(PDOException $e)
+        {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+    
+    public function getRequestingStreamFlag()
+    {
+        try
+        {
+            $sql = $this->conn->prepare("SELECT requesting_stream FROM ". self::SQL_TABLE_SYSTEM_DETAILS 
+                . " ORDER BY id DESC LIMIT 1");
+            $sql->execute();
+            return $sql->fetch(PDO::FETCH_ASSOC);
+        }
+        catch(PDOException $e)
+        {
+            echo "Error: " . $e->getMessage();
+        }
+    }
         
-	private function closeConn()
-	{
-		$this->conn = null;
-	}
+    private function closeConn()
+    {
+            $this->conn = null;
+    }
 
 }
 
