@@ -61,7 +61,11 @@
     }
     
     //Default failure response
-    $response = array(constant("PARAM_STATUS_CODE") => constant('RESPONSE_FAILED'));
+    //$response = array(constant("PARAM_STATUS_CODE") => constant('RESPONSE_FAILED'));
+    $response = array();
+
+    //Include meta paramaters
+    $include_meta = true;
     
     #$database_manager = new DatabaseManager();
     #$outputs =  $database_manager->getRequestingStreamFlag();
@@ -88,7 +92,8 @@
                 echo fread($config_file, filesize($file));
                 fclose($config_file);
                 
-                $response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_SUCCESS');
+                #$response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_SUCCESS');
+                $include_meta = false;
                 break;
 
             case constant('PARAM_UPDATE_CONFIG'):
@@ -104,7 +109,8 @@
                     $config_file = fopen($file, "wb") or die("Unable to open file!");
                     fwrite($config_file, json_encode($requestObj));
                     fclose($config_file);
-                    $response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_SUCCESS');
+                    #$response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_SUCCESS');
+                    $include_meta = false;
                 }catch(Exception $e){
                     //Ignore
                 }
@@ -159,7 +165,6 @@
                 }
                 
                 $response[constant('PARAM_IMAGES')] = $imgList;
-                
                 $response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_SUCCESS');
                 break;
                 
@@ -245,11 +250,17 @@
     }
 
 //Add Meta data to response
-$ip_address_array = $database_manager->getPiPublicIP();
-$response[constant('PARAM_PI_PUBLIC_IP')]  = $ip_address_array['ip_address'];
+if($include_meta)
+{
+    $ip_address_array = $database_manager->getPiPublicIP();
+    $response[constant('PARAM_PI_PUBLIC_IP')]  = $ip_address_array['ip_address'];
+}
 
 //Echo the response
-echo json_encode($response);
+if( count($response) > 0)
+{
+    echo json_encode($response);
+}
 
 /*
  * Code largely taken from ->
