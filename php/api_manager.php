@@ -32,6 +32,7 @@
     define('PARAM_PN_REG_IDS', 'pn_reg_ids');
     define('PARAM_PI_PUBLIC_IP', 'pi_public_ip');
     define('PARAM_REQUESTING_VIDEO_STREAM', 'requesting_video_stream');
+    define('PARAM_REQUEST_NEW_IMAGE', 'requesting_new_image');
     
     //Files
     define('DIR_CONFIG', './config/');
