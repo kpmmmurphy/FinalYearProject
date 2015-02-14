@@ -21,3 +21,8 @@ class CameraManager(object):
     	print "CameraManager :: Taking Video"
     	subprocess.call(CONSTS.SCRIPT_TAKE_CAMERA_VIDEO, shell=True)
 
+    @staticmethod
+    def startStream():
+        print "CameraManager :: Starting Remote Stream"
+        subprocess.call(CONSTS.SCRIPT_START_REMOTE_STREAM, shell=True)
+

@@ -15,6 +15,7 @@ import constants as CONSTS
 
 from sensor_factory   import SensorFactory
 from sensor_manager   import SensorManager
+from camera_manager import CameraManager
 
 class APIManager(Configurable):
     DEBUG  = True
@@ -133,11 +134,23 @@ class APIManager(Configurable):
                 print self.LOGTAG, " :: ", service, " -> Completed Successfully"
             else:
                 print self.LOGTAG, " :: ERROR: ",service, " -> status_code:", sendResponse.status_code
-    
+            
+            self.parseRequestMetaData(response.content)
             return response.content
         except requests.ConnectionError:
             if self.DEBUG:
                 print self.LOGTAG, ":: ConnectionError Thrown"
+
+    def parseRequestMetaData(self, data):
+        responseObj = json.loads(data)
+        try: 
+            if responseObj[CONSTS.JSON_KEY_REQUESTING_VIDEO_STREAM] == 1:
+                if self.DEBUG:
+                    print self.LOGTAG, " ::  Starting Video Stream"
+                CameraManager.startVideoStream()
+        except KeyError:
+            if self.DEBUG:
+                print self.LOGTAG, " :: MetaData KeyError"
 
     #-------Polling Calls---------------------------
     def schedule_SysConfigCheck(self):

@@ -127,6 +127,7 @@ JSON_KEY_REQUEST_SERVICE       = "service"
 JSON_KEY_REQUEST_SENSOR_VALUES = "sensor_values"
 JSON_KEY_REQUEST_FILE          = "file"     
 JSON_KEY_CAMERA_STILL          = "camera_still"  
+JSON_KEY_REQUESTING_VIDEO_STREAM = "requesting_video_stream"  
 
 JSON_VALUE_REQUEST_SERVICE_GET_CONFIG           = "get_config"
 JSON_VALUE_REQUEST_SERVICE_UPDATE_CONFIG        = "update_config"
@@ -146,9 +147,11 @@ SCRIPTS_DIR              = "./scripts/"
 SCRIPTS_DIR_IMG          = "image/"
 SCRIPTS_DIR_NETWORKING   = "networking/"
 SCRIPTS_DIR_SETUP        = "setup/"
-SCRIPT_TAKE_CAMERA_STILL = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_still.sh"
-SCRIPT_TAKE_CAMERA_STILL = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_still.sh"
-SCRIPT_START_STREAM      = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "start_video_stream.sh"
+
+SCRIPT_TAKE_CAMERA_STILL   = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_still.sh"
+SCRIPT_TAKE_CAMERA_STILL   = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_still.sh"
+SCRIPT_START_STREAM        = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "start_video_stream.sh"
+SCRIPT_START_REMOTE_STREAM = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "start_remote_video_stream.sh"
 
 #DIRs
 DIR_CAMERA = "./camera/"
