@@ -76,7 +76,6 @@
         $requestedService = htmlspecialchars($headers[constant('PARAM_SERVICE')]);
         #$requestedService = "get_sensor_values";
         
-        
         switch($requestedService){
 
             case constant('PARAM_GET_CONFIG'):
@@ -109,10 +108,9 @@
                     $config_file = fopen($file, "wb") or die("Unable to open file!");
                     fwrite($config_file, json_encode($requestObj));
                     fclose($config_file);
-                    #$response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_SUCCESS');
-                    $include_meta = false;
+                    $response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_SUCCESS');
                 }catch(Exception $e){
-                    //Ignore
+                    $response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_FAILED');
                 }
                 break;
 
@@ -136,7 +134,7 @@
                 $streamArray = $database_manager->getRequestingStreamFlag();
                 $requestingStream = $streamArray['requesting_stream'];
                 $response[constant('PARAM_REQUESTING_VIDEO_STREAM')] = $requestingStream;
-                if($requestingStream == 1)
+                if($requestingStream == 1 || $requestingStream == 2)
                 {
                     $database_manager->updateRequestingStreamFlag(0);
                 }
@@ -222,7 +220,15 @@
                 $database_manager->updateRequestingStreamFlag(1);
                 $response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_SUCCESS');
                 break;
-                
+
+            case constant('PARAM_REQUEST_NEW_IMAGE'):
+                if($debug){
+                    echo "\nRequesting New Image Capture\n";
+                }
+                $database_manager->updateRequestingStreamFlag(2);
+                $response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_SUCCESS');
+                break;
+
             default:
                 $response[constant("PARAM_STATUS_CODE")] = constant('RESPONSE_NOT_FOUND');
         }

@@ -19,21 +19,31 @@ class CameraManager(object):
     @staticmethod
     def takeStill():
     	print "CameraManager :: Taking Still"
-        subprocess.call(CONSTS.SCRIPT_TAKE_CAMERA_STILL, shell=True)
+        # The os.setsid() is passed in the argument preexec_fn so
+        # it's run after the fork() and before  exec() to run the shell.
+        pro = subprocess.Popen([CONSTS.SCRIPT_TAKE_CAMERA_STILL], 
+                       shell=True, preexec_fn=os.setsid) 
+
+        time.sleep(10)
+        os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
 
     @staticmethod
     def recordVideo():
     	print "CameraManager :: Taking Video"
     	subprocess.call(CONSTS.SCRIPT_TAKE_CAMERA_VIDEO, shell=True)
+        pro = subprocess.Popen([CONSTS.SCRIPT_TAKE_CAMERA_VIDEO], 
+                       shell=True, preexec_fn=os.setsid) 
+
+        time.sleep(20)
+        os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
+
 
     @staticmethod
     def startStream():
         print "CameraManager :: Starting Remote Stream"
-        # The os.setsid() is passed in the argument preexec_fn so
-        # it's run after the fork() and before  exec() to run the shell.
         pro = subprocess.Popen([CONSTS.SCRIPT_START_REMOTE_STREAM], 
                        shell=True, preexec_fn=os.setsid) 
 
         time.sleep(30)
-        os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
+        os.killpg(pro.pid, signal.SIGTERM)
 

@@ -148,6 +148,10 @@ class APIManager(Configurable):
                 if self.DEBUG:
                     print self.LOGTAG, " ::  Starting Video Stream"
                 CameraManager.startStream()
+            elif responseObj[CONSTS.JSON_KEY_REQUESTING_VIDEO_STREAM] == "2":
+                if self.DEBUG:
+                    print self.LOGTAG, " ::  Capturing Image Stream"
+                CameraManager.takeStill()
         except KeyError:
             if self.DEBUG:
                 print self.LOGTAG, " :: MetaData KeyError"
