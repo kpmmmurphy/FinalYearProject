@@ -142,7 +142,9 @@ class APIManager(Configurable):
                 print self.LOGTAG, ":: ConnectionError Thrown"
 
     def parseRequestMetaData(self, data):
+        print data
         responseObj = json.loads(data)
+        print responseObj
         try: 
             if responseObj[CONSTS.JSON_KEY_REQUESTING_VIDEO_STREAM] == 1:
                 if self.DEBUG:
