@@ -14,6 +14,7 @@ import subprocess
 from model.peer import Peer
 from configurable import Configurable
 import constants as CONSTS
+from camera_manager import CameraManager
 
 class WifiDirectManager(Configurable):
 	DEBUG  = True
@@ -165,6 +166,7 @@ class WifiDirectManager(Configurable):
 
 			try:
 				service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]
+
 				try:
 					payload  = packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]
 				except KeyError:
@@ -186,11 +188,18 @@ class WifiDirectManager(Configurable):
 					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR, payload=currentDayAggHourVals))
 					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY, payload=aggDayVals))
 				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_STREAM:
-					subprocess.call(CONSTS.SCRIPT_START_STREAM, shell=True)
+					CameraManager.startLocalStream()
+				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_GET_IMAGES:
+					self.transferFileFromDir(CONSTS.DIR_CAMERA_STILL_BACKUP)
+					
 
 			except KeyError:
 				if self.DEBUG:
 						print self.LOGTAG, " :: KeyError -> No Service Supplied"
+
+
+	def transferFileFromDir(self, dir, socket):
+		files = os.listdir(dir)
 
 
 	def addPeer(self, payload):

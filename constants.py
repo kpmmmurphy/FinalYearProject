@@ -108,7 +108,8 @@ JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA        = "get_graph_data"
 JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_HOUR   = "sensor_list_current_hour"
 JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR = "sensor_list_current_day_agg_hour"
 JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY          = "sensor_list_agg_day"
-JSON_VALUE_WIFI_DIRECT_CONFIG = "config"
+JSON_VALUE_WIFI_DIRECT_CONFIG     = "config"
+JSON_VALUE_WIFI_DIRECT_GET_IMAGES = "get_images"
 JSON_VALUE_WIFI_DIRECT_REQUEST_STREAM  = "request_stream";
 JSON_VALUE_WIFI_DIRECT_REQUEST_IMAGE   = "request_image";
 JSON_VALUE_WIFI_DIRECT_STATUS_CODE_SUCCESS = 200
@@ -154,10 +155,12 @@ SCRIPT_START_STREAM        = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "start_video_stream
 SCRIPT_START_REMOTE_STREAM = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "start_remote_video_stream.sh"
 
 #DIRs
-DIR_CAMERA = "./camera/"
-DIR_CAMERA_STILL = DIR_CAMERA + "still/"
-DIR_CAMERA_VIDEO = DIR_CAMERA + "video/"
-DIR_CONFIG = "./config/"
+DIR_CAMERA              = "./camera/"
+DIR_CAMERA_STILL        = DIR_CAMERA + "still/"
+DIR_CAMERA_STILL_BACKUP = DIR_CAMERA + "still_backup/"
+DIR_CAMERA_VIDEO        = DIR_CAMERA + "video/"
+DIR_CAMERA_VIDEO_BACKUP = DIR_CAMERA + "video_backup/"
+DIR_CONFIG 				= "./config/"
 
 #---API------------------------------------------
 API_URL_CS1     = "http://cs1.ucc.ie/~kpm2/fyp/api/"

@@ -47,3 +47,13 @@ class CameraManager(object):
         time.sleep(30)
         os.killpg(pro.pid, signal.SIGTERM)
 
+    @staticmethod
+    def startLocalStream():
+        print "CameraManager :: Starting Local Stream"
+        pro = subprocess.Popen([CONSTS.SCRIPT_START_STREAM], 
+                       shell=True, preexec_fn=os.setsid) 
+
+        time.sleep(30)
+        os.killpg(pro.pid, signal.SIGTERM)
+
+

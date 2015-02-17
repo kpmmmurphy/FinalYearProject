@@ -16,10 +16,11 @@ from wifi_direct_manager import WifiDirectManager
 
 ##---TODO
 #FEB
-#--- Direct Images
-#Video // Streaming, local?
-#System Stat Manager
+#Direct Images
 #Galileo?....
+#Testing
+#UI Styling
+#System Stat Manager?
 
 #Constants
 DEBUG = True
