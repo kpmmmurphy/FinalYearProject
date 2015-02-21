@@ -23,7 +23,6 @@ class CameraManager(object):
         # it's run after the fork() and before  exec() to run the shell.
         pro = subprocess.Popen([CONSTS.SCRIPT_TAKE_CAMERA_STILL], 
                        shell=True, preexec_fn=os.setsid) 
-
         time.sleep(10)
         os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
 
@@ -32,7 +31,6 @@ class CameraManager(object):
     	print "CameraManager :: Taking Video"
         pro = subprocess.Popen([CONSTS.SCRIPT_TAKE_CAMERA_VIDEO], 
                        shell=True, preexec_fn=os.setsid) 
-
         time.sleep(40)
         os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
 
@@ -42,7 +40,6 @@ class CameraManager(object):
         print "CameraManager :: Starting Remote Stream"
         pro = subprocess.Popen([CONSTS.SCRIPT_START_REMOTE_STREAM], 
                        shell=True, preexec_fn=os.setsid) 
-
         time.sleep(30)
         os.killpg(pro.pid, signal.SIGTERM)
 
@@ -51,7 +48,6 @@ class CameraManager(object):
         print "CameraManager :: Starting Local Stream"
         pro = subprocess.Popen([CONSTS.SCRIPT_START_STREAM], 
                        shell=True, preexec_fn=os.setsid) 
-
         time.sleep(30)
         os.killpg(pro.pid, signal.SIGTERM)
 

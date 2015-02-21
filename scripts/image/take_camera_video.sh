@@ -19,3 +19,4 @@ raspivid -t 10000 -w 1280 -h 720 -b 8000000 -o /home/pi/FinalYearProject/camera/
 #ffmpeg -r 30 -i /home/pi/FinalYearProject/camera/video/$DATE.h264 -vcodec copy /home/pi/FinalYearProject/camera/video/$DATE.mkv
 MP4Box -fps 30 -add /home/pi/FinalYearProject/camera/video/$DATE.h264 /home/pi/FinalYearProject/camera/video/$DATE.mp4
 sudo rm /home/pi/FinalYearProject/camera/video/$DATE.h264
+	
