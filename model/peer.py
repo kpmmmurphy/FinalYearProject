@@ -30,13 +30,17 @@ class Peer(object):
 		return self.__timeStamp
 
 	def sendPacket(self, packet):
+		accepted = True
 		try:
 			tmpSocket = self.createSocket(bindToIP=None, connectToIP=self.getIPAddress())
 			tmpSocket.send(json.dumps(packet, default=json_serial))
 			tmpSocket.close()
 		except:
+			accepted = False
 			if self.DEBUG:
 				print self.LOGTAG, " :: ", self.getDeviceID(), " -> Refused Connection" 
+
+		return accepted
 
 	def toString(self):
 		print {CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS : self.getIPAddress(),

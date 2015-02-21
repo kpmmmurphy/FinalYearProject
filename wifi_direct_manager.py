@@ -121,11 +121,11 @@ class WifiDirectManager(Configurable):
 
 		return newSocket
 
-	def sendPacketToPeers(self, packet):
+	def sendPacketToAllPeers(self, packet):
 		for deviceID, peer in self.__currentPeers.iteritems():
 				if self.DEBUG:
 					print self.LOGTAG, " :: Sending Packet to DeviceID -> ", deviceID 
-				peer.sendPacket(packet)
+				self.sendPacketToPeer(peer, packet)
 
 
 	def sendSensorValues(self):
@@ -138,7 +138,7 @@ class WifiDirectManager(Configurable):
 			else:
 				payload = sensorValues.items()
 
-			self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES, payload=payload))
+			self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES, payload=payload))
 
 		timer = threading.Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
 		timer.start()
@@ -146,7 +146,7 @@ class WifiDirectManager(Configurable):
 	def sendConfig(self):
 		if self.__configManager is not None:
 			config = self.getConfigManager().getConfig()
-			self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG, payload=config))
+			self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG, payload=config))
 
 		timer = threading.Timer(self.getConfigSendRate(), self.sendConfig,())
 		timer.start()
@@ -176,7 +176,7 @@ class WifiDirectManager(Configurable):
 				if payload is not None and service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
 					if self.DEBUG:
 						print self.LOGTAG, " :: Config from Peer"
-						self.getConfigManager().reconfigure(json.dumps(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG]))
+					self.getConfigManager().reconfigure(json.dumps(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG]))
 				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA:
 					if self.DEBUG:
 						print self.LOGTAG, " :: Peer Requested Graphing Values"
@@ -184,23 +184,17 @@ class WifiDirectManager(Configurable):
 					currentDayAggHourVals = self.__databaseManager.select_agg_hour_current_day_sensor_values()
 					aggDayVals            = self.__databaseManager.select_agg_day_sensor_values()
 
-					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_HOUR, payload=currentHourVals))
-					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR, payload=currentDayAggHourVals))
-					self.sendPacketToPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY, payload=aggDayVals))
+					self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_HOUR, payload=currentHourVals))
+					self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR, payload=currentDayAggHourVals))
+					self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY, payload=aggDayVals))
 				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_STREAM:
+					if self.DEBUG:
+						print self.LOGTAG, " :: Peer Requested Local Stream"
 					CameraManager.startLocalStream()
-				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_GET_IMAGES:
-					self.transferFileFromDir(CONSTS.DIR_CAMERA_STILL_BACKUP)
 					
-
 			except KeyError:
 				if self.DEBUG:
 						print self.LOGTAG, " :: KeyError -> No Service Supplied"
-
-
-	def transferFileFromDir(self, dir, socket):
-		files = os.listdir(dir)
-
 
 	def addPeer(self, payload):
 		try:
@@ -217,19 +211,20 @@ class WifiDirectManager(Configurable):
 			self.__currentPeers[peerDeviceID] = peer
 
 			#Send the response ACK
-			payload        = {}
+			payload = {}
 			payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_STATUS_CODE] = CONSTS.JSON_VALUE_WIFI_DIRECT_STATUS_CODE_SUCCESS
 			responsePacket = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_PAIRED, payload=payload)
 
 			if self.DEBUG:
 				print self.LOGTAG, " :: Sending Response -> ", responsePacket
 
-			peer.sendPacket(responsePacket)
+			self.sendPacketToPeer(peer, responsePacket)
 
 			#Send Peer Current Sys Config
 			config = self.getConfigManager().getConfig()
 			packet = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG, payload=config)
-			peer.sendPacket(packet)
+
+			self.sendPacketToPeer(peer, packet)
 			
 			if self.DEBUG:
 				print self.LOGTAG, " :: Current Peers -> ", self.printPeers()
@@ -241,6 +236,16 @@ class WifiDirectManager(Configurable):
 	def printPeers(self):
 		for deviceID, peer in self.__currentPeers.iteritems():
 			peer.toString()
+
+	def removePeer(self, peer):
+		if self.DEBUG:
+			print self.LOGTAG, " :: Removing Peer -> ", peer.getDeviceID()
+		del self.__currentPeers[peer.getDeviceID()]
+
+	def sendPacketToPeer(self, peer, packet):
+		accepted = peer.sendPacket(packet)
+		if not accepted:
+			self.removePeer(peer)
 
 	def createPacket(self, service, payload):
 		_packet  = {}
