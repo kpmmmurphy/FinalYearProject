@@ -15,4 +15,5 @@ mv /home/pi/FinalYearProject/camera/video/* /home/pi/FinalYearProject/camera/vid
 
 DATE=$(date +"%Y-%m-%d_%H%M")
 
-raspivid -o /home/pi/FinalYearProject/camera/video/$DATE.mp4 -t 5000
+raspivid -o /home/pi/FinalYearProject/camera/video/$DATE.h264 -t 5000
+ffmpeg -r 30 -i /home/pi/FinalYearProject/camera/video/$DATE.h264 -vcodec copy /home/pi/FinalYearProject/camera/video/$DATE.mp4
