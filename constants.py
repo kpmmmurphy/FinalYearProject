@@ -150,7 +150,7 @@ SCRIPTS_DIR_NETWORKING   = "networking/"
 SCRIPTS_DIR_SETUP        = "setup/"
 
 SCRIPT_TAKE_CAMERA_STILL   = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_still.sh"
-SCRIPT_TAKE_CAMERA_STILL   = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_still.sh"
+SCRIPT_TAKE_CAMERA_VIDEO   = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "take_camera_video.sh"
 SCRIPT_START_STREAM        = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "start_video_stream.sh"
 SCRIPT_START_REMOTE_STREAM = SCRIPTS_DIR + SCRIPTS_DIR_IMG + "start_remote_video_stream.sh"
 

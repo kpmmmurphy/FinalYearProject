@@ -30,7 +30,6 @@ class CameraManager(object):
     @staticmethod
     def recordVideo():
     	print "CameraManager :: Taking Video"
-    	subprocess.call(CONSTS.SCRIPT_TAKE_CAMERA_VIDEO, shell=True)
         pro = subprocess.Popen([CONSTS.SCRIPT_TAKE_CAMERA_VIDEO], 
                        shell=True, preexec_fn=os.setsid) 
 
