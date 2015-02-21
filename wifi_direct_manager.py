@@ -191,6 +191,8 @@ class WifiDirectManager(Configurable):
 					if self.DEBUG:
 						print self.LOGTAG, " :: Peer Requested Local Stream"
 					CameraManager.startLocalStream()
+				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_IMAGE:
+					CameraManager.takeStill()
 					
 			except KeyError:
 				if self.DEBUG:
