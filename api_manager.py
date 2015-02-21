@@ -85,6 +85,8 @@ class APIManager(Configurable):
     def uploadVideo(self):
         videos = os.listdir(CONSTS.DIR_CAMERA_VIDEO)
         if len(videos) > 0:
+            if self.DEBUG:
+                print self.LOGTAG, " :: Uploading Video -> ", videos[0]
             camera_video = {CONSTS.JSON_KEY_CAMERA_STILL : (videos[0], open(CONSTS.DIR_CAMERA_VIDEO + videos[0], 'rb'), 'video/mp4')}
             self.sendRequest(service=None, payload=None, filez=camera_video)
 
