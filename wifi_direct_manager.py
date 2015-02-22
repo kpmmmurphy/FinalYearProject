@@ -125,7 +125,7 @@ class WifiDirectManager(Configurable):
 		for deviceID in self.__currentPeers.keys():
 				if self.DEBUG:
 					print self.LOGTAG, " :: Sending Packet to DeviceID -> ", deviceID 
-				self.sendPacketToPeer(self.__currentPeers[deviceID], packet)
+			self.sendPacketToPeer(self.__currentPeers[deviceID], packet)
 
 
 	def sendSensorValues(self):
