@@ -122,10 +122,10 @@ class WifiDirectManager(Configurable):
 		return newSocket
 
 	def sendPacketToAllPeers(self, packet):
-		for deviceID, peer in self.__currentPeers.iteritems():
+		for deviceID in self.__currentPeers.keys():
 				if self.DEBUG:
 					print self.LOGTAG, " :: Sending Packet to DeviceID -> ", deviceID 
-				self.sendPacketToPeer(peer, packet)
+				self.sendPacketToPeer(self.__currentPeers[deviceID], packet)
 
 
 	def sendSensorValues(self):
@@ -236,8 +236,8 @@ class WifiDirectManager(Configurable):
 				print self.LOGTAG, " :: Exception thrown -> KeyError"
 
 	def printPeers(self):
-		for deviceID, peer in self.__currentPeers.iteritems():
-			peer.toString()
+		for peerID in self.__currentPeers.keys():
+			self.__currentPeers[peerID].toString()
 
 	def removePeer(self, peer):
 		if self.DEBUG:
