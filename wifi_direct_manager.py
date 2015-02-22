@@ -123,8 +123,8 @@ class WifiDirectManager(Configurable):
 
 	def sendPacketToAllPeers(self, packet):
 		for deviceID in self.__currentPeers.keys():
-				if self.DEBUG:
-					print self.LOGTAG, " :: Sending Packet to DeviceID -> ", deviceID 
+			if self.DEBUG:
+				print self.LOGTAG, " :: Sending Packet to DeviceID -> ", deviceID 
 			self.sendPacketToPeer(self.__currentPeers[deviceID], packet)
 
 
