@@ -177,6 +177,7 @@ class WifiDirectManager(Configurable):
 					if self.DEBUG:
 						print self.LOGTAG, " :: Config from Peer"
 					self.getConfigManager().reconfigure(json.dumps(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG]))
+					self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_SYSTEM_CONFIG_UPDATED, payload=None))
 				elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA:
 					if self.DEBUG:
 						print self.LOGTAG, " :: Peer Requested Graphing Values"
