@@ -16,7 +16,6 @@ from wifi_direct_manager import WifiDirectManager
 
 ##---TODO
 #FEB
-#Direct Images -> Updating after capture, ordering
 #Galileo?....
 #Testing
 #UI Styling
