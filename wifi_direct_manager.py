@@ -91,19 +91,23 @@ class WifiDirectManager(Configurable):
 					print self.LOGTAG, " :: Waiting to Recveive Packet..."
 
 				rawPacket = multicastSocket.recv(1024)
-				packet    = json.loads(rawPacket)
-
-				if self.DEBUG:
-					print self.LOGTAG, " :: Received Packet ->", json.dumps(packet)
-
 				try:
-					service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]
-					payload = packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]
-					if service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONNECT:
-						self.addPeer(payload)
-				except KeyError:
+					packet    = json.loads(rawPacket)
+
 					if self.DEBUG:
-						print self.LOGTAG, " :: Exception thrown -> KeyError"
+						print self.LOGTAG, " :: Received Packet ->", json.dumps(packet)
+
+					try:
+						service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]
+						payload = packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]
+						if service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONNECT:
+							self.addPeer(payload)
+					except KeyError:
+						if self.DEBUG:
+							print self.LOGTAG, " :: Exception thrown -> KeyError"
+				except ValueError:
+					if self.DEBUG:
+						print self.LOGTAG, " :: Exception thrown -> ValueError - No JSON object could be decoded"
 
 	def createSocket(self, bindToIP, connectToIP):
 		newSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
