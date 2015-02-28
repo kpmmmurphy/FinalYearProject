@@ -12,6 +12,7 @@ import threading
 import netifaces
 import subprocess
 from model.peer import Peer
+from model.peripheral import Peripheral
 from configurable import Configurable
 import constants as CONSTS
 from camera_manager import CameraManager
@@ -23,17 +24,18 @@ class WifiDirectManager(Configurable):
 	MCAST_GRP  = CONSTS.MULTICAST_GRP
 	MCAST_PORT = CONSTS.MULTICAST_PORT
 
-	__sensorManager = None
-	__configManager = None
+	__sensorManager   = None
+	__configManager   = None
 	__databaseManager = None
 
-	__currentPeers = {}
+	__currentPeers      = {}
+	__currentPeripherals = {}
 
-	__multicastSocket = None
-	__ipAddress = None
+	__multicastSocket     = None
+	__ipAddress           = None
 	__sensorValueSendRate = CONSTS.WIFI_DIRECT_SENSOR_VALUE_SEND_RATE
 	__configSendRate      = CONSTS.WIFI_DIRECT_CONFIG_SEND_RATE
-	__testRate = 10
+	__testRate            = 10
 
 	def __init__(self, sensorManager, databaseManager):
 		super(WifiDirectManager, self).__init__(CONSTS.JSON_KEY_WIFI_DIRECT_MANAGER)
@@ -131,7 +133,6 @@ class WifiDirectManager(Configurable):
 				print self.LOGTAG, " :: Sending Packet to DeviceID -> ", deviceID 
 			self.sendPacketToPeer(self.__currentPeers[deviceID], packet)
 
-
 	def sendSensorValues(self):
 		if self.__sensorManager is not None:
 			sensorValues = self.__sensorManager.getSensorValues()
@@ -159,8 +160,8 @@ class WifiDirectManager(Configurable):
 		peerSocket  = self.createSocket(self.__ipAddress, None)
 		while True:
 			conn, addr = peerSocket.accept()
-			rawPacket = conn.recv(10240)
-			packet    = json.loads(rawPacket)
+			rawPacket  = conn.recv(10240)
+			packet     = json.loads(rawPacket)
 
 			service = None
 			payload = None
@@ -206,16 +207,20 @@ class WifiDirectManager(Configurable):
 	def addPeer(self, payload):
 		try:
 			session      = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_SESSION]
+			peerType     = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_PEER_TYPE]
 			peerIP       = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS]
 			peerDeviceID = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_DEVICE_ID]
 			timeStamp    = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_TIMESTAMP]
 
-			peer = Peer(ipAddress=peerIP, deviceID=peerDeviceID, timeStamp=timeStamp)
+			if peerType == CONSTS.WIFI_DIRECT_PEER_TYPE_ANDROID:
+				peer = Peer(ipAddress=peerIP, deviceID=peerDeviceID, timeStamp=timeStamp)
+				self.__currentPeers[peerDeviceID] = peer
+			elif peerType == CONSTS.WIFI_DIRECT_PEER_TYPE_PERIPHERAL:
+				peer = Peripheral(ipAddress=peerIP, deviceID=peerDeviceID, timeStamp=timeStamp)
+				self.__currentPeripherals[peerDeviceID] = peer
 
 			if self.DEBUG:
 				print self.LOGTAG, " :: Added new Peer -> ", peer.toString()
-
-			self.__currentPeers[peerDeviceID] = peer
 
 			#Send the response ACK
 			payload = {}
@@ -227,11 +232,11 @@ class WifiDirectManager(Configurable):
 
 			self.sendPacketToPeer(peer, responsePacket)
 
-			#Send Peer Current Sys Config
-			config = self.getConfigManager().getConfig()
-			packet = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG, payload=config)
-
-			self.sendPacketToPeer(peer, packet)
+			if peerType == CONSTS.WIFI_DIRECT_PEER_TYPE_ANDROID:
+				#Send Android Peers Current Sys Config
+				config = self.getConfigManager().getConfig()
+				packet = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG, payload=config)
+				self.sendPacketToPeer(peer, packet)
 			
 			if self.DEBUG:
 				print self.LOGTAG, " :: Current Peers -> ", self.printPeers()
@@ -244,10 +249,16 @@ class WifiDirectManager(Configurable):
 		for peerID in self.__currentPeers.keys():
 			self.__currentPeers[peerID].toString()
 
+		for peerID in self.__currentPeripherals.keys():
+			self.__currentPeripherals[peerID].toString()
+
 	def removePeer(self, peer):
 		if self.DEBUG:
 			print self.LOGTAG, " :: Removing Peer -> ", peer.getDeviceID()
-		del self.__currentPeers[peer.getDeviceID()]
+		if isinstance(Peripheral(), peer):
+			del self.__currentPeripherals[peer.getDeviceID()]
+		else:	
+			del self.__currentPeers[peer.getDeviceID()]
 
 	def sendPacketToPeer(self, peer, packet):
 		accepted = peer.sendPacket(packet)
@@ -258,7 +269,7 @@ class WifiDirectManager(Configurable):
 		_packet  = {}
 		_payload = {}
 
-		_packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]   = service 
+		_packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE] = service 
 		_payload[service] = payload
 		_packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]   = _payload
 		return _packet
