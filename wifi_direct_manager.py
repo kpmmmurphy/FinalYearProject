@@ -55,16 +55,8 @@ class WifiDirectManager(Configurable):
 		sendSensorValuesThread = threading.Thread(target=self.sendSensorValues, args=())
 		sendSensorValuesThread.start()
 
-		#sendConfigThread = threading.Thread(target=self.sendConfig, args=())
-		#sendConfigThread.start()
-
 		peerPacketThread = threading.Thread(target=self.listenForPeerPacket, args=())
 		peerPacketThread.start()
-
-		#self.setupSendMulticastSocket()
-
-		#if self.__multicastSocket is not None:
-		#	self.sendSensorValues()
 
 	def getIPAddress(self):
 		try:
@@ -157,7 +149,7 @@ class WifiDirectManager(Configurable):
 		timer.start()
 
 	def listenForPeerPacket(self):
-		peerSocket  = self.createSocket(self.__ipAddress, None)
+		peerSocket  = self.createSocket(bindToIP=self.__ipAddress, connectToIP=None)
 		while True:
 			conn, addr = peerSocket.accept()
 			rawPacket  = conn.recv(10240)
@@ -207,7 +199,7 @@ class WifiDirectManager(Configurable):
 	def addPeer(self, payload):
 		try:
 			session      = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_SESSION]
-			peerType     = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_PEER_TYPE]
+			peerType     = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_PEER_TYPE]
 			peerIP       = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_IP_ADDRESS]
 			peerDeviceID = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_DEVICE_ID]
 			timeStamp    = session[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_TIMESTAMP]
@@ -230,6 +222,7 @@ class WifiDirectManager(Configurable):
 			if self.DEBUG:
 				print self.LOGTAG, " :: Sending Response -> ", responsePacket
 
+			time.sleep(1)
 			self.sendPacketToPeer(peer, responsePacket)
 
 			if peerType == CONSTS.WIFI_DIRECT_PEER_TYPE_ANDROID:
@@ -255,7 +248,7 @@ class WifiDirectManager(Configurable):
 	def removePeer(self, peer):
 		if self.DEBUG:
 			print self.LOGTAG, " :: Removing Peer -> ", peer.getDeviceID()
-		if isinstance(Peripheral(), peer):
+		if isinstance(peer, Peripheral):
 			del self.__currentPeripherals[peer.getDeviceID()]
 		else:	
 			del self.__currentPeers[peer.getDeviceID()]
@@ -271,7 +264,7 @@ class WifiDirectManager(Configurable):
 
 		_packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE] = service 
 		_payload[service] = payload
-		_packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]   = _payload
+		_packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD] = _payload
 		return _packet
 
 	def getSensorValueSendRate(self):

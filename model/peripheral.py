@@ -4,7 +4,7 @@
 #Author: Kevin Murphy
 #Date  : 28 - Feb - 15
 
-import peer as Peer
+from peer import Peer  
 
 class Peripheral(Peer):
 	LOGTAG = "Peripheral"
