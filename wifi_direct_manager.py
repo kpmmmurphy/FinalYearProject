@@ -50,12 +50,15 @@ class WifiDirectManager(Configurable):
 
 		self.__multicastSocket = self.createMulticatSocket(self.__ipAddress, CONSTS.MULTICAST_GRP, CONSTS.MULTICAST_PORT)
 		multicastThread        = threading.Thread(target=self.listenOnMulticastSocket,args=(self.__multicastSocket,))
+		multicastThread.daemon = True
 		multicastThread.start()
 
 		sendSensorValuesThread = threading.Thread(target=self.sendSensorValues, args=())
+		sendSensorValuesThread.daemon = True
 		sendSensorValuesThread.start()
 
 		peerPacketThread = threading.Thread(target=self.listenForPeerPacket, args=())
+		peerPacketThread..daemon = True
 		peerPacketThread.start()
 
 	def getIPAddress(self):
