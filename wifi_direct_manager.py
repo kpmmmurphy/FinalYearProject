@@ -58,7 +58,7 @@ class WifiDirectManager(Configurable):
 		sendSensorValuesThread.start()
 
 		peerPacketThread = threading.Thread(target=self.listenForPeerPacket, args=())
-		peerPacketThread..daemon = True
+		peerPacketThread.daemon = True
 		peerPacketThread.start()
 
 	def getIPAddress(self):
