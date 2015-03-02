@@ -153,11 +153,17 @@ class WifiDirectManager(Configurable):
 
 	def listenForPeerPacket(self):
 		peerSocket  = self.createSocket(bindToIP=self.__ipAddress, connectToIP=None)
+		peripheralServices = [CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SENSOR_VALUES]
+		peerServices = [CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG, 
+						CONSTS.JSON_VALUE_WIFI_DIRECT_SYSTEM_CONFIG_UPDATED,
+						CONSTS.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA,
+						CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_STREAM,
+						CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_IMAGE]
 		while True:
 			conn, addr = peerSocket.accept()
 			rawPacket  = conn.recv(1024)
-			if self.DEBUG:
-					print self.LOGTAG, " Packet Recieved -> ", rawPacket
+			if self.DEBUG: print self.LOGTAG, " Packet Recieved -> ", rawPacket
+
 			try:
 				packet     = json.loads(rawPacket)
 
@@ -170,38 +176,58 @@ class WifiDirectManager(Configurable):
 					try:
 						payload  = packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]
 					except KeyError:
-						if self.DEBUG:
-							print self.LOGTAG, " :: KeyError -> No Payload Supplied"
+						if self.DEBUG: print self.LOGTAG, " :: KeyError -> No Payload Supplied"
 
-					if payload is not None and service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
-						if self.DEBUG:
-							print self.LOGTAG, " :: Config from Peer"
-						self.getConfigManager().reconfigure(json.dumps(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG]))
-						self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_SYSTEM_CONFIG_UPDATED, payload=None))
-					elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA:
-						if self.DEBUG:
-							print self.LOGTAG, " :: Peer Requested Graphing Values"
-						currentHourVals       = self.__databaseManager.select_current_hour_sensor_values()
-						currentDayAggHourVals = self.__databaseManager.select_agg_hour_current_day_sensor_values()
-						aggDayVals            = self.__databaseManager.select_agg_day_sensor_values()
+					if service in peerServices:
+						#Peer Service Required -> ANDROID
+						self.performPeerService(service=service, payload=payload)
+					else:
+						#Peripheral Service Required - > GALILEOOOO
+						self.performPeripheralService(service=service, payload=payload)
 
-						self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_HOUR, payload=currentHourVals))
-						self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR, payload=currentDayAggHourVals))
-						self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY, payload=aggDayVals))
-					elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_STREAM:
-						if self.DEBUG:
-							print self.LOGTAG, " :: Peer Requested Local Stream"
-						CameraManager.startLocalStream()
-					elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_IMAGE:
-						CameraManager.takeStill()
-						
 				except KeyError:
-					if self.DEBUG:
-							print self.LOGTAG, " :: KeyError -> No Service Supplied"
+					if self.DEBUG: print self.LOGTAG, " :: KeyError -> No Service Supplied"
 			except ValueError:
-				if self.DEBUG:
-					print self.LOGTAG, " :: ValueError -> Unable to decode JSON Object" 
+				if self.DEBUG: print self.LOGTAG, " :: ValueError -> Unable to decode JSON Object" 
 
+	def performPeerService(self, service, payload):
+		if payload is not None and service == CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG:
+			if self.DEBUG:
+				print self.LOGTAG, " :: Config from Peer"
+			self.getConfigManager().reconfigure(json.dumps(payload[CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG]))
+			self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_SYSTEM_CONFIG_UPDATED, payload=None))
+		elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA:
+			if self.DEBUG:
+				print self.LOGTAG, " :: Peer Requested Graphing Values"
+			currentHourVals       = self.__databaseManager.select_current_hour_sensor_values()
+			currentDayAggHourVals = self.__databaseManager.select_agg_hour_current_day_sensor_values()
+			aggDayVals            = self.__databaseManager.select_agg_day_sensor_values()
+			
+			self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_HOUR, payload=currentHourVals))
+			self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_CUR_DAY_AGG_HOUR, payload=currentDayAggHourVals))
+			self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_GRAPH_DATA_AGG_DAY, payload=aggDayVals))
+		elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_STREAM:
+			if self.DEBUG:
+				print self.LOGTAG, " :: Peer Requested Local Stream"
+			CameraManager.startLocalStream()
+		elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_REQUEST_IMAGE:
+			CameraManager.takeStill()
+
+	def performPeripheralService(self, service, payload):
+		if self.DEBUG: print self.LOGTAG, " :: Peripheral sensor"
+
+		if service == CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SENSOR_VALUES:
+			'''
+				Peripheral packet looks like this -> {"payload": {"peripheral_sensor_values": 
+				{"touch": false, "light": 17, "device_id": 167469062838880, "temperature": 14, "time_stamp": "2015-03-02 20:02:49"}}, 
+				"service": "peripheral_sensor_values"}
+			'''
+			peripheralSensorValues = payload[CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SENSOR_VALUES]
+			peerDeviceID = peripheralSensorValues[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_DEVICE_ID]
+			self.__currentPeripherals[peerDeviceID].setSensorReadings(peripheralSensorValues)
+			#SQL Write should go here! :o
+			#--->
+			
 	def addPeer(self, payload):
 		try:
 			session      = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_SESSION]
