@@ -35,7 +35,7 @@ class Peer(object):
 			tmpSocket = self.createSocket(bindToIP=None, connectToIP=self.getIPAddress())
 			packet = json.dumps(packet, default=json_serial)
 			if self.DEBUG:
-				print self.LOGTAG, " :: Sending packet to Peer -> ", packet)
+				print self.LOGTAG, " :: Sending packet to Peer -> ", packet
 			tmpSocket.send(packet)
 			tmpSocket.close()
 		except:
