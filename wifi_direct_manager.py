@@ -294,8 +294,6 @@ class WifiDirectManager(Configurable):
 			del self.__currentPeers[peer.getDeviceID()]
 
 	def sendPacketToPeer(self, peer, packet):
-		if self.DEBUG:
-			print self.LOGTAG, " :: Sending packet to Peer -> ", json.dumps(packet)
 		accepted = peer.sendPacket(packet)
 		if not accepted:
 			self.removePeer(peer)
