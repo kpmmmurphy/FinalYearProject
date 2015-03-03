@@ -133,12 +133,21 @@ class WifiDirectManager(Configurable):
 			sensorValues = self.__sensorManager.getSensorValues()
 			minMaxValues = self.__databaseManager.select_current_day_max_min_sensor_values()
 			payload = {}
+			
 			if minMaxValues is not None:
 				payload = dict(sensorValues.items() + minMaxValues.items())
 			else:
 				payload = sensorValues.items()
 
-			self.sendPacketToAllPeers(self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES, payload=payload))
+			#Add Peripheral Values
+			peripheral_sensor_values = []
+			for peripheral in self.__currentPeripherals.keys():
+				peripheral_sensor_values.append(self.__currentPeripherals[peripheral.getDeviceID()].getSensorReadings())
+
+			payload[CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SENSOR_VALUES] = peripheral_sensor_values
+
+			packet = self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_CURRENT_SENSOR_VALUES, payload=payload)
+			self.sendPacketToAllPeers(packet)
 
 		timer = threading.Timer(self.getSensorValueSendRate(), self.sendSensorValues,())
 		timer.start()
@@ -172,7 +181,6 @@ class WifiDirectManager(Configurable):
 
 				try:
 					service = packet[CONSTS.JSON_KEY_WIFI_DIRECT_SERVICE]
-
 					try:
 						payload  = packet[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD]
 					except KeyError:
@@ -286,6 +294,8 @@ class WifiDirectManager(Configurable):
 			del self.__currentPeers[peer.getDeviceID()]
 
 	def sendPacketToPeer(self, peer, packet):
+		if self.DEBUG:
+			print self.LOGTAG, " :: Sending packet to Peer -> ", json.dumps(packet)
 		accepted = peer.sendPacket(packet)
 		if not accepted:
 			self.removePeer(peer)
