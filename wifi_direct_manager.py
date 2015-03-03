@@ -142,7 +142,7 @@ class WifiDirectManager(Configurable):
 			#Add Peripheral Values
 			peripheral_sensor_values = []
 			for peripheral in self.__currentPeripherals.keys():
-				peripheral_sensor_values.append(self.__currentPeripherals[peripheral.getDeviceID()].getSensorReadings())
+				peripheral_sensor_values.append(self.__currentPeripherals[peripheral].getSensorReadings())
 
 			payload[CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SENSOR_VALUES] = peripheral_sensor_values
 
