@@ -28,7 +28,7 @@ class WifiDirectManager(Configurable):
 	__configManager   = None
 	__databaseManager = None
 
-	__currentPeers      = {}
+	__currentPeers       = {}
 	__currentPeripherals = {}
 
 	__multicastSocket     = None
@@ -117,7 +117,6 @@ class WifiDirectManager(Configurable):
 			newSocket.listen(5)
 		elif connectToIP is not None:
 			#For sending
-			#newSocket.bind((self.__ipAddress, CONSTS.DEFAULT_PORT))
 			newSocket.connect((connectToIP, CONSTS.DEFAULT_PORT))
 
 		return newSocket

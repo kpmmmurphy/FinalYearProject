@@ -15,11 +15,17 @@ from system_details_manager import SystemDetailsManager
 from wifi_direct_manager import WifiDirectManager
 
 ##---TODO
-#FEB
-#Galileo?....
+#March
+#Add Alert Icons
+#Add light metrics
+#fix null max min values
+#Create Galilo demo?
+#Style Graph fragment
+#Fix icon
+#Touch for buzzer
+#Push from android to Galileo -> Flash buzzer
 #Testing
 #UI Styling
-#System Stat Manager?
 
 #Constants
 DEBUG = True
