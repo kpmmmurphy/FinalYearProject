@@ -128,6 +128,12 @@ class WifiDirectManager(Configurable):
 				print self.LOGTAG, " :: Sending Packet to DeviceID -> ", deviceID 
 			self.sendPacketToPeer(self.__currentPeers[deviceID], packet)
 
+	def sendPacketToAllPeripherals(self, packet):
+		for deviceID in self.__currentPeripherals.keys():
+			if self.DEBUG:
+				print self.LOGTAG, " :: Sending Packet to DeviceID -> ", deviceID 
+			self.sendPacketToPeer(self.__currentPeripherals[deviceID], packet)
+
 	def sendSensorValues(self):
 		if self.__sensorManager is not None and len(self.__currentPeers) > 0:
 			sensorValues = self.__sensorManager.getSensorValues()
@@ -162,7 +168,8 @@ class WifiDirectManager(Configurable):
 
 	def listenForPeerPacket(self):
 		peerSocket  = self.createSocket(bindToIP=self.__ipAddress, connectToIP=None)
-		peripheralServices = [CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SENSOR_VALUES]
+		peripheralServices = [CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SENSOR_VALUES, 
+		                      CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SERVICE_FlASH_LED]
 		peerServices = [CONSTS.JSON_VALUE_WIFI_DIRECT_CONFIG, 
 						CONSTS.JSON_VALUE_WIFI_DIRECT_SYSTEM_CONFIG_UPDATED,
 						CONSTS.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA,
@@ -239,11 +246,12 @@ class WifiDirectManager(Configurable):
 			#Check for touch, activiate buzzer if true
 			if peripheralSensorValues[CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SENSOR_VALUES_TOUCH]:
 				if self.DEBUG:
-					print self.DEBUG, " :: Peripheral Touch Recieved"
+					print self.LOGTAG, " :: Peripheral Touch Recieved"
 				AlertManager.forceBuzzerRing()
+		elif service = CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SERVICE_FlASH_LED:
+			self.sendPacketToAllPeripherals( self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SERVICE_FlASH_LED, payload=None))
 
 
-			
 	def addPeer(self, payload):
 		try:
 			session      = payload[CONSTS.JSON_KEY_WIFI_DIRECT_PAYLOAD_SESSION]
