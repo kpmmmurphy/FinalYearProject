@@ -51,7 +51,7 @@ class AlertManager(Configurable):
     		Buzzer.buzz()
 
     @staticmethod
-    def forceBuzzerRing(self):
+    def forceBuzzerRing():
         Buzzer.buzz()
 
     def activateCamera(self):
