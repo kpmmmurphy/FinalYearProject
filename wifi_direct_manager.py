@@ -248,7 +248,7 @@ class WifiDirectManager(Configurable):
 				if self.DEBUG:
 					print self.LOGTAG, " :: Peripheral Touch Recieved"
 				AlertManager.forceBuzzerRing()
-		elif service = CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SERVICE_FlASH_LED:
+		elif service == CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SERVICE_FlASH_LED:
 			self.sendPacketToAllPeripherals( self.createPacket(service=CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SERVICE_FlASH_LED, payload=None))
 
 
