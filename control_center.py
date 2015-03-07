@@ -16,14 +16,14 @@ from wifi_direct_manager import WifiDirectManager
 
 ##---TODO
 #March
-#Add Alert Icons
 #Add light metrics
 #fix null max min values
-#Create Galilo demo?
-#Style Graph fragment
+#Push notification sounds
+#Clear Database
+#Push from android to Galileo -> Flash buzzer
 #Fix icon
 #Touch for buzzer
-#Push from android to Galileo -> Flash buzzer
+#Collect genuine data
 #Testing
 #UI Styling
 
