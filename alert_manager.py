@@ -50,6 +50,10 @@ class AlertManager(Configurable):
     	if self.getBuzzerStatus():
     		Buzzer.buzz()
 
+    @staticmethod
+    def forceBuzzerRing(self):
+        Buzzer.buzz()
+
     def activateCamera(self):
     	if self.getCameraStatus():
     		if self.getVideoMode():

@@ -18,7 +18,6 @@ from wifi_direct_manager import WifiDirectManager
 #March
 #Add light metrics
 #fix null max min values
-#Push notification sounds
 #Clear Database
 #Push from android to Galileo -> Flash buzzer
 #Fix icon

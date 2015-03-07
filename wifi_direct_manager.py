@@ -16,6 +16,7 @@ from model.peripheral import Peripheral
 from configurable import Configurable
 import constants as CONSTS
 from camera_manager import CameraManager
+from alert_manager import AlertManager
 
 class WifiDirectManager(Configurable):
 	DEBUG  = True
@@ -234,6 +235,14 @@ class WifiDirectManager(Configurable):
 			self.__currentPeripherals[peerDeviceID].setSensorReadings(peripheralSensorValues)
 			#SQL Write should go here! :o
 			#--->
+
+			#Check for touch, activiate buzzer if true
+			if peripheralSensorValues[CONSTS.JSON_VALUE_WIFI_DIRECT_PERIPHERAL_SENSOR_VALUES_TOUCH]:
+				if self.DEBUG:
+					print self.DEBUG, " :: Peripheral Touch Recieved"
+				AlertManager.forceBuzzerRing()
+
+
 			
 	def addPeer(self, payload):
 		try:
