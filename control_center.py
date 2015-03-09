@@ -16,11 +16,7 @@ from wifi_direct_manager import WifiDirectManager
 
 ##---TODO
 #March
-#Add light metrics
-#fix null max min values
-#Clear Database
 #Fix icon
-#Collect genuine data
 #Testing
 #UI Styling
 
