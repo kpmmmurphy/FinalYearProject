@@ -16,10 +16,6 @@ from wifi_direct_manager import WifiDirectManager
 
 ##---TODO
 #March
-#Fix icon
-#Testing
-#UI Styling
-
 #Constants
 DEBUG = True
 

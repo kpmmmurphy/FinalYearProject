@@ -133,10 +133,10 @@ class DatabaseManager(Configurable):
                                                       fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_co),
                                                       fn.Max(Current_Day_Sensor_Output.flammable_gas).alias(self.__max_flam),
                                                       fn.Min(Current_Day_Sensor_Output.flammable_gas).alias(self.__min_flam),
-                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_flam),
+                                                      fn.Avg(Current_Day_Sensor_Output.flammable_gas).alias(self.__avg_flam),
                                                       fn.Max(Current_Day_Sensor_Output.temperature).alias(self.__max_temp),
                                                       fn.Min(Current_Day_Sensor_Output.temperature).alias(self.__min_temp),
-                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_temp),
+                                                      fn.Avg(Current_Day_Sensor_Output.temperature).alias(self.__avg_temp),
                                                      (fn.Sum(Current_Day_Sensor_Output.motion)/fn.Count(Current_Day_Sensor_Output.motion)*100).alias(self.__motion)
                                                      ).where(Current_Day_Sensor_Output.date_and_time.between(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=1))).group_by(Current_Day_Sensor_Output.date_and_time.hour).dicts()
         for item in agg_values:
@@ -152,10 +152,10 @@ class DatabaseManager(Configurable):
                                                       fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_co),
                                                       fn.Max(Current_Day_Sensor_Output.flammable_gas).alias(self.__max_flam),
                                                       fn.Min(Current_Day_Sensor_Output.flammable_gas).alias(self.__min_flam),
-                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_flam),
+                                                      fn.Avg(Current_Day_Sensor_Output.flammable_gas).alias(self.__avg_flam),
                                                       fn.Max(Current_Day_Sensor_Output.temperature).alias(self.__max_temp),
                                                       fn.Min(Current_Day_Sensor_Output.temperature).alias(self.__min_temp),
-                                                      fn.Avg(Current_Day_Sensor_Output.carbon_monoxide).alias(self.__avg_temp),
+                                                      fn.Avg(Current_Day_Sensor_Output.temperature).alias(self.__avg_temp),
                                                      (fn.Sum(Current_Day_Sensor_Output.motion)/fn.Count(Current_Day_Sensor_Output.motion)*100).alias(self.__motion)
                                                      ).group_by(Current_Day_Sensor_Output.date_and_time.day).dicts()
         for item in agg_values:
