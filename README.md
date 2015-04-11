@@ -2,7 +2,10 @@ FinalYearProject
 ================
 
 This Repo contains the Sensor Management System and the RESTful API developed for my 
-final year project. These were developed while studying at the University College of Cork. 
+final year project. These were developed while studying at the University College of Cork. Additionally the project includes an Android Application as the user interface, and a Peripheral Sensing System.
+
+[Link to Android Application.](https://github.com/kpmmmurphy/FYP-Android-App)
+[Link to Peripheral Sensing System, developed for an Intel Galileo.](https://github.com/kpmmmurphy/FYPGalileo)
 
 Here is a high level overall architecture of the project. 
 ![Image of System Arch](https://raw.githubusercontent.com/kpmmmurphy/FinalYearProject/master/assets/Open%20Day%20General%20System%20Diagram.png)
